@@ -1,28 +1,43 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
+import { database } from './firebase';
+import { RoomList, ProfileArea } from './Components';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
+class App extends React.Component {
+
+	constructor() {
+		super();
+
+		this.state = {
+			user: {},
+			rooms: []
+		};
+
+		// get rooms
+		database.collection("rooms").get().then((snapshot) => {
+
+			this.setState({
+				rooms: snapshot.docs.map(e => ({id: e.id, data: e.data()}))
+			});
+		});
+
+	}
+
+	render() {
+		return (
+			<div className="App">
+				<header className="app-header">
+					<ProfileArea />
+				</header>
+				<RoomList rooms={this.state.rooms} joinRoom={this.joinRoom} />
+			</div>
+		);
+	}
+
+	joinRoom(id) {
+		console.log("join room id " + id);
+	}
+
 }
 
 export default App;
