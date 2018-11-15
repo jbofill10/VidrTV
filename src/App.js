@@ -16,6 +16,7 @@ class App extends React.Component {
 		// get rooms
 		database.collection("rooms").get().then((snapshot) => {
 
+			// update room list
 			this.setState({
 				rooms: snapshot.docs.map(e => ({id: e.id, data: e.data()}))
 			});
