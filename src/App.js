@@ -1,5 +1,6 @@
 import React from 'react';
-import Youtube from 'react-youtube';
+import { default as YoutubePlayer } from 'react-youtube';
+// import { youtube } from './youtube';
 // import { database } from './firebase';
 import { RoomList, ProfileArea, PlaylistView } from './Components';
 import './App.css';
@@ -54,7 +55,7 @@ class App extends React.Component {
 				<RoomList hidden rooms={this.state.rooms} joinRoom={this.joinRoom} />
 
 				<div className="content">
-					<Youtube
+					<YoutubePlayer
 						className="player-container"
 						videoId={window.room.queue[window.room.cur]}
 						opts={opts}
