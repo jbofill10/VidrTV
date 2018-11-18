@@ -2,7 +2,7 @@ import React from 'react';
 import { default as YoutubePlayer } from 'react-youtube';
 // import { youtube } from './youtube';
 // import { database } from './firebase';
-import { RoomList, ProfileArea, PlaylistView } from './Components';
+import { RoomList, ProfileArea, PlaylistView } from './components';
 import './App.css';
 
 class App extends React.Component {
@@ -43,7 +43,7 @@ class App extends React.Component {
 			height: '360px',
 			width: '640px',
 			playerVars: { // https://developers.google.com/youtube/player_parameters
-				autoplay: 1
+				autoplay: 0
 			}
 		};
 
