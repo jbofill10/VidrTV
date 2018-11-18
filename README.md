@@ -1,5 +1,9 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Setup
+
+Make a .env file with ```REACT_APP_GOOGLE_API_KEY=``` followed by the google api key, at the project's root directory.
+
 ## Available Scripts
 
 In the project directory, you can run:
