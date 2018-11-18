@@ -3,7 +3,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 firebase.initializeApp({
-	apiKey: "AIzaSyAn14sii2Jbvl93mac5p29hWz2FZI0RVJg",
+	apiKey: process.env.REACT_APP_GOOGLE_API_KEY,
 	authDomain: "reactapp-cb5e1.firebaseapp.com",
 	databaseURL: "https://reactapp-cb5e1.firebaseio.com",
 	projectId: "reactapp-cb5e1",

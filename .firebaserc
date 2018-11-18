@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "reactapp-cb5e1"
+    "default": "reactapp-cb5e1",
+    "production": "reactapp-cb5e1"
   }
 }
