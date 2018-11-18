@@ -1,4 +1,4 @@
-image: rambabusaravanan/firebase
+image: node:latest
 
 stages:
   - deploy
@@ -16,6 +16,7 @@ deploy_production:
   only:
     - master
   script:
+    - npm i -g firebase-tools
     - npm i
     - npm --prefix ./functions i ./functions
     - npm run build
