@@ -1,7 +1,5 @@
 import React from 'react';
 import { default as YoutubePlayer } from 'react-youtube';
-// import { youtube } from './youtube';
-// import { database } from './firebase';
 import { RoomList, ProfileArea, PlaylistView } from './components';
 import './App.css';
 
@@ -14,15 +12,6 @@ class App extends React.Component {
 			user: {},
 			rooms: [],
 		};
-
-		// get rooms
-		// database.collection("rooms").get().then((snapshot) => {
-
-		// 	// update room list
-		// 	this.setState({
-		// 		rooms: snapshot.docs.map(e => ({id: e.id, data: e.data()}))
-		// 	});
-		// });
 
 		window.room = {
 			queue: [
@@ -42,7 +31,8 @@ class App extends React.Component {
 			height: '360px',
 			width: '640px',
 			playerVars: { // https://developers.google.com/youtube/player_parameters
-				autoplay: 1
+				autoplay: 1,
+				controls: 1
 			}
 		};
 
@@ -60,6 +50,7 @@ class App extends React.Component {
 						opts={opts}
 						onReady={this._onReady}
 						onEnd={this._onEnd}
+						onStateChange={this._playerStateChange}
 					/>
 					<PlaylistView items={window.room.queue}/>
 				</div>
@@ -67,8 +58,13 @@ class App extends React.Component {
 		);
 	}
 
+	_playerStateChange(event) {
+		console.log("state change", event);
+	}
+
 	_onReady(event) {
 		console.log("Video ready", event);
+		event.target.mute();
 	}
 
 	_onEnd(event) {
