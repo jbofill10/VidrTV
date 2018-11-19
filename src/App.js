@@ -26,11 +26,10 @@ class App extends React.Component {
 
 		window.room = {
 			queue: [
-				"KFJgGQdKzXo",
-				"dcQEWGjDS2o",
-				"VSAALRWehGA",
-				"wHfrvbz_HuI",
-				"aRf36vRAWF8"
+				"TjAa0wOe5k4", // Twitch A/V sync
+				"Sz_YPczxzZc", // official youtube music
+				"mM5_T-F1Yn4", // 4:3 video test
+				"En6TUJJWwww", // vertical video test
 			],
 			cur: 0,
 			time: 0
@@ -43,7 +42,7 @@ class App extends React.Component {
 			height: '360px',
 			width: '640px',
 			playerVars: { // https://developers.google.com/youtube/player_parameters
-				autoplay: 0
+				autoplay: 1
 			}
 		};
 
