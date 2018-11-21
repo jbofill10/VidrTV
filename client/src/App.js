@@ -20,7 +20,7 @@ class App extends React.Component {
 
 	componentDidMount() {
 
-		const socket = openSocket();
+		const socket = openSocket(process.env.NODE_ENV === "development" ? window.location.hostname + ":8000" : null);
 
 		socket.on('statesync', (data) => {
 			console.log("statesync", data);
