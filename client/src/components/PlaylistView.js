@@ -15,9 +15,6 @@ export default class PlaylistView extends React.Component {
 
 		let data = {};
 
-		console.log(data);
-
-
 		for (let i = 0; i < this.props.items.length; i++) {
 
 			youtube.getVideoByID(this.props.items[i]).then((result) => {

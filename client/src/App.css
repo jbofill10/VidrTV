@@ -34,7 +34,7 @@ body {
 	background: red;
 }
 
-.player-container {
+.react-player {
 	border: solid 1px rgb(199, 139, 255);
 	border-radius: 1px;
 	box-shadow: 0 0 32px rgba(255, 48, 227, 0.459);
