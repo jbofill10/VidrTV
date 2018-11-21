@@ -20,7 +20,9 @@ class App extends React.Component {
 
 	componentDidMount() {
 
-		const socket = openSocket('localhost:8000');
+		let loc = window.location.origin.replace(/^http/, 'ws');
+
+		const socket = openSocket(loc.slice(0, loc.length - 4) + '8000');
 
 		socket.on('statesync', (data) => {
 			console.log("statesync", data);
