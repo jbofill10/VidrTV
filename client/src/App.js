@@ -3,6 +3,10 @@ import { default as YoutubePlayer } from 'react-youtube';
 import { RoomList, ProfileArea, PlaylistView } from './components';
 import './App.css';
 
+import openSocket from 'socket.io-client';
+
+const socket = openSocket('localhost:8000');
+
 class App extends React.Component {
 
 	constructor() {
@@ -19,10 +23,13 @@ class App extends React.Component {
 				"Sz_YPczxzZc", // official youtube music
 				"mM5_T-F1Yn4", // 4:3 video test
 				"En6TUJJWwww", // vertical video test
+				"5T_CqqjOPDc", // free youtube movie
 			],
 			cur: 0,
 			time: 0
 		};
+
+		console.log(socket);
 
 	}
 
