@@ -34,9 +34,10 @@ body {
 	background: red;
 }
 
-.react-player {
-	border: solid 1px rgb(199, 139, 255);
+.player-container {
+	border: solid 1px;
 	border-radius: 1px;
-	box-shadow: 0 0 32px rgba(255, 48, 227, 0.459);
+	border-color: #c78bff;
+	box-shadow: 0 0 32px #c78bff75;
 	background: rgba(255, 255, 255, 0.082);
 }

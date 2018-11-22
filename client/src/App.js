@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactPlayer from 'react-player';
-import { ProfileArea, PlaylistView } from './components';
+import { ProfileArea, PlaylistView, Player } from './components';
 import './App.css';
 
 import openSocket from 'socket.io-client';
@@ -52,15 +52,10 @@ class App extends React.Component {
 				</header>
 
 				<div className="content">
-					<div className="player-wrapper">
-						<ReactPlayer
-							className="react-player"
-							url={'https://www.youtube.com/watch?v=' + this.state.room.queue[this.state.room.cur]}
-						/>
-						<div className="player-controls">
-							hello
-						</div>
-					</div>
+					<Player
+						className="player-container"
+						url={'https://www.youtube.com/watch?v=' + this.state.room.queue[this.state.room.cur]}
+					/>
 					<PlaylistView items={this.state.room.queue}/>
 				</div>
 			</div>
