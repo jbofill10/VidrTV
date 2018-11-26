@@ -1,5 +1,4 @@
 import React from 'react';
-import ReactPlayer from 'react-player';
 import { ProfileArea, PlaylistView, Player } from './components';
 import './App.css';
 

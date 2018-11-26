@@ -41,3 +41,16 @@ body {
 	box-shadow: 0 0 32px #c78bff75;
 	background: rgba(255, 255, 255, 0.082);
 }
+
+.player-wrapper {
+	position: relative;
+}
+
+.player-controls {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	background: rgba(0,0,255,0.5);
+	z-index: 2;
+}

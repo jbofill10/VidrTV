@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Slider, Direction } from 'react-player-controls';
+import Radium from 'radium';
 
 const SliderBar = ({ direction, value, style }) => (
 	<div
@@ -60,8 +61,8 @@ export default class PlayerControls extends Component {
 						cursor: 'pointer',
 					}}
 				>
-					<SliderBar direction={Direction.HORIZONTAL} value={0.5} style={{ background: true ? '#72d687' : '#878c88' }} />
-					<SliderHandle direction={Direction.HORIZONTAL} value={0.5} style={{ background: true ? '#72d687' : '#878c88' }} />
+					<SliderBar direction={Direction.HORIZONTAL} value={0.25} style={{ background: true ? '#72d687' : '#878c88' }} />
+					<SliderHandle direction={Direction.HORIZONTAL} value={0.25} style={{ background: true ? '#72d687' : '#878c88' }} />
 				</Slider>
 			</div>
 		);

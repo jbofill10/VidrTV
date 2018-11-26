@@ -15,10 +15,13 @@ export default class Player extends Component {
 			<div className={this.props.className} style={{
 
 			}}>
-				<ReactPlayer
-					className="react-player"
-				/>
-				<PlayerControls />
+				<div className="player-wrapper">
+					<ReactPlayer
+						className="react-player"
+						url={this.props.url}
+					/>
+					<PlayerControls />
+				</div>
 			</div>
 		);
 	}
