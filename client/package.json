@@ -3,8 +3,12 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
+		"@babel/plugin-proposal-class-properties": "^7.1.0",
+		"babel-plugin-syntax-decorators": "^6.13.0",
+		"customize-cra": "^0.2.6",
 		"radium": "^0.25.0",
 		"react": "^16.6.3",
+		"react-app-rewired": "^1.6.2",
 		"react-dom": "^16.6.3",
 		"react-player": "^1.7.0",
 		"react-player-controls": "^1.0.0-beta.0",
@@ -16,10 +20,10 @@
 		"socket.io-client": "^2.1.1"
 	},
 	"scripts": {
-		"start": "react-scripts start",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"start": "react-app-rewired start",
+		"build": "react-app-rewired build",
+		"test": "react-app-rewired test",
+		"eject": "react-app-rewired eject"
 	},
 	"eslintConfig": {
 		"extends": "react-app"

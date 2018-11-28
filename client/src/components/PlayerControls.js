@@ -44,7 +44,7 @@ const SliderHandle = ({ direction, value, style }) => (
 	/>
 )
 
-export default class PlayerControls extends Component {
+export default @Radium class PlayerControls extends Component {
 
 	render() {
 		return (
