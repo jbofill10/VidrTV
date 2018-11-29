@@ -1,8 +1,5 @@
-const { override, addBabelPlugins } = require('customize-cra');
+const { override, addDecoratorsLegacy } = require('customize-cra');
 
 module.exports = override(
-	...addBabelPlugins(
-		"transform-class-properties",
-		"syntax-decorators"
-	)
+	addDecoratorsLegacy()
 );
