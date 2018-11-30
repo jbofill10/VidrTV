@@ -3,7 +3,7 @@ const path = require('path');
 const socketio = require('socket.io');
 
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 
 
 // Serve the static files from the React app
