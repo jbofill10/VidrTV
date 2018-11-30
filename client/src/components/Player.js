@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ReactPlayer from 'react-player';
+import YoutubePlayer from 'react-player/lib/players/YouTube';
 import { default as PlayerControls } from './PlayerControls';
 
 export default class Player extends Component {
@@ -16,9 +16,10 @@ export default class Player extends Component {
 
 			}}>
 				<div className="player-wrapper">
-					<ReactPlayer
+					<YoutubePlayer
 						className="react-player"
 						url={this.props.url}
+						controls
 					/>
 					<PlayerControls />
 				</div>
