@@ -22,7 +22,10 @@
 		}
 	},
 	"lint-staged": {
-		"**/src/**/*.{js,json,css,md}": [ "prettier --write", "git add" ]
+		"**/src/**/*.{js,json,css,md}": [
+			"prettier --write",
+			"git add"
+		]
 	},
 	"prettier": {
 		"useTabs": true,

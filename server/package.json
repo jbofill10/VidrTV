@@ -24,13 +24,20 @@
 	},
 	"scripts": {
 		"start": "gulp && node ./build/index.js",
-		"start-dev": "nodemon ./src/index.js --watch ./src/index.js"
+		"start-dev": "nodemon --exec npm start"
 	},
 	"devDependencies": {
-		"nodemon": "^1.18.7",
-		"gulp-cli": "^2.0.1"
+		"gulp-cli": "^2.0.1",
+		"nodemon": "^1.18.7"
 	},
 	"engines": {
 		"node": ">=6.0.0"
+	},
+	"nodemonConfig": {
+		"watch": [ "src/**/*.js" ],
+		"ignore": [ "build/*", "node_modules/**/node_modules", ".git" ],
+		"env": {
+			"NODE_ENV": "development"
+		}
 	}
 }
