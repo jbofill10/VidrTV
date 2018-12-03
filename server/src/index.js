@@ -2,9 +2,14 @@ import express from "express";
 import path from "path";
 import socketio from "socket.io";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+// setup mongoose
+mongoose.connect(process.env.MONGO_URL);
 
 // Serve the static files from the React app
 app.use(express.static(path.join(__dirname, "client", "build")));

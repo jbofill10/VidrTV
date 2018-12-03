@@ -5,7 +5,7 @@
 	"scripts": {
 		"start": "cd server && npm start",
 		"heroku-postbuild": "cd client && npm i --only=dev && npm i && npm run build",
-		"client-dev": "source .env.local; cd client && npm start",
+		"client-dev": "cd client && npm start",
 		"server-dev": "cd server && npm run start-dev",
 		"install": "npm run client-install && npm run server-install",
 		"client-install": "cd client && npm i",
