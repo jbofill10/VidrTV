@@ -20,6 +20,7 @@
 		"gulp": "^4.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-eslint": "^5.0.0",
+		"mongoose": "^5.3.14",
 		"socket.io": "^2.1.1"
 	},
 	"scripts": {
@@ -34,8 +35,14 @@
 		"node": ">=6.0.0"
 	},
 	"nodemonConfig": {
-		"watch": [ "src/**/*.js" ],
-		"ignore": [ "build/*", "node_modules/**/node_modules", ".git" ],
+		"watch": [
+			"src/**/*.js"
+		],
+		"ignore": [
+			"build/*",
+			"node_modules/**/node_modules",
+			".git"
+		],
 		"env": {
 			"NODE_ENV": "development"
 		}

@@ -1,6 +1,7 @@
 import express from "express";
 import path from "path";
 import socketio from "socket.io";
+import mongoose from "mongoose";
 
 const app = express();
 const port = process.env.PORT || 8080;
