@@ -48,6 +48,33 @@ function updateRoom() {
 
 const io = socketio(server);
 
+var url =
+	"mongodb+srv://admin:8aWp8Yd7gbUmPE5X@databasetest-um3nb.mongodb.net/test?retryWrites=true";
+
+mongoose.connect(
+	url,
+	{ useNewUrlParser: true },
+	(err, db) => {
+		if (err) return console.log(err);
+		console.log("Connected to MongoDB");
+		//Add youtube link IDs to DB arr
+		db.collection("Room").updateOne(
+			{ Names: Array },
+			{ $addToSet: { $each: { Names: room.queue } } },
+			(err, result) => {
+				if (err) console.log(err);
+				else console.log("Songs successfully put into DB");
+				db.close();
+			}
+		);
+		getSizeAsynch(function(result) {
+			console.log("The result is" + result);
+		});
+
+		db.close();
+	}
+);
+
 io.on("connection", socket => {
 	console.log("a user connected " + socket.id);
 
