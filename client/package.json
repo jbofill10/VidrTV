@@ -10,6 +10,7 @@
 		"react": "^16.6.3",
 		"react-app-rewired": "^1.6.2",
 		"react-dom": "^16.6.3",
+		"react-google-login": "^4.0.0",
 		"react-player": "^1.7.0",
 		"react-player-controls": "^1.0.0-beta.0",
 		"react-redux": "^5.1.1",

@@ -1,4 +1,5 @@
 import React from "react";
+import GoogleLogin from "react-google-login";
 
 export default class ProfileArea extends React.Component {
 	constructor(props) {
@@ -7,12 +8,17 @@ export default class ProfileArea extends React.Component {
 	}
 
 	render() {
-		return <button onClick={this.signIn}>Sign In</button>;
+		return (
+			<GoogleLogin
+				clientId={process.env.REACT_APP_OAUTH_CLIENT_ID}
+				buttonText="Sign In"
+				onSuccess={this.responseGoogle}
+				onFailure={this.responseGoogle}
+			/>
+		);
 	}
 
-	signIn() {}
-
-	signOut() {
-		console.log("signOut");
+	responseGoogle(response) {
+		// TODO handle sign-in response
 	}
 }
