@@ -1,11 +1,10 @@
-import React from 'react';
-import { ProfileArea, PlaylistView, Player } from './components';
-import './App.css';
+import React from "react";
+import { ProfileArea, PlaylistView, MediaPlayer } from "./components";
+import "./App.css";
 
-import openSocket from 'socket.io-client';
+import openSocket from "socket.io-client";
 
 class App extends React.Component {
-
 	constructor() {
 		super();
 
@@ -14,23 +13,23 @@ class App extends React.Component {
 			room: {},
 			loading: true
 		};
-
 	}
 
 	componentDidMount() {
+		const socket = openSocket(
+			process.env.NODE_ENV === "development"
+				? window.location.hostname + ":8080"
+				: null
+		);
 
-		const socket = openSocket(process.env.NODE_ENV === "development" ? window.location.hostname + ":8080" : null);
-
-		socket.on('statesync', (data) => {
+		socket.on("statesync", data => {
 			console.log("statesync", data);
 
 			this.setState({ room: data, loading: false });
 		});
-
 	}
 
 	render() {
-
 		if (this.state.loading)
 			return (
 				<div className="App">
@@ -38,9 +37,7 @@ class App extends React.Component {
 						<ProfileArea />
 					</header>
 
-					<div className="content">
-						Loading...
-					</div>
+					<div className="content">Joining Room...</div>
 				</div>
 			);
 
@@ -51,11 +48,14 @@ class App extends React.Component {
 				</header>
 
 				<div className="content">
-					<Player
+					<MediaPlayer
 						className="player-container"
-						url={'https://www.youtube.com/watch?v=' + this.state.room.queue[this.state.room.cur]}
+						url={
+							"https://www.youtube.com/watch?v=" +
+							this.state.room.queue[this.state.room.cur]
+						}
 					/>
-					<PlaylistView items={this.state.room.queue}/>
+					<PlaylistView items={this.state.room.queue} />
 				</div>
 			</div>
 		);
@@ -64,7 +64,6 @@ class App extends React.Component {
 	onSeek() {
 		console.log("onSeek");
 	}
-
 }
 
 export default App;
