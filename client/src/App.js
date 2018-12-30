@@ -54,8 +54,13 @@ class App extends React.Component {
 							"https://www.youtube.com/watch?v=" +
 							this.state.room.queue[this.state.room.cur]
 						}
+						width={640}
+						height={360}
 					/>
-					<PlaylistView items={this.state.room.queue} />
+					<PlaylistView
+						items={this.state.room.queue}
+						style={{ paddingTop: 16 }}
+					/>
 				</div>
 			</div>
 		);

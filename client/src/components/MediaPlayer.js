@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { default as MediaControls } from "./MediaControls";
 import { Media, Player } from "react-media-player";
 
+const paddingHack = 200;
+
 export default class MediaPlayer extends Component {
 	constructor(props) {
 		super(props);
@@ -24,11 +26,23 @@ export default class MediaPlayer extends Component {
 				<Media>
 					<div
 						className="media"
-						style={{ position: "relative", display: "grid" }}
+						style={{
+							position: "relative",
+							display: "grid",
+							height: this.props.height,
+							width: this.props.width,
+							overflow: "hidden"
+						}}
 					>
 						<Player
 							src={this.props.url}
-							style={{ pointerEvents: "none" }}
+							style={{
+								position: "absolute",
+								top: -paddingHack,
+								pointerEvents: "none",
+								height: this.props.height + paddingHack * 2,
+								width: this.props.width
+							}}
 							onPause={() => {
 								console.log("pause");
 							}}
