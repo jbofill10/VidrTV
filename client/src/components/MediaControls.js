@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Radium from "radium";
 import { Slider, Direction } from "react-player-controls";
 import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeOff } from "react-icons/md";
-import { withMediaProps, utils } from "react-media-player";
+import { utils } from "react-media-player";
 
 const PlayerButton = Radium(({ style, children, ...props }) => (
 	<button
@@ -86,7 +86,6 @@ const SliderHandle = ({ direction, value, style }) => (
 		)}
 	/>
 );
-@withMediaProps
 @Radium
 class MediaControls extends Component {
 	// shouldComponentUpdate({ media }) {
@@ -101,23 +100,12 @@ class MediaControls extends Component {
 		};
 	}
 
-	_handlePlayPause = () => {
-		this.props.media.playPause();
-	};
-
-	_handleMuteUnmute = () => {
-		this.props.media.muteUnmute();
-	};
-
 	_handleVolumeChange = val => {
-		if (!isNaN(val))
-			this.props.media.setVolume(
-				Math.max(0, Math.min(1, val.toFixed(4)))
-			);
+		// if (!isNaN(val)) this.props.media.setVolume(Math.max(0, Math.min(1, val.toFixed(4))));
 	};
 
 	_handleSeek = time => {
-		this.props.media.seekTo(+(time * this.props.media.duration));
+		// this.props.media.seekTo(+(time * this.props.media.duration));
 	};
 
 	_hideTimeout = -1;
@@ -134,7 +122,15 @@ class MediaControls extends Component {
 	};
 
 	render() {
-		const { className, style, media } = this.props;
+		const { className, style, player } = this.props;
+		const {
+			duration,
+			loaded,
+			muted,
+			played,
+			playing,
+			volume
+		} = player.state;
 
 		return (
 			<div
@@ -165,7 +161,7 @@ class MediaControls extends Component {
 						border: 0,
 						outline: "none"
 					}}
-					onClick={this._handlePlayPause}
+					onClick={player.playPause}
 				/>
 				<div
 					style={[
@@ -223,7 +219,7 @@ class MediaControls extends Component {
 					>
 						<SliderBar
 							direction={Direction.HORIZONTAL}
-							value={media.progress.toFixed(4)}
+							value={loaded.toFixed(3)}
 							style={{
 								background: "rgba(255,255,255,0.2)",
 								transition: "width 0.3s"
@@ -231,16 +227,12 @@ class MediaControls extends Component {
 						/>
 						<SliderBar
 							direction={Direction.HORIZONTAL}
-							value={
-								media.currentTime.toFixed(4) / media.duration
-							}
+							value={played.toFixed(3) / duration}
 							style={{ background: "#fff" }}
 						/>
 						<SliderHandle
 							direction={Direction.HORIZONTAL}
-							value={
-								media.currentTime.toFixed(4) / media.duration
-							}
+							value={played.toFixed(3) / duration}
 							style={{
 								transform: "scale(0)",
 								background: "#fff",
@@ -263,10 +255,10 @@ class MediaControls extends Component {
 						]}
 					>
 						<PlayerButton
-							onClick={this._handlePlayPause}
+							onClick={player.playPause}
 							style={{ padding: "4px 10px" }}
 						>
-							{media.isPlaying ? <MdPause /> : <MdPlayArrow />}
+							{playing ? <MdPause /> : <MdPlayArrow />}
 						</PlayerButton>
 
 						<span
@@ -281,11 +273,7 @@ class MediaControls extends Component {
 							}}
 						>
 							<PlayerButton onClick={this._handleMuteUnmute}>
-								{media.isMuted ? (
-									<MdVolumeOff />
-								) : (
-									<MdVolumeUp />
-								)}
+								{muted ? <MdVolumeOff /> : <MdVolumeUp />}
 							</PlayerButton>
 							<Slider
 								className="volume-slider"
@@ -303,12 +291,12 @@ class MediaControls extends Component {
 							>
 								<SliderBar
 									direction={Direction.HORIZONTAL}
-									value={media.volume}
+									value={volume.toFixed(3)}
 									style={{ background: "#fff" }}
 								/>
 								<SliderHandle
 									direction={Direction.HORIZONTAL}
-									value={media.volume}
+									value={volume.toFixed(3)}
 									style={{
 										// transform: 'scale(0)',
 										background: "#fff",
@@ -327,10 +315,10 @@ class MediaControls extends Component {
 								opacity: 0.7
 							}}
 						>
-							<time>{utils.formatTime(media.currentTime)}</time>
+							<time>{utils.formatTime(played)}</time>
 							<span style={{ opacity: 0.7 }}>
 								{" / "}
-								<time>{utils.formatTime(media.duration)}</time>
+								<time>{utils.formatTime(duration)}</time>
 							</span>
 						</span>
 					</div>

@@ -65,10 +65,6 @@ class App extends React.Component {
 			</div>
 		);
 	}
-
-	onSeek() {
-		console.log("onSeek");
-	}
 }
 
 export default App;
