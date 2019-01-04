@@ -18,7 +18,8 @@ export default class MediaPlayer extends Component {
 			loaded: 0,
 			duration: 0,
 			playbackRate: 1.0,
-			loop: false
+			loop: false,
+			seeking: false
 		};
 	}
 
@@ -28,6 +29,35 @@ export default class MediaPlayer extends Component {
 
 	playPause = () => {
 		this.setState({ playing: !this.state.playing });
+	};
+
+	setVolume = value => {
+		this.setState({ volume: value });
+	};
+
+	toggleMute = () => {
+		this.setState({ muted: !this.state.muted });
+	};
+
+	onSeekMouseDown = e => {
+		this.setState({ seeking: true });
+	};
+
+	onSeekChange = value => {
+		this.setState({ played: value });
+	};
+
+	onSeekMouseUp = value => {
+		this.setState({ seeking: false });
+		this.player.seekTo(value);
+	};
+
+	onProgress = state => {
+		if (!this.state.seeking) this.setState(state);
+	};
+
+	onDuration = duration => {
+		this.setState({ duration });
 	};
 
 	render() {
@@ -62,7 +92,7 @@ export default class MediaPlayer extends Component {
 						overflow: "hidden"
 					}}
 				>
-					<YouTubePlayer
+					<div
 						style={{
 							position: "absolute",
 							top: -paddingHack,
@@ -70,15 +100,23 @@ export default class MediaPlayer extends Component {
 							height: this.props.height + paddingHack * 2,
 							width: this.props.width
 						}}
-						ref={this.ref}
-						url={url}
-						pip={pip}
-						playing={playing}
-						loop={loop}
-						playbackRate={playbackRate}
-						volume={volume}
-						muted={muted}
-					/>
+					>
+						<YouTubePlayer
+							ref={this.ref}
+							url={url}
+							pip={pip}
+							playing={playing}
+							loop={loop}
+							playbackRate={playbackRate}
+							volume={volume}
+							muted={muted}
+							width="100%"
+							height="100%"
+							progressInterval={200}
+							onDuration={this.onDuration}
+							onProgress={this.onProgress}
+						/>
+					</div>
 					<MediaControls className="media-controls" player={this} />
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Radium from "radium";
-import { Slider, Direction } from "react-player-controls";
+import { Slider } from "react-player-controls";
 import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeOff } from "react-icons/md";
 import { utils } from "react-media-player";
 
@@ -33,37 +33,27 @@ const PlayerButton = Radium(({ style, children, ...props }) => (
 	</button>
 ));
 
-const SliderBar = ({ direction, value, style }) => (
+const SliderBar = Radium(({ value, style, ...props }) => (
 	<div
-		style={Object.assign(
-			{},
+		style={[
 			{
 				position: "absolute",
 				background: "#878c88",
-				borderRadius: 4
+				borderRadius: 4,
+				top: 0,
+				bottom: 0,
+				left: 0,
+				width: `${value * 100}%`
 			},
-			direction === Direction.HORIZONTAL
-				? {
-						top: 0,
-						bottom: 0,
-						left: 0,
-						width: `${value * 100}%`
-				  }
-				: {
-						right: 0,
-						bottom: 0,
-						left: 0,
-						height: `${value * 100}%`
-				  },
 			style
-		)}
+		]}
+		{...props}
 	/>
-);
+));
 
-const SliderHandle = ({ direction, value, style }) => (
+const SliderHandle = Radium(({ value, style, ...props }) => (
 	<div
-		style={Object.assign(
-			{},
+		style={[
 			{
 				position: "absolute",
 				width: 16,
@@ -72,26 +62,22 @@ const SliderHandle = ({ direction, value, style }) => (
 				borderRadius: "100%",
 				transform: "scale(1)",
 				transition: "transform 0.2s",
-				"&:hover": {
+				":hover": {
 					transform: "scale(1.3)"
-				}
-			},
-			{
+				},
 				top: 0,
 				left: `${value * 100}%`,
 				marginTop: -4,
 				marginLeft: -8
 			},
 			style
-		)}
+		]}
+		{...props}
 	/>
-);
+));
+
 @Radium
 class MediaControls extends Component {
-	// shouldComponentUpdate({ media }) {
-	// 	return this.props.media !== media;
-	// }
-
 	constructor(props) {
 		super(props);
 
@@ -101,14 +87,16 @@ class MediaControls extends Component {
 	}
 
 	_handleVolumeChange = val => {
-		// if (!isNaN(val)) this.props.media.setVolume(Math.max(0, Math.min(1, val.toFixed(4))));
+		this.props.player.setState({ muted: false });
+		if (!isNaN(val))
+			this.props.player.setVolume(
+				Math.max(0, Math.min(1, val.toFixed(4)))
+			);
 	};
 
 	_handleSeek = time => {
-		// this.props.media.seekTo(+(time * this.props.media.duration));
+		this.props.player.seekTo(+(time * this.props.player.state.duration));
 	};
-
-	_hideTimeout = -1;
 
 	_showControls = () => {
 		clearTimeout(this._hideTimeout);
@@ -116,6 +104,7 @@ class MediaControls extends Component {
 	};
 
 	_hideControls = () => {
+		// hide controls after 800ms
 		this._hideTimeout = setTimeout(() => {
 			this.setState({ hidden: true });
 		}, 800);
@@ -129,7 +118,9 @@ class MediaControls extends Component {
 			muted,
 			played,
 			playing,
-			volume
+			volume,
+			playedSeconds,
+			seeking
 		} = player.state;
 
 		return (
@@ -206,19 +197,19 @@ class MediaControls extends Component {
 				>
 					<Slider
 						isEnabled={true}
-						direction={Direction.HORIZONTAL}
 						style={{
 							flex: 1,
 							height: 4,
 							borderRadius: 0,
 							background: "rgba(255,255,255,0.2)",
-							transition: "width 0.1s",
+							transition: "width 0.1s, height 0.1s",
 							cursor: "pointer"
 						}}
-						onChangeEnd={this._handleSeek}
+						onChangeStart={player.onSeekMouseDown}
+						onChange={player.onSeekChange}
+						onChangeEnd={player.onSeekMouseUp}
 					>
 						<SliderBar
-							direction={Direction.HORIZONTAL}
 							value={loaded.toFixed(3)}
 							style={{
 								background: "rgba(255,255,255,0.2)",
@@ -226,13 +217,14 @@ class MediaControls extends Component {
 							}}
 						/>
 						<SliderBar
-							direction={Direction.HORIZONTAL}
-							value={played.toFixed(3) / duration}
-							style={{ background: "#fff" }}
+							value={played.toFixed(3)}
+							style={[
+								{ background: "#fff" },
+								!seeking && { transition: "width 0.2s linear" }
+							]}
 						/>
 						<SliderHandle
-							direction={Direction.HORIZONTAL}
-							value={played.toFixed(3) / duration}
+							value={played.toFixed(3)}
 							style={{
 								transform: "scale(0)",
 								background: "#fff",
@@ -260,7 +252,6 @@ class MediaControls extends Component {
 						>
 							{playing ? <MdPause /> : <MdPlayArrow />}
 						</PlayerButton>
-
 						<span
 							style={{
 								display: "flex",
@@ -272,13 +263,16 @@ class MediaControls extends Component {
 								}
 							}}
 						>
-							<PlayerButton onClick={this._handleMuteUnmute}>
-								{muted ? <MdVolumeOff /> : <MdVolumeUp />}
+							<PlayerButton onClick={player.toggleMute}>
+								{muted || volume === 0 ? (
+									<MdVolumeOff />
+								) : (
+									<MdVolumeUp />
+								)}
 							</PlayerButton>
 							<Slider
 								className="volume-slider"
 								isEnabled={true}
-								direction={Direction.HORIZONTAL}
 								style={{
 									flex: 1,
 									margin: "15px 8px",
@@ -290,13 +284,11 @@ class MediaControls extends Component {
 								onChange={this._handleVolumeChange}
 							>
 								<SliderBar
-									direction={Direction.HORIZONTAL}
-									value={volume.toFixed(3)}
+									value={muted ? 0 : volume.toFixed(2)}
 									style={{ background: "#fff" }}
 								/>
 								<SliderHandle
-									direction={Direction.HORIZONTAL}
-									value={volume.toFixed(3)}
+									value={muted ? 0 : volume.toFixed(2)}
 									style={{
 										// transform: 'scale(0)',
 										background: "#fff",
@@ -306,19 +298,19 @@ class MediaControls extends Component {
 								/>
 							</Slider>
 						</span>
-
 						<span
 							style={{
 								padding: "7px 12px",
 								fontSize: 14,
 								color: "white",
-								opacity: 0.7
+								opacity: 0.7,
+								userSelect: "none"
 							}}
 						>
-							<time>{utils.formatTime(played)}</time>
+							<time>{utils.formatTime(playedSeconds | 0)}</time>
 							<span style={{ opacity: 0.7 }}>
 								{" / "}
-								<time>{utils.formatTime(duration)}</time>
+								<time>{utils.formatTime(duration | 0)}</time>
 							</span>
 						</span>
 					</div>
