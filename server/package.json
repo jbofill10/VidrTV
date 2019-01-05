@@ -4,24 +4,24 @@
 	"private": true,
 	"main": "build/server.js",
 	"dependencies": {
-		"@babel/core": "^7.1.6",
-		"@babel/plugin-proposal-class-properties": "^7.1.0",
-		"@babel/plugin-proposal-decorators": "^7.1.6",
-		"@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0",
-		"@babel/plugin-proposal-optional-chaining": "^7.0.0",
-		"@babel/plugin-proposal-pipeline-operator": "^7.0.0",
-		"@babel/preset-env": "^7.1.6",
+		"@babel/core": "^7.2.2",
+		"@babel/plugin-proposal-class-properties": "^7.2.3",
+		"@babel/plugin-proposal-decorators": "^7.2.3",
+		"@babel/plugin-proposal-nullish-coalescing-operator": "^7.2.0",
+		"@babel/plugin-proposal-optional-chaining": "^7.2.0",
+		"@babel/plugin-proposal-pipeline-operator": "^7.2.0",
+		"@babel/preset-env": "^7.2.3",
 		"babel-eslint": "^10.0.1",
-		"dotenv": "^6.1.0",
+		"dotenv": "^6.2.0",
 		"eslint-plugin-babel": "^5.3.0",
 		"eslint-plugin-import": "^2.14.0",
-		"eslint-plugin-node": "^8.0.0",
+		"eslint-plugin-node": "^8.0.1",
 		"express": "^4.16.4",
 		"gulp": "^4.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-eslint": "^5.0.0",
-		"mongoose": "^5.3.14",
-		"socket.io": "^2.1.1"
+		"mongoose": "^5.4.2",
+		"socket.io": "^2.2.0"
 	},
 	"scripts": {
 		"start": "gulp && node ./build/server.js",
@@ -29,14 +29,20 @@
 	},
 	"devDependencies": {
 		"gulp-cli": "^2.0.1",
-		"nodemon": "^1.18.7"
+		"nodemon": "^1.18.9"
 	},
 	"engines": {
 		"node": ">=6.0.0"
 	},
 	"nodemonConfig": {
-		"watch": [ "src/**/*.js" ],
-		"ignore": [ "build/*", "node_modules/**/node_modules", ".git" ],
+		"watch": [
+			"src/**/*.js"
+		],
+		"ignore": [
+			"build/*",
+			"node_modules/**/node_modules",
+			".git"
+		],
 		"env": {
 			"NODE_ENV": "development"
 		}
