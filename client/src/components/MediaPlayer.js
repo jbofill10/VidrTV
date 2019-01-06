@@ -3,6 +3,7 @@ import { default as MediaControls } from "./MediaControls";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
+const timeSyncThreshold = 3000;
 
 export default class MediaPlayer extends Component {
 	constructor(props) {
@@ -13,14 +14,36 @@ export default class MediaPlayer extends Component {
 			pip: false,
 			playing: false,
 			volume: 1,
-			muted: false,
+			muted: true,
 			played: 0,
+			playedSeconds: 0,
 			loaded: 0,
 			duration: 0,
 			playbackRate: 1.0,
 			loop: false,
 			seeking: false
 		};
+	}
+
+	componentDidMount() {
+		this.props.socket.on("statesync", data => {
+			let delta = this.state.playedSeconds * 1000 - data.time;
+			let norm = Math.abs(delta);
+
+			console.log(
+				`\tMediaPlayer: ${
+					norm > timeSyncThreshold ? "❌" : "✅"
+				} ${norm.toFixed(0)}ms ${delta < 0 ? "behind" : "ahead"}`
+			);
+
+			if (norm > timeSyncThreshold) {
+				console.log(
+					`\t\tover ${timeSyncThreshold}ms threshold, seeking to catch up...`
+				);
+				this.player.seekTo(data.time / 1000 / this.state.duration);
+				this.setState({ playing: true });
+			}
+		});
 	}
 
 	ref = player => {
@@ -58,6 +81,11 @@ export default class MediaPlayer extends Component {
 
 	onDuration = duration => {
 		this.setState({ duration });
+	};
+
+	onReady = () => {
+		this.player.seekTo(this.props.time / 1000);
+		this.setState({ playing: true });
 	};
 
 	render() {
@@ -115,9 +143,14 @@ export default class MediaPlayer extends Component {
 							progressInterval={200}
 							onDuration={this.onDuration}
 							onProgress={this.onProgress}
+							onReady={this.onReady}
 						/>
 					</div>
-					<MediaControls className="media-controls" player={this} />
+					<MediaControls
+						className="media-controls"
+						player={this}
+						lockedPlayback
+					/>
 				</div>
 			</div>
 		);

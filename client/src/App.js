@@ -13,16 +13,16 @@ class App extends React.Component {
 			room: {},
 			loading: true
 		};
-	}
 
-	componentDidMount() {
-		const socket = openSocket(
+		this.socket = openSocket(
 			process.env.NODE_ENV === "development"
 				? window.location.hostname + ":8080"
 				: null
 		);
+	}
 
-		socket.on("statesync", data => {
+	componentDidMount() {
+		this.socket.on("statesync", data => {
 			console.log("statesync", data);
 
 			this.setState({ room: data, loading: false });
@@ -52,13 +52,15 @@ class App extends React.Component {
 						className="player-container"
 						url={
 							"https://www.youtube.com/watch?v=" +
-							this.state.room.queue[this.state.room.cur]
+							this.state.room.media[this.state.room.cur]
 						}
 						width={640}
 						height={360}
+						time={this.state.room.time}
+						socket={this.socket}
 					/>
 					<PlaylistView
-						items={this.state.room.queue}
+						items={this.state.room.media}
 						style={{ paddingTop: 16 }}
 					/>
 				</div>

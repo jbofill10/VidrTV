@@ -94,24 +94,20 @@ class MediaControls extends Component {
 			);
 	};
 
-	_handleSeek = time => {
-		this.props.player.seekTo(+(time * this.props.player.state.duration));
-	};
-
 	_showControls = () => {
 		clearTimeout(this._hideTimeout);
 		this.setState({ hidden: false });
 	};
 
 	_hideControls = () => {
-		// hide controls after 800ms
+		// hide controls after 400ms
 		this._hideTimeout = setTimeout(() => {
 			this.setState({ hidden: true });
-		}, 800);
+		}, 400);
 	};
 
 	render() {
-		const { className, style, player } = this.props;
+		const { className, style, player, lockedPlayback } = this.props;
 		const {
 			duration,
 			loaded,
@@ -140,20 +136,22 @@ class MediaControls extends Component {
 				onMouseOver={this._showControls}
 				onMouseLeave={this._hideControls}
 			>
-				<button
-					style={{
-						position: "absolute",
-						top: 0,
-						left: 0,
-						background: "transparent",
-						height: "100%",
-						width: "100%",
-						zIndex: 2,
-						border: 0,
-						outline: "none"
-					}}
-					onClick={player.playPause}
-				/>
+				{!lockedPlayback && (
+					<button
+						style={{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							background: "transparent",
+							height: "100%",
+							width: "100%",
+							zIndex: 2,
+							border: 0,
+							outline: "none"
+						}}
+						onClick={player.playPause}
+					/>
+				)}
 				<div
 					style={[
 						{
@@ -190,20 +188,20 @@ class MediaControls extends Component {
 							height: 46
 						},
 						this.state.hidden && {
-							height: 4,
+							height: 2,
 							transition: "height 0.4s"
 						}
 					]}
 				>
 					<Slider
-						isEnabled={true}
+						isEnabled={!lockedPlayback}
 						style={{
 							flex: 1,
-							height: 4,
+							height: this.state.hidden ? 2 : 4,
 							borderRadius: 0,
 							background: "rgba(255,255,255,0.2)",
 							transition: "width 0.1s, height 0.1s",
-							cursor: "pointer"
+							cursor: lockedPlayback ? "inherit" : "pointer"
 						}}
 						onChangeStart={player.onSeekMouseDown}
 						onChange={player.onSeekChange}
@@ -248,7 +246,10 @@ class MediaControls extends Component {
 					>
 						<PlayerButton
 							onClick={player.playPause}
-							style={{ padding: "4px 10px" }}
+							style={{
+								padding: "4px 10px",
+								display: lockedPlayback ? "none" : "inherit"
+							}}
 						>
 							{playing ? <MdPause /> : <MdPlayArrow />}
 						</PlayerButton>

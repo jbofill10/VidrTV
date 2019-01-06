@@ -3,17 +3,7 @@ import mongoose from "mongoose";
 
 export default class sockets {
 	static init(server) {
-		const room = {
-			queue: [
-				"TjAa0wOe5k4", // Twitch A/V sync
-				"Sz_YPczxzZc", // official youtube music
-				"mM5_T-F1Yn4", // 4:3 video test
-				"En6TUJJWwww", // vertical video test
-				"5T_CqqjOPDc" // free youtube movie
-			],
-			cur: 0,
-			time: 0
-		};
+		const room = {};
 
 		// let testroom = new mongoose.model('room')({
 		// 	name: 'test room sldkjflskd',
@@ -31,8 +21,10 @@ export default class sockets {
 			.findById("5c1c129c8134305cf00f2cfd", (err, res) => {
 				if (err) console.error("unable to find room");
 				else {
-					room.queue = res.media;
+					room.media = res.media;
 					room.name = res.name;
+					room.cur = 0;
+					room.time = 0;
 				}
 			});
 
@@ -65,6 +57,12 @@ export default class sockets {
 			room.time += delta;
 			room.time %= 120000;
 		}
+
+		// sync room state every 3 seconds
+		let loop = setInterval(() => {
+			updateRoom();
+			io.sockets.emit("statesync", room);
+		}, 3000);
 
 		return io;
 	}
