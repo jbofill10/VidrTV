@@ -21,6 +21,7 @@
 		"gulp-babel": "^8.0.0",
 		"gulp-eslint": "^5.0.0",
 		"mongoose": "^5.4.2",
+		"simple-youtube-api": "^5.1.1",
 		"socket.io": "^2.2.0"
 	},
 	"scripts": {

@@ -22,8 +22,8 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.socket.on("statesync", data => {
-			console.log("statesync", data);
+		this.socket.on("fullsync", data => {
+			console.log("fullsync", data);
 
 			this.setState({ room: data, loading: false });
 		});
@@ -50,14 +50,10 @@ class App extends React.Component {
 				<div className="content">
 					<MediaPlayer
 						className="player-container"
-						url={
-							"https://www.youtube.com/watch?v=" +
-							this.state.room.media[this.state.room.cur]
-						}
 						width={640}
 						height={360}
-						time={this.state.room.time}
 						socket={this.socket}
+						room={this.state.room}
 					/>
 					<PlaylistView
 						items={this.state.room.media}

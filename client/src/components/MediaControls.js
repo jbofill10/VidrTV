@@ -19,7 +19,7 @@ const PlayerButton = Radium(({ style, children, ...props }) => (
 				":hover": {
 					opacity: 1,
 					cursor: "pointer",
-					transform: "scale(1.1)"
+					transform: "scale(1.08)"
 				},
 				fontSize: 22,
 				padding: "4px 6px",
@@ -183,7 +183,6 @@ class MediaControls extends Component {
 							left: 0,
 							right: 0,
 							zIndex: 3,
-							// overflow: 'hidden',
 							transition: "height 0.1s",
 							height: 46
 						},
@@ -197,11 +196,17 @@ class MediaControls extends Component {
 						isEnabled={!lockedPlayback}
 						style={{
 							flex: 1,
+							overflow: "hidden",
+							cursor: lockedPlayback ? "inherit" : "pointer",
 							height: this.state.hidden ? 2 : 4,
-							borderRadius: 0,
-							background: "rgba(255,255,255,0.2)",
-							transition: "width 0.1s, height 0.1s",
-							cursor: lockedPlayback ? "inherit" : "pointer"
+							margin: this.state.hidden ? 0 : "0 6px",
+							borderRadius: this.state.hidden ? 0 : 4,
+							background: this.state.hidden
+								? "rgba(255,255,255,0)"
+								: "rgba(255,255,255,0.2)",
+							transition: this.state.hidden
+								? "margin 0.2s ease 0.2s, height 0.2s ease 0.2s, borderRadius 0.15s, background 0.3s"
+								: "margin 0.1s, height 0.1s, borderRadius 0.1s, background 0.3s"
 						}}
 						onChangeStart={player.onSeekMouseDown}
 						onChange={player.onSeekChange}
@@ -211,13 +216,15 @@ class MediaControls extends Component {
 							value={loaded.toFixed(3)}
 							style={{
 								background: "rgba(255,255,255,0.2)",
-								transition: "width 0.3s"
+								transition: "width 0.5s"
 							}}
 						/>
 						<SliderBar
 							value={played.toFixed(3)}
 							style={[
-								{ background: "#fff" },
+								{
+									background: "#fff"
+								},
 								!seeking && { transition: "width 0.2s linear" }
 							]}
 						/>
@@ -235,7 +242,7 @@ class MediaControls extends Component {
 						style={[
 							{
 								display: "flex",
-								padding: 4,
+								padding: "2px 8px",
 								opacity: 1,
 								transition: "opacity 0.15s"
 							},

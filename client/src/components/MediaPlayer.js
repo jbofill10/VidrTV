@@ -3,14 +3,14 @@ import { default as MediaControls } from "./MediaControls";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
-const timeSyncThreshold = 3000;
+const timeSyncThreshold = 1000;
 
 export default class MediaPlayer extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			url: props.url,
+			url: props.room.media[props.room.cur],
 			pip: false,
 			playing: false,
 			volume: 1,
@@ -26,21 +26,25 @@ export default class MediaPlayer extends Component {
 	}
 
 	componentDidMount() {
-		this.props.socket.on("statesync", data => {
-			let delta = this.state.playedSeconds * 1000 - data.time;
+		this.props.socket.on("fullsync", data => {
+			this.setState({ url: data.media[data.cur] });
+		});
+
+		this.props.socket.on("timesync", time => {
+			let delta = this.state.playedSeconds * 1000 - time;
 			let norm = Math.abs(delta);
 
 			console.log(
-				`\tMediaPlayer: ${
-					norm > timeSyncThreshold ? "❌" : "✅"
+				`timesync ${
+					norm > timeSyncThreshold ? "🔴" : "🔵"
 				} ${norm.toFixed(0)}ms ${delta < 0 ? "behind" : "ahead"}`
 			);
 
 			if (norm > timeSyncThreshold) {
 				console.log(
-					`\t\tover ${timeSyncThreshold}ms threshold, seeking to catch up...`
+					`\tover ${timeSyncThreshold}ms threshold, seeking to catch up...`
 				);
-				this.player.seekTo(data.time / 1000 / this.state.duration);
+				this.player.seekTo(time / 1000 / this.state.duration);
 				this.setState({ playing: true });
 			}
 		});
@@ -131,7 +135,7 @@ export default class MediaPlayer extends Component {
 					>
 						<YouTubePlayer
 							ref={this.ref}
-							url={url}
+							url={"https://www.youtube.com/watch?v=" + url}
 							pip={pip}
 							playing={playing}
 							loop={loop}

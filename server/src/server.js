@@ -37,4 +37,4 @@ const server = app.listen(port, () => {
 
 // Setup socketio
 
-sockets.init(server);
+new sockets(server).loadRoom("5c1c129c8134305cf00f2cfd");

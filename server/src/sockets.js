@@ -1,10 +1,22 @@
 import socketio from "socket.io";
 import mongoose from "mongoose";
+import { youtube } from "./youtube";
 
 export default class sockets {
-	static init(server) {
-		const room = {};
+	constructor(server) {
+		this.io = socketio(server);
 
+		this.room = {
+			name: "",
+			media: [],
+			cur: 0,
+			time: 0
+		};
+
+		this.mediacache = {};
+	}
+
+	saveRoom() {
 		// let testroom = new mongoose.model('room')({
 		// 	name: 'test room sldkjflskd',
 		// 	media: [
@@ -13,57 +25,104 @@ export default class sockets {
 		// 		'mM5_T-F1Yn4' // 4:3 video test
 		// 	]
 		// });
-
 		// testroom.save();
+	}
 
-		mongoose
-			.model("room")
-			.findById("5c1c129c8134305cf00f2cfd", (err, res) => {
-				if (err) console.error("unable to find room");
-				else {
-					room.media = res.media;
-					room.name = res.name;
-					room.cur = 0;
-					room.time = 0;
+	loadRoom(roomid) {
+		console.log(`loading room ${roomid}`);
+
+		// fetch room data from db
+		mongoose.model("room").findById(roomid, (err, res) => {
+			if (err) console.error(`unable to find room ${roomid}`);
+			else {
+				this.room.media = res.media;
+				this.room.name = res.name;
+				this.room.cur = 0;
+				this.room.time = 0;
+
+				// get info for the current video
+				youtube
+					.getVideoByID(this.room.media[this.room.cur])
+					.then(result => {
+						this.mediacache[
+							this.room.media[this.room.cur]
+						] = result;
+
+						// we have enough data to open the room to connections
+						this.openRoom();
+					})
+					.catch(console.error);
+
+				// get info for the other videos async
+				for (let i = 0; i < this.room.media.length; i++) {
+					if (i === this.room.cur) continue;
+					youtube
+						.getVideoByID(this.room.media[i])
+						.then(
+							result =>
+								(this.mediacache[this.room.media[i]] = result)
+						)
+						.catch(console.error);
 				}
-			});
+			}
+		});
+	}
 
-		const io = socketio(server);
+	openRoom() {
+		this.io.on("connection", socket => {
+			console.log(socket.id + " connected");
 
-		io.on("connection", socket => {
-			console.log("a user connected " + socket.id);
-
-			updateRoom();
-			socket.emit("statesync", room);
+			this.updateTime();
+			socket.emit("fullsync", this.room);
 
 			socket.on("disconnect", () => {
-				console.log("user disconnected");
-			});
-
-			socket.on("seekTo", newtime => {
-				room.time = newtime * 1000;
-				lastUpdate = Date.now();
-				socket.broadcast.emit("seekTo", newtime);
+				console.log(socket.id + " disconnected");
 			});
 		});
 
-		var lastUpdate = Date.now();
+		console.log("room is open for connections");
 
-		function updateRoom() {
-			let now = Date.now();
-			let delta = now - lastUpdate;
-			lastUpdate = now;
+		this.startPlayback(0);
+	}
 
-			room.time += delta;
-			room.time %= 120000;
-		}
+	_lastUpdate = Date.now();
 
-		// sync room state every 3 seconds
-		let loop = setInterval(() => {
-			updateRoom();
-			io.sockets.emit("statesync", room);
+	updateTime() {
+		let now = Date.now();
+		let delta = now - this._lastUpdate;
+		this._lastUpdate = now;
+
+		this.room.time += delta;
+	}
+
+	startPlayback(index) {
+		this.room.cur = index;
+		this.room.time = 0;
+		this._lastUpdate = Date.now();
+
+		let duration =
+			this.mediacache[this.room.media[this.room.cur]].durationSeconds *
+			1000;
+
+		this.io.sockets.emit("fullsync", this.room);
+
+		// sync time every 3 seconds
+		let syncloop = setInterval(() => {
+			this.updateTime();
+			this.io.sockets.emit("timesync", this.room.time);
+
+			// stop loop at the end of the video
+			if (this.room.time + 3000 >= duration) {
+				clearInterval(syncloop);
+			}
 		}, 3000);
 
-		return io;
+		setTimeout(() => {
+			// make sure syncloop is dead
+			clearInterval(syncloop);
+
+			// start next video
+			this.startPlayback((index + 1) % this.room.media.length);
+		}, duration + 3000);
 	}
 }
