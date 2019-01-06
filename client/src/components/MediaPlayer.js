@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { default as MediaControls } from "./MediaControls";
+import { default as MediaControls, StatsOverlay } from "./MediaControls";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
-const timeSyncThreshold = 1000;
+const PlaybackDeltaThreshold = 1000;
 
 export default class MediaPlayer extends Component {
 	constructor(props) {
@@ -21,30 +21,79 @@ export default class MediaPlayer extends Component {
 			duration: 0,
 			playbackRate: 1.0,
 			loop: false,
-			seeking: false
+			seeking: false,
+			showStats: true
 		};
 	}
 
 	componentDidMount() {
-		this.props.socket.on("fullsync", data => {
+		const { socket } = this.props;
+		const { showStats } = this.state;
+
+		socket.on("fullsync", data => {
 			this.setState({ url: data.media[data.cur] });
+
+			if (showStats) this._statsOverlay.event("fullsync");
 		});
 
-		this.props.socket.on("timesync", time => {
+		if (showStats)
+			this._statsOverlay.set(
+				"ping",
+				"ms",
+				"Waiting for first Socket.io ping"
+			);
+
+		socket.on("pong", data => {
+			if (showStats)
+				this._statsOverlay.set(
+					"ping",
+					data + "ms",
+					"latest Socket.io ping"
+				);
+		});
+
+		socket.on("timesync", time => {
 			let delta = this.state.playedSeconds * 1000 - time;
 			let norm = Math.abs(delta);
 
-			console.log(
-				`timesync ${
-					norm > timeSyncThreshold ? "🔴" : "🔵"
-				} ${norm.toFixed(0)}ms ${delta < 0 ? "behind" : "ahead"}`
-			);
+			// console.log(
+			// 	`timesync ${norm > timeSyncThreshold ? '🔴' : '🔵'} ${norm.toFixed(0)}ms ${delta < 0
+			// 		? 'behind'
+			// 		: 'ahead'}`
+			// );
 
-			if (norm > timeSyncThreshold) {
-				console.log(
-					`\tover ${timeSyncThreshold}ms threshold, seeking to catch up...`
+			if (showStats) {
+				this._statsOverlay.remove("Playback Delta");
+				this._statsOverlay.set(
+					"Playback Delta",
+					delta.toFixed(0) + "ms",
+					`The current difference between the server and client playback time.\nIf delta is larger than the ${PlaybackDeltaThreshold}ms threshold, the player will try seeking to match the server playback time`,
+					norm > PlaybackDeltaThreshold ? "bad" : "good"
 				);
-				this.player.seekTo(time / 1000 / this.state.duration);
+			}
+
+			if (norm > PlaybackDeltaThreshold) {
+				// console.log(`\tover ${timeSyncThreshold}ms threshold, seeking to catch up...`);
+				if (showStats) {
+					this._statsOverlay.event(
+						`delta > ${PlaybackDeltaThreshold}ms thres`,
+						"warn",
+						2800,
+						"left"
+					);
+					this._statsOverlay.event(
+						"seeking to catch up...",
+						"warn",
+						2720,
+						"left"
+					);
+				}
+
+				this.player.seekTo(
+					(time + (socket.io.lastPing | 0)) /
+						1000 /
+						this.state.duration
+				);
 				this.setState({ playing: true });
 			}
 		});
@@ -100,7 +149,8 @@ export default class MediaPlayer extends Component {
 			muted,
 			loop,
 			playbackRate,
-			pip
+			pip,
+			showStats
 		} = this.state;
 
 		return (
@@ -155,6 +205,7 @@ export default class MediaPlayer extends Component {
 						player={this}
 						lockedPlayback
 					/>
+					{showStats && <StatsOverlay player={this} />}
 				</div>
 			</div>
 		);
