@@ -22,6 +22,8 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
+		this.socket.emit("join", { roomid: "5c1c129c8134305cf00f2cfd" });
+
 		this.socket.on("fullsync", data => {
 			console.log("fullsync", data);
 
@@ -30,36 +32,28 @@ class App extends React.Component {
 	}
 
 	render() {
-		if (this.state.loading)
-			return (
-				<div className="App">
-					<header className="app-header">
-						<ProfileArea />
-					</header>
-
-					<div className="content">Joining Room...</div>
-				</div>
-			);
-
 		return (
 			<div className="App">
 				<header className="app-header">
 					<ProfileArea />
 				</header>
-
-				<div className="content">
-					<MediaPlayer
-						className="player-container"
-						width={640}
-						height={360}
-						socket={this.socket}
-						room={this.state.room}
-					/>
-					<PlaylistView
-						items={this.state.room.media}
-						style={{ paddingTop: 16 }}
-					/>
-				</div>
+				{this.state.loading ? (
+					<div className="content">Joining Room...</div>
+				) : (
+					<div className="content">
+						<MediaPlayer
+							className="player-container"
+							width={640}
+							height={360}
+							socket={this.socket}
+							room={this.state.room}
+						/>
+						<PlaylistView
+							items={this.state.room.media}
+							style={{ paddingTop: 16 }}
+						/>
+					</div>
+				)}
 			</div>
 		);
 	}

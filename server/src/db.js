@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
-import "./models/room";
+import chalk from "chalk";
+import { status } from "./log";
 import dotenv from "dotenv";
 dotenv.config();
 
 export default class db {
 	static init() {
+		console.log("[DB] Connecting to MongoDB Atlas...");
+
+		// connect to mongoose server
 		mongoose.connect(
 			process.env.MONGO_URL,
 			{ useNewUrlParser: true }
@@ -12,16 +16,15 @@ export default class db {
 
 		const db = mongoose.connection;
 
-		db.on(
-			"error",
-			console.error.bind(
-				console,
-				"connection error:\nYou might need to whitelist your IP!"
-			)
-		);
+		db.on("error", () => {
+			console.error("[DB] You might need to whitelist your IP!");
+		});
 
 		db.once("open", () => {
-			console.log("Successfully connected to MongoDB Atlas!");
+			console.log(
+				chalk.green("[DB] Successfully connected to MongoDB Atlas!")
+			);
+			status.db = true;
 		});
 
 		return db;

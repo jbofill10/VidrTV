@@ -31,7 +31,7 @@ export default class MediaPlayer extends Component {
 		const { showStats } = this.state;
 
 		socket.on("fullsync", data => {
-			this.setState({ url: data.media[data.cur] });
+			this.setState({ url: data.media[data.cur], playing: true });
 
 			if (showStats) this._statsOverlay.event("fullsync");
 		});
@@ -128,6 +128,24 @@ export default class MediaPlayer extends Component {
 		this.player.seekTo(value);
 	};
 
+	onReady = () => {
+		if (this.state.showStats)
+			this._statsOverlay.set("Player State", "Ready");
+
+		this.player.seekTo(this.props.time / 1000);
+		this.setState({ playing: true });
+	};
+
+	onStart = () => {
+		if (this.state.showStats)
+			this._statsOverlay.set("Player State", "Started");
+	};
+
+	onPlay = () => {
+		if (this.state.showStats)
+			this._statsOverlay.set("Player State", "Playing");
+	};
+
 	onProgress = state => {
 		if (!this.state.seeking) this.setState(state);
 	};
@@ -136,9 +154,24 @@ export default class MediaPlayer extends Component {
 		this.setState({ duration });
 	};
 
-	onReady = () => {
-		this.player.seekTo(this.props.time / 1000);
-		this.setState({ playing: true });
+	onBuffer = () => {
+		if (this.state.showStats)
+			this._statsOverlay.set("Player State", "Buffering");
+	};
+
+	onSeek = () => {
+		if (this.state.showStats)
+			this._statsOverlay.set("Player State", "Seeking");
+	};
+
+	onEnded = () => {
+		if (this.state.showStats)
+			this._statsOverlay.set("Player State", "Ended");
+	};
+
+	onError = e => {
+		if (this.state.showStats)
+			this._statsOverlay.event(`Player Error ${e}`, "error", 5000);
 	};
 
 	render() {
@@ -195,9 +228,15 @@ export default class MediaPlayer extends Component {
 							width="100%"
 							height="100%"
 							progressInterval={200}
-							onDuration={this.onDuration}
-							onProgress={this.onProgress}
 							onReady={this.onReady}
+							onStart={this.onStart}
+							onPlay={this.onPlay}
+							onProgress={this.onProgress}
+							onDuration={this.onDuration}
+							onBuffer={this.onBuffer}
+							onSeek={this.onSeek}
+							onEnded={this.onEnded}
+							onError={this.onError}
 						/>
 					</div>
 					<MediaControls

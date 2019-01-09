@@ -443,9 +443,9 @@ class StatsOverlay extends Component {
 								maxNameLength + maxValueLength + 1,
 								maxEventLength
 							) * 7,
-						height: lines.length * 22,
-						margin: 4,
-						padding: "4px 6px 0 6px",
+						height: lines.length * 16 + 8,
+						margin: 8,
+						padding: "4px 6px",
 						fontSize: 12,
 						borderRadius: 4,
 						fontFamily: "monospace",

@@ -1,8 +1,11 @@
 import express from "express";
-import sockets from "./sockets";
-import db from "./db";
-import dotenv from "dotenv";
+import socketio from "socket.io";
 import path from "path";
+import chalk from "chalk";
+import { status } from "./log";
+import db from "./db";
+import RoomService from "./RoomService";
+import dotenv from "dotenv";
 dotenv.config();
 
 // Setup database
@@ -10,6 +13,8 @@ dotenv.config();
 db.init();
 
 // Setup Express server
+
+console.log("[Express] Starting server");
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -32,9 +37,9 @@ app.get("*", (req, res) => {
 });
 
 const server = app.listen(port, () => {
-	console.log("Listening on " + port);
+	console.log(chalk.green("[Express] Listening on " + port));
+	status.express = true;
 });
 
-// Setup socketio
-
-new sockets(server).loadRoom("5c1c129c8134305cf00f2cfd");
+// start room service
+RoomService.start(socketio(server));
