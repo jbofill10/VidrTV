@@ -37,30 +37,16 @@ function format(statustext) {
 }
 
 // loading animation
-const frames = [
-	"[    ]",
-	"[=   ]",
-	"[==  ]",
-	"[=== ]",
-	"[ ===]",
-	"[  ==]",
-	"[   =]",
-	"[    ]",
-	"[   =]",
-	"[  ==]",
-	"[ ===]",
-	"[====]",
-	"[=== ]",
-	"[==  ]",
-	"[=   ]"
-];
+const frames = ["⠁", "⠂", "⠄", "⠂", "⠂", "⠂", "⠂"];
 
 // current frame of the loading animation
 let frame = 0;
 
 // create status bar
 const ui = new BottomBar({
-	bottomBar: format(`${chalk.cyan(frames[frame])} Loading`)
+	bottomBar: format(
+		` ${chalk.cyan(frames[0] + frames[0] + frames[0])} Loading`
+	)
 });
 
 // loading by default
@@ -77,10 +63,18 @@ function render() {
 	if (loading) {
 		// animate loading bar
 		frame++;
-		frame %= frames.length;
+		frame %= 1000;
 
 		// update status bar text
-		ui.updateBottomBar(format(`${chalk.cyan(frames[frame])} Loading`));
+		ui.updateBottomBar(
+			format(
+				` ${chalk.cyan(
+					frames[(frame + 2) % frames.length] +
+						frames[(frame + 1) % frames.length] +
+						frames[frame % frames.length]
+				)} Loading`
+			)
+		);
 	} else {
 		// update status bar text
 		ui.updateBottomBar(
@@ -93,7 +87,7 @@ function render() {
 	}
 
 	// queue next render
-	if (loading) setTimeout(render, 50);
+	if (loading) setTimeout(render, 500);
 
 	// is app still loading?
 	loading = !status.express || !status.db || !status.roomservice;
