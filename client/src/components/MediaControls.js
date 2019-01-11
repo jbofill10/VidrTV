@@ -86,6 +86,10 @@ class MediaControls extends Component {
 		};
 	}
 
+	componentWillUnmount() {
+		clearTimeout(this._hideTimeout);
+	}
+
 	_handleVolumeChange = val => {
 		this.props.player.setState({ muted: false });
 		if (!isNaN(val))
@@ -340,8 +344,18 @@ class StatsOverlay extends Component {
 		};
 
 		this._updated = [];
+		this._eventTimeout = -1;
 
 		props.player._statsOverlay = this;
+	}
+
+	componentDidMount() {
+		this._isMounted = true;
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
+		clearTimeout(this._eventTimeout);
 	}
 
 	color(input) {
@@ -355,6 +369,8 @@ class StatsOverlay extends Component {
 	}
 
 	set(name, value, description = "", color = "white", flash = true) {
+		if (!this._isMounted) return;
+
 		let next = this.state.info;
 		next[name] = {
 			type: "value",
@@ -372,6 +388,8 @@ class StatsOverlay extends Component {
 	}
 
 	event(text, color = "event", timeout = 1000, align = "left") {
+		if (!this._isMounted) return;
+
 		let now = Date.now().toString();
 
 		let next = this.state.info;
@@ -383,13 +401,8 @@ class StatsOverlay extends Component {
 			align: align
 		};
 
-		setTimeout(() => {
-			let next = this.state.info;
-			delete next[now];
-
-			this.setState({
-				info: next
-			});
+		this._eventTimeout = setTimeout(() => {
+			this.remove(now);
 		}, timeout);
 
 		this.setState({
@@ -398,12 +411,18 @@ class StatsOverlay extends Component {
 	}
 
 	remove(name) {
+		if (!this._isMounted) return;
+
 		let next = this.state.info;
 		delete next[name];
 
 		this.setState({
 			info: next
 		});
+	}
+
+	componentDidUpdate() {
+		this._updated = [];
 	}
 
 	render() {
@@ -427,10 +446,6 @@ class StatsOverlay extends Component {
 					maxEventLength
 				);
 		});
-
-		setTimeout(() => {
-			this._updated = [];
-		}, 0);
 
 		return (
 			<div

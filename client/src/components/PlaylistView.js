@@ -12,17 +12,25 @@ export default class PlaylistView extends React.Component {
 
 	componentDidMount() {
 		let data = {};
+		this._isMounted = true;
 
 		for (let i = 0; i < this.props.items.length; i++) {
+			if (!this._isMounted) break;
 			youtube
 				.getVideoByID(this.props.items[i])
 				.then(result => {
-					data[this.props.items[i]] = result;
+					if (this._isMounted) {
+						data[this.props.items[i]] = result;
 
-					this.setState({ data: data });
+						this.setState({ data: data });
+					}
 				})
 				.catch(console.error);
 		}
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
 	}
 
 	render() {

@@ -1,10 +1,12 @@
 import express from "express";
+import bodyParser from "body-parser";
 import socketio from "socket.io";
 import path from "path";
 import chalk from "chalk";
 import { status } from "./log";
 import db from "./db";
 import RoomService from "./RoomService";
+import { register } from "./Routes.js";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -31,8 +33,30 @@ const clientpath = path.join(fullpath.join(path.sep), "client", "build");
 // Serve the static files from the React app
 app.use(express.static(clientpath));
 
-// Handles any requests that don't match the ones above
+// body parser to read POSTs
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// get router instance
+const router = express.Router();
+
+router.use((req, res, next) => {
+	next();
+});
+
+// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+router.get("/", (req, res) => {
+	res.json({ message: "hooray! welcome to our api!" });
+});
+
+register(app);
+
+// all of our routes will be prefixed with /api
+app.use("/api", router);
+
+// handles all non api requests
 app.get("*", (req, res) => {
+	// send index.html to client
 	res.sendFile(path.join(clientpath, "index.html"));
 });
 

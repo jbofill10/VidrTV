@@ -20,7 +20,8 @@
 		"react-scripts": "2.1.1",
 		"redux": "^4.0.1",
 		"simple-youtube-api": "^5.1.1",
-		"socket.io-client": "^2.2.0"
+		"socket.io-client": "^2.2.0",
+		"whatwg-fetch": "^3.0.0"
 	},
 	"scripts": {
 		"start": "react-app-rewired start",
@@ -31,11 +32,6 @@
 	"eslintConfig": {
 		"extends": "react-app"
 	},
-	"browserslist": [
-		">0.2%",
-		"not dead",
-		"not ie <= 11",
-		"not op_mini all"
-	],
-	"proxy": "https://localhost:8080"
+	"browserslist": [ ">0.2%", "not dead", "not ie <= 11", "not op_mini all" ],
+	"proxy": "http://localhost:8080"
 }

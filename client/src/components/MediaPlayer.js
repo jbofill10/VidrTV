@@ -218,7 +218,7 @@ export default class MediaPlayer extends Component {
 					>
 						<YouTubePlayer
 							ref={this.ref}
-							url={"https://www.youtube.com/watch?v=" + url}
+							url={"http://www.youtube.com/watch?v=" + url}
 							pip={pip}
 							playing={playing}
 							loop={loop}
@@ -237,6 +237,14 @@ export default class MediaPlayer extends Component {
 							onSeek={this.onSeek}
 							onEnded={this.onEnded}
 							onError={this.onError}
+							config={{
+								youtube: {
+									playerVars: {
+										origin: window.location.href,
+										rel: null
+									}
+								}
+							}}
 						/>
 					</div>
 					<MediaControls
