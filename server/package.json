@@ -29,27 +29,14 @@
 		"socket.io": "^2.2.0"
 	},
 	"scripts": {
-		"start": "gulp && node ./build/server.js",
-		"start-dev": "nodemon --exec npm start"
+		"build": "gulp",
+		"start": "node ./build/server.js",
+		"start-dev": "gulp watch -S"
 	},
 	"devDependencies": {
-		"gulp-cli": "^2.0.1",
-		"nodemon": "^1.18.9"
+		"gulp-cli": "^2.0.1"
 	},
 	"engines": {
 		"node": ">=6.0.0"
-	},
-	"nodemonConfig": {
-		"watch": [
-			"src/**/*.js"
-		],
-		"ignore": [
-			"build/*",
-			"node_modules/**/node_modules",
-			".git"
-		],
-		"env": {
-			"NODE_ENV": "development"
-		}
 	}
 }
