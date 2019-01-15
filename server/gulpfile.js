@@ -4,6 +4,8 @@ const eslint = require('gulp-eslint');
 const child_process = require('child_process');
 const readline = require('readline');
 const chalk = require('chalk');
+// eslint-disable-next-line node/no-unpublished-require
+const fancy = require('../scripts/fancy');
 
 // keypress listener
 
@@ -26,50 +28,6 @@ process.stdin.on('keypress', (str, key) => {
 	// console.log('gulp keypress ' + key.name);
 });
 
-// log test
-// info('info');
-// event('event');
-// warn('warning');
-// error('error');
-// complete('complete');
-// info('info', true);
-// event('event', true);
-// warn('warning', true);
-// error('error', true);
-// complete('complete', true);
-
-/**
- * Custom Log formatting
- * @param {*} message message to display
- * @param {*} type type of message [info, error, warn]
- */
-function _log(message, color, icon, bg = false) {
-	if (bg)
-		console.log(
-			` ${chalk[color](icon)}  ${chalk.black['bg' + color.charAt(0).toUpperCase() + color.slice(1)](
-				' ' + message + ' '
-			)}`
-		);
-	else console.log(chalk[color](` ${icon}  ${message}`));
-}
-function info(message, bg = false) {
-	_log(message, 'cyan', '●', bg);
-}
-function event(message, bg = false) {
-	_log(message, 'magenta', '!', bg);
-}
-function warn(message, bg = false) {
-	_log(message, 'yellow', '⚠', bg);
-}
-function error(message, bg = false) {
-	_log(message, 'red', '✖', bg);
-}
-function complete(message, bg = false) {
-	_log(message, 'green', '✔', bg);
-}
-function space(lines = 1) {
-	console.log('\n'.repeat(Math.max(0, lines - 1)));
-}
 
 var lintfailed = false;
 
@@ -87,10 +45,10 @@ const lint = () => {
 			.pipe(
 				eslint.results((results) => {
 					if (results.errorCount > 0) {
-						error('    ESLint Report    ', true);
+						fancy.error('    ESLint Report    ', true);
 						lintfailed = true;
-					} else if (results.warningCount > 0) warn('    ESLint Report    ', true);
-					else complete('ESLint Report: No Issues Found');
+					} else if (results.warningCount > 0) fancy.warn('    ESLint Report    ', true);
+					else fancy.complete('ESLint Report: No Issues Found');
 				})
 			)
 			// format eslint report
@@ -99,10 +57,10 @@ const lint = () => {
 			.pipe(
 				eslint.results((results) => {
 					if (lintfailed) {
-						space();
-						error('ESLint has cancelled the build');
-						info('waiting for file changes to restart...');
-					} else if (results.warningCount > 0) space();
+						fancy.space();
+						fancy.error('ESLint has cancelled the build');
+						fancy.info('waiting for file changes to restart...');
+					} else if (results.warningCount > 0) fancy.space();
 				})
 			)
 	);
@@ -120,7 +78,7 @@ const compile = () =>
 		.pipe(gulp.dest('build'))
 		// console log when finished
 		.on('end', () => {
-			if (!lintfailed) complete('Finished Compiling');
+			if (!lintfailed) fancy.complete('Finished Compiling');
 		});
 
 /**
@@ -129,9 +87,9 @@ const compile = () =>
  * Runs Lint and Compile in parallel
  */
 const build = gulp.series((cb) => {
-	space();
-	info('Building Server...');
-	space();
+	fancy.space();
+	fancy.info('Building Server...');
+	fancy.space();
 	cb();
 }, gulp.parallel(lint, compile));
 
@@ -166,7 +124,7 @@ const spawnserver = gulp.series(killserver, (cb) => {
 
 	// start server process
 	node = child_process.fork('.', [], {
-		stdio: [ process.stdin, 'inherit', 'pipe', 'ipc' ]
+		stdio: [process.stdin, 'inherit', 'pipe', 'ipc']
 	});
 
 	// pipe input to server process
@@ -177,14 +135,14 @@ const spawnserver = gulp.series(killserver, (cb) => {
 
 	// handle process close event
 	node.on('close', (code) => {
-		if (!restarting) space(2);
+		if (!restarting) fancy.space(2);
 
 		if (code) {
-			if (code === 0) event(`server ${restarting ? 'killed' : 'exited'} with code ${code}`);
-			else error(`server ${restarting ? 'killed' : 'exited'} with code ${code}`);
-		} else event(`server ${restarting ? 'killed' : 'exited'}`);
+			if (code === 0) fancy.event(`server ${restarting ? 'killed' : 'exited'} with code ${code}`);
+			else fancy.error(`server ${restarting ? 'killed' : 'exited'} with code ${code}`);
+		} else fancy.event(`server ${restarting ? 'killed' : 'exited'}`);
 
-		if (!restarting) info('waiting for file changes to restart...');
+		if (!restarting) fancy.info('waiting for file changes to restart...');
 
 		//? this seems to work
 		process.stdin.resume();
@@ -194,17 +152,17 @@ const spawnserver = gulp.series(killserver, (cb) => {
 	// task callback
 	cb();
 
-	space();
-	info('Launching Server...');
-	space();
+	fancy.space();
+	fancy.info('Launching Server...');
+	fancy.space();
 });
 
 var restarting = false;
 
 const restart = gulp.series(
 	(cb) => {
-		space();
-		info('Restarting due to file change...');
+		fancy.space();
+		fancy.info('Restarting due to file change...');
 		restarting = true;
 		cb();
 	},
@@ -221,7 +179,7 @@ const restart = gulp.series(
 	}
 );
 
-var watchcallback = () => {};
+var watchcallback = () => { };
 
 const watch = (cb) => {
 	watchcallback = cb;

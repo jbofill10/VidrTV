@@ -3,6 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
+		"env": "node ./scripts/env.js",
 		"start": "cd server && npm start",
 		"heroku-postbuild": "cd client && npm i --only=dev && npm i && npm run build",
 		"client-dev": "cd client && npm start",
@@ -30,5 +31,9 @@
 	"prettier": {
 		"useTabs": true,
 		"tabWidth": 4
+	},
+	"dependencies": {
+		"chalk": "^2.4.2",
+		"yargs": "^12.0.5"
 	}
 }
