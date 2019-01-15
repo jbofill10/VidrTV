@@ -23,8 +23,7 @@
 		"gulp": "^4.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-eslint": "^5.0.0",
-		"inquirer": "^6.2.1",
-		"mongoose": "^5.4.2",
+		"mongoose": "^5.4.3",
 		"simple-youtube-api": "^5.1.1",
 		"socket.io": "^2.2.0"
 	},
