@@ -45,9 +45,9 @@ const lint = () => {
 			.pipe(
 				eslint.results((results) => {
 					if (results.errorCount > 0) {
-						fancy.error('    ESLint Report    ', true);
+						fancy.error.bg('    ESLint Report    ');
 						lintfailed = true;
-					} else if (results.warningCount > 0) fancy.warn('    ESLint Report    ', true);
+					} else if (results.warningCount > 0) fancy.warn.bg('    ESLint Report    ');
 					else fancy.complete('ESLint Report: No Issues Found');
 				})
 			)
