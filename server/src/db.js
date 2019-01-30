@@ -17,6 +17,7 @@ export default class db {
 		const db = mongoose.connection;
 
 		db.on("error", () => {
+			console.error("[DB] Failed to connect to database");
 			console.error("[DB] You might need to whitelist your IP!");
 		});
 

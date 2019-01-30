@@ -1,11 +1,48 @@
 import { RoomModel } from "./Room";
 import { check, validationResult } from "express-validator/check";
+import { OAuth2Client } from "google-auth-library";
+import dotenv from "dotenv";
+dotenv.config();
+
+// google auth client
+const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_API_KEY);
 
 /**
  * Register api routes
  * @param {Express.Application} app
  */
 export function register(app) {
+	// google login using id_token
+	app.post(
+		"/auth/google/tokensignin",
+		[check("idtoken").exists()],
+		(req, res) => {
+			const errors = validationResult(req);
+
+			if (!errors.isEmpty())
+				return res.status(442).json({ errors: errors.array() });
+
+			client
+				.verifyIdToken({
+					idToken: req.body.idtoken,
+					audience: process.env.REACT_APP_OAUTH_CLIENT_ID
+				})
+				.then(ticket => {
+					const payload = ticket.getPayload();
+					const userid = payload["sub"];
+
+					// TODO: do something with userid
+
+					console.log(userid);
+
+					return res.json({ loggedin: true });
+				})
+				.catch(err => {
+					return res.status(442).json({ errors: err.toString() });
+				});
+		}
+	);
+
 	// room list and search
 	// TODO: query params for search and pagination
 	app.get("/api/rooms", [], (req, res) => {
