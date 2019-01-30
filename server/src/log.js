@@ -164,7 +164,8 @@ function clearprompt() {
 
 function writeprompt(statustext) {
 	readline.clearLine(process.stdout, 0);
-	process.stdout.write(`${statustext} | inputbuffer:"${inputbuffer}"\n`);
+	process.stdout.write(`${statustext}\n`);
+	// process.stdout.write(`${statustext} | inputbuffer:"${inputbuffer}"\n`);
 
 	// don't show prompt until loaded
 	if (loading) return;
