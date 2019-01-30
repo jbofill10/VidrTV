@@ -1,4 +1,30 @@
 const chalk = require('chalk');
+
+var _debug = false;
+
+/**
+ * Set Debugging Flag
+ *
+ * This toggles fancy.debug chains
+ * @example
+ * fancy.setDebug(process.env.DEBUG);
+ * fancy.debug.log('debug only log');
+ */
+exports.setDebug = (value) => {
+	_debug = value;
+};
+/**
+ * Debug Optional Chaining
+ *
+ * Toggled by fancy.setDebug()
+ * @example
+ * fancy.debug.log('debug only log');
+ */
+exports.debug = () => {};
+Object.defineProperty(module.exports, 'debug', {
+	get: () => (_debug ? exports : deadexports)
+});
+
 /**
  * Fancy Log formatting
  * @param {*} message message to display
@@ -6,17 +32,18 @@ const chalk = require('chalk');
  * @param {char} icon icon character
  * @param {boolean} bg use color as bg instead of text color
  */
-const _log = (message, color, icon, bg = false) =>
-	console.log(bg ?
-		` ${chalk[color](icon)}  ${chalk.black['bg' + color.charAt(0).toUpperCase() + color.slice(1)](
-			' ' + message + ' '
-		)}`
-		: chalk[color](` ${icon}  ${message}`
-		)
+const _log = (message = '', color = 'cyan', icon = '●', bg = false) =>
+	console.log(
+		bg
+			? ` ${chalk[color](icon)}  ${chalk.black['bg' + color.charAt(0).toUpperCase() + color.slice(1)](
+					' ' + message + ' '
+				)}`
+			: chalk[color](` ${icon}  ${message}`)
 	);
 
-// main log functions
-
+/**
+ * Main Log Functions
+ */
 const fun = {};
 fun.info = (message) => _log(message, 'cyan', '●', false);
 fun.event = (message) => _log(message, 'magenta', '!', false);
@@ -26,6 +53,10 @@ fun.complete = (message) => _log(message, 'green', '✔', false);
 fun.question = (message) => _log(message, 'blue', '?', false);
 fun.bool = (expression, truemessage, falsemessage, truemessagetype = 'true', falsemessagetype = 'false') =>
 	exports[expression ? truemessagetype : falsemessagetype](expression ? truemessage : falsemessage);
+
+//
+// Main Log Functions with bg
+//
 
 /**
  * Fancy Log with cyan background in the following format: ' ● {message}'
@@ -68,8 +99,9 @@ fun.question.bg = (message) => _log(message, 'blue', '?', true);
 fun.bool.bg = (expression, truemessage, falsemessage, truemessagetype = 'true', falsemessagetype = 'false') =>
 	exports[expression ? truemessagetype : falsemessagetype].bg(expression ? truemessage : falsemessage);
 
-
-// aliases
+//
+// Main Function Aliases
+//
 
 /**
  * Fancy Log with cyan text in the following format: ' ● {message}'
@@ -80,7 +112,7 @@ exports.default = exports.log = exports.dot = exports.circle = exports.info = fu
  * Fancy Log with magenta text in the following format: ' ! {message}'
  * @param {*} message message to log
  */
-exports.exclaim = exports.important = exports.event = fun.event;
+exports.exclaim = exports.important = exports.event = exports.notify = exports.notification = fun.event;
 /**
  * Fancy Log with yellow text in the following format: ' ⚠ {message}'
  * @param {*} message message to log
@@ -95,7 +127,8 @@ exports.wrong = exports.x = exports.incorrect = exports.bad = exports.false = ex
  * Fancy Log with green text in the following format: ' ✔ {message}'
  * @param {*} message message to log
  */
-exports.done = exports.finished = exports.check = exports.checked = exports.checkmark = exports.correct = exports.ok = exports.true = exports.complete = fun.complete;
+exports.done = exports.finished = exports.check = exports.checked = exports.checkmark = exports.correct = exports.ok = exports.true = exports.complete =
+	fun.complete;
 /**
  * Fancy Log with blue text in the following format: ' ? {message}'
  * @param {*} message message to log
@@ -121,14 +154,16 @@ exports.has = exports.is = exports.choose = exports.bool = fun.bool;
  * fancy.if(loading).info('still loading');
  * @param {boolean} expression
  */
-exports.if = (expression) => expression ? exports : exportsor;
+exports.if = (expression) => (expression ? exports : deadexports);
 /**
  * object for killing call chains
  */
-const dead = new Proxy({}, {
-	get: (obj, prop) => {
-		if (prop === 'if')
-			return () => dead;
-		return () => { };
+const deadexports = new Proxy(
+	{},
+	{
+		get: (obj, prop) => {
+			if (typeof exports[prop] === 'function') return () => deadexports;
+			return deadexports;
+		}
 	}
-});
+);
