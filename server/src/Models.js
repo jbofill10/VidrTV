@@ -1,9 +1,14 @@
 import mongoose from "mongoose";
 
 //UserID model for DB
-const userID = mongoose.model("userInfo", {
-	userID: String
-});
+const Schema = mongoose.Schema;
+const userIdSchema = new Schema(
+	{
+		userID: String
+	},
+	{ collection: "userInfo" }
+);
+const userIdInfo = mongoose.model("userIdInfo", userIdSchema);
 
 //Playlist model for DB
 const RoomModel = mongoose.model("room", {
@@ -13,4 +18,4 @@ const RoomModel = mongoose.model("room", {
 	time: Number
 });
 
-export { RoomModel, userID };
+export { RoomModel, userIdInfo };

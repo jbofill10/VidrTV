@@ -1,7 +1,7 @@
 import { RoomModel } from "./Room";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
-import { userID } from "./Models";
+import { userIdInfo } from "./Models";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -32,8 +32,8 @@ export function register(app) {
 					const payload = ticket.getPayload();
 					const userid = payload["sub"];
 					//Insert token if new, if not update
-					userID.updateOne(
-						{},
+					userIdInfo.updateOne(
+						{ userID: userid },
 						{ userID: userid },
 						{ upsert: true },
 						err => {
