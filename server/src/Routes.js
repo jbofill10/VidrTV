@@ -1,23 +1,13 @@
 import { RoomModel } from "./Room";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
+import { userID } from "./Models";
 import dotenv from "dotenv";
-import mongoose from "mongoose";
 dotenv.config();
 
 // google auth client
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_API_KEY);
 
-var Schema = mongoose.Schema;
-
-var idSchema = new Schema(
-	{
-		userID: String
-	},
-	{ collection: "userInfo" }
-);
-
-var userID = mongoose.model("userID", idSchema);
 /**
  * Register api routes
  * @param {Express.Application} app

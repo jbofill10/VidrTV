@@ -1,17 +1,9 @@
-import mongoose from "mongoose";
 import chalk from "chalk";
 import { youtube } from "./youtube";
-
-const RoomModel = mongoose.model("room", {
-	name: String,
-	media: [String],
-	cur: Number,
-	time: Number
-});
-export { RoomModel };
+import { RoomModel } from "./Models";
 
 const mediaInfoCache = {};
-
+export { RoomModel };
 export default class Room {
 	constructor(io, doc) {
 		/** room channel */
