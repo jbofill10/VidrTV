@@ -2,6 +2,7 @@ import { RoomModel } from "./Room";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
 import dotenv from "dotenv";
+import db from "./db";
 dotenv.config();
 
 // google auth client
@@ -19,25 +20,32 @@ export function register(app) {
 		(req, res) => {
 			const errors = validationResult(req);
 
-			if (!errors.isEmpty())
+			if (!errors.isEmpty()) {
 				return res.status(442).json({ errors: errors.array() });
-
+			}
 			client
 				.verifyIdToken({
 					idToken: req.body.idtoken,
-					audience: process.env.REACT_APP_OAUTH_CLIENT_ID
+					clientID: process.env.REACT_APP_OAUTH_CLIENT_ID
 				})
 				.then(ticket => {
 					const payload = ticket.getPayload();
 					const userid = payload["sub"];
-
-					// TODO: do something with userid
+					//Insert token if new, if not update
+					db.collection("userInfo").update(
+						{ String: userid },
+						{
+							upsert: true
+						}
+					);
+					console.log("Adding user to DB");
 
 					console.log(userid);
 
 					return res.json({ loggedin: true });
 				})
 				.catch(err => {
+					console.log("Code runs here");
 					return res.status(442).json({ errors: err.toString() });
 				});
 		}

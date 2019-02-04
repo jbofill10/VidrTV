@@ -117,11 +117,14 @@ class ProfileArea extends React.Component {
 		let authres = response.getAuthResponse();
 
 		fetch("http://localhost:3000/auth/google/tokensignin", {
-			method: "post",
+			method: "POST",
 			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
+				//"Content-Type": "application/x-www-form-urlencoded"
+				"Content-Type": "application/json"
 			},
-			body: `idtoken=${authres.id_token}`
+			body: JSON.stringify({
+				idtoken: authres.id_token
+			})
 		})
 			.then(res => res.json())
 			.then(json => {
