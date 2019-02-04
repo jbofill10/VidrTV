@@ -2,12 +2,22 @@ import { RoomModel } from "./Room";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
 import dotenv from "dotenv";
-import db from "./db";
+import mongoose from "mongoose";
 dotenv.config();
 
 // google auth client
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_API_KEY);
 
+var Schema = mongoose.Schema;
+
+var idSchema = new Schema(
+	{
+		userID: String
+	},
+	{ collection: "userInfo" }
+);
+
+var userID = mongoose.model("userID", idSchema);
 /**
  * Register api routes
  * @param {Express.Application} app
@@ -32,17 +42,21 @@ export function register(app) {
 					const payload = ticket.getPayload();
 					const userid = payload["sub"];
 					//Insert token if new, if not update
-					db.collection("userInfo").update(
-						{ String: userid },
-						{
-							upsert: true
+					userID.updateOne(
+						{},
+						{ userID: userid },
+						{ upsert: true },
+						err => {
+							if (err) {
+								return res
+									.status(500)
+									.json({ errors: errors.array() });
+							} else {
+								console.log("Login successful!");
+								return res.json({ loggedin: true });
+							}
 						}
 					);
-					console.log("Adding user to DB");
-
-					console.log(userid);
-
-					return res.json({ loggedin: true });
 				})
 				.catch(err => {
 					console.log("Code runs here");
