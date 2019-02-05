@@ -55,8 +55,7 @@ class ProfileArea extends React.Component {
 						style={{
 							marginRight: 10,
 							background: active ? "#eee" : "#fff",
-							padding: 10,
-							paddingBottom: 6,
+							padding: "10px 10px 6px 10px",
 							borderRadius: 2
 						}}
 					>
