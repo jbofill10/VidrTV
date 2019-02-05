@@ -1,6 +1,5 @@
 import React from "react";
 import Radium from "radium";
-import { Button } from "react-player-controls";
 import "whatwg-fetch";
 
 @Radium
@@ -26,23 +25,25 @@ class ProfileArea extends React.Component {
 						backgroundColor: "#383342",
 						display: "inline-flex",
 						alignItems: "center",
-						padding: 0,
+						margin: "4px 12px",
 						borderRadius: "50%",
-						height: 40
+						height: 32
 					}}
 				/>
 			);
 		} else
 			return (
-				<Button
+				<button
 					onClick={() => this.signIn()}
 					style={{
 						backgroundColor: "#383342",
 						display: "inline-flex",
 						alignItems: "center",
+						cursor: "pointer",
 						color: "#fff",
 						boxShadow:
 							"0 2px 2px 0 rgba(0, 0, 0, .24), 0 0 1px 0 rgba(0, 0, 0, .24)",
+						margin: "0 8px",
 						padding: 0,
 						borderRadius: 2,
 						border: "1px solid transparent",
@@ -96,7 +97,7 @@ class ProfileArea extends React.Component {
 					>
 						Sign in with Google
 					</span>
-				</Button>
+				</button>
 			);
 	}
 

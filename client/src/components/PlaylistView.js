@@ -39,7 +39,19 @@ export default class PlaylistView extends React.Component {
 				{this.props.items.map(id => {
 					if (this.state.data.hasOwnProperty(id))
 						return (
-							<div className="card playlist-item" key={id}>
+							<div
+								className="card playlist-item"
+								key={id}
+								style={{
+									backgroundColor: "rgb(31, 18, 31)",
+									color: "rgba(255, 255, 255, 0.747)",
+									boxShadow:
+										"0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+									padding: "0.15rem 1rem",
+									margin: "6px 2px",
+									display: "flex"
+								}}
+							>
 								<img
 									className="thumb"
 									alt={this.state.data[id].title}
