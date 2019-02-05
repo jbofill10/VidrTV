@@ -116,10 +116,11 @@ class ProfileArea extends React.Component {
 		let profile = response.getBasicProfile();
 		let authres = response.getAuthResponse();
 
+		// console.log(profile, authres);
+
 		fetch("http://localhost:3000/auth/google/tokensignin", {
 			method: "POST",
 			headers: {
-				//"Content-Type": "application/x-www-form-urlencoded"
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
@@ -128,15 +129,17 @@ class ProfileArea extends React.Component {
 		})
 			.then(res => res.json())
 			.then(json => {
-				// console.log('/auth/google/tokensignin response', json);
-				this.setState({ profile: profile, loggedin: true });
+				if (json.loggedin) {
+					console.log("/auth/google/tokensignin response", json);
+					// TODO: do something with user info response
+					this.setState({ profile: profile, loggedin: true });
+				} else {
+					console.error("/auth/google/tokensignin response", json);
+				}
 			})
 			.catch(ex => {
 				console.error("parsing failed", ex);
 			});
-
-		console.log(authres);
-		console.log(profile);
 	}
 }
 

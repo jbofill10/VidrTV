@@ -1,7 +1,7 @@
 import { RoomModel } from "./Room";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
-import { userIdInfo } from "./Models";
+import { UserInfoModel } from "./Models";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -32,9 +32,9 @@ export function register(app) {
 					const payload = ticket.getPayload();
 					const userid = payload["sub"];
 					//Insert token if new, if not update
-					userIdInfo.updateOne(
-						{ userID: userid },
-						{ userID: userid },
+					UserInfoModel.updateOne(
+						{ _id: userid },
+						{ _id: userid, lastlogin: Date.now() },
 						{ upsert: true },
 						err => {
 							if (err) {
@@ -42,14 +42,16 @@ export function register(app) {
 									.status(500)
 									.json({ errors: errors.array() });
 							} else {
-								console.log("Login successful!");
+								console.log(
+									`[OAuth2] User #${userid} login successful!`
+								);
+								// TODO: send stored user info back to the client
 								return res.json({ loggedin: true });
 							}
 						}
 					);
 				})
 				.catch(err => {
-					console.log("Code runs here");
 					return res.status(442).json({ errors: err.toString() });
 				});
 		}

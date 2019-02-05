@@ -1,16 +1,13 @@
 import mongoose from "mongoose";
 
-//UserID model for DB
-const Schema = mongoose.Schema;
-const userIdSchema = new Schema(
-	{
-		userID: String
-	},
-	{ collection: "userInfo" }
-);
-const userIdInfo = mongoose.model("userIdInfo", userIdSchema);
+// user info model
+const UserInfoModel = mongoose.model("user", {
+	_id: { type: Number, id: true },
+	displayname: String,
+	lastlogin: { type: Date, default: Date.now }
+});
 
-//Playlist model for DB
+// room state model
 const RoomModel = mongoose.model("room", {
 	name: String,
 	media: [String],
@@ -18,4 +15,4 @@ const RoomModel = mongoose.model("room", {
 	time: Number
 });
 
-export { RoomModel, userIdInfo };
+export { RoomModel, UserInfoModel };
