@@ -1,0 +1,9 @@
+{
+	"title": "oembed test",
+	"description": "oembed test",
+	"version": "1.0",
+	"type": "video",
+	"width": 480,
+	"height": 270,
+	"html": "<iframe width=\"480\" height=\"270\" src=\"https://jacobcoughenour.herokuapp.com\" frameborder=\"0\"></iframe>"
+}
