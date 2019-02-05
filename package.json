@@ -5,9 +5,11 @@
 	"scripts": {
 		"env": "node ./scripts/env.js",
 		"start": "cd server && npm start",
-		"heroku-postbuild": "cd client && npm i --only=dev && npm i && npm run build",
+		"heroku-postbuild": "npm run build-client && npm run build-server",
 		"client-dev": "cd client && npm start",
 		"server-dev": "cd server && npm run start-dev",
+		"build-client": "cd client && npm run build",
+		"build-server": "cd server && npm run build",
 		"install": "npm run client-install && npm run server-install",
 		"client-install": "cd client && npm i",
 		"server-install": "cd server && npm i"
@@ -23,10 +25,7 @@
 		}
 	},
 	"lint-staged": {
-		"**/src/**/*.{js,json,css,md}": [
-			"prettier --write",
-			"git add"
-		]
+		"**/src/**/*.{js,json,css,md}": [ "prettier --write", "git add" ]
 	},
 	"prettier": {
 		"useTabs": true,

@@ -118,7 +118,7 @@ class ProfileArea extends React.Component {
 
 		// console.log(profile, authres);
 
-		fetch("http://localhost:3000/auth/google/tokensignin", {
+		fetch("/auth/google/tokensignin", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"

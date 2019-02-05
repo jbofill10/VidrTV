@@ -2,82 +2,8 @@ import readline from "readline";
 import chalk from "chalk";
 import util from "util";
 
-readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
-
 var inputbuffer = "";
 var cursorpos = 0;
-
-process.stdin.on("keypress", (str, key) => {
-	// ctrl + C exit
-	if (key.sequence === "\u0003") {
-		// kill it
-		// eslint-disable-next-line no-process-exit
-		process.exit("SIGINT");
-	}
-
-	// only allow the above inputs while loading
-	if (loading) return;
-
-	// TODO: ctrl+A, arrow keys
-
-	// input has a 'code'
-	if (key.hasOwnProperty("code")) {
-		// key has a code
-		switch (key.name) {
-			case "up":
-				break;
-			case "down":
-				break;
-			case "left":
-				if (cursorpos !== 0) {
-					cursorpos = Math.max(0, cursorpos - 1);
-					redrawprompt();
-				}
-				break;
-			case "right":
-				if (cursorpos !== inputbuffer.length) {
-					cursorpos = Math.min(inputbuffer.length, cursorpos + 1);
-					redrawprompt();
-				}
-				break;
-			default:
-				break;
-		}
-	} else if (str) {
-		// non codes
-		// ascii code for key
-		let code = str.charCodeAt(0);
-
-		// normal chars
-		if (code >= 32 && code <= 126) {
-			inputbuffer =
-				inputbuffer.slice(0, cursorpos) +
-				str +
-				inputbuffer.slice(cursorpos);
-			cursorpos = Math.min(cursorpos + 1, inputbuffer.length);
-			redrawprompt();
-
-			// return / enter
-		} else if (code === 13) {
-			// TODO: handle commands here
-			console.log("command: " + inputbuffer);
-			cursorpos = 0;
-			inputbuffer = "";
-			redrawprompt();
-
-			// backspace
-		} else if (code === 8) {
-			if (inputbuffer.length > 0) {
-				inputbuffer =
-					inputbuffer.slice(0, cursorpos - 1) +
-					inputbuffer.slice(cursorpos);
-				cursorpos = Math.max(0, cursorpos - 1);
-				redrawprompt();
-			}
-		}
-	}
-});
 
 /**
  * Info that is displayed on the status bar
@@ -100,7 +26,8 @@ const status = new Proxy(
 			// set new value
 			obj[prop] = value;
 			// render status bar
-			if (!obj.loading) redrawprompt();
+			if (!obj.loading && process.env.NODE_ENV === "development")
+				redrawprompt();
 			return true;
 		}
 	}
@@ -153,9 +80,6 @@ function redrawprompt(clear = true) {
 	loading = !status.express || !status.db || !status.roomservice;
 }
 
-// start status bar render loop
-redrawprompt(false);
-
 function clearprompt() {
 	readline.cursorTo(process.stdout, 0);
 	readline.moveCursor(process.stdout, 0, -1);
@@ -181,21 +105,100 @@ function writeprompt(statustext) {
 	readline.cursorTo(process.stdout, cursorpos + 5);
 }
 
-/**
- * console.log override that writes above the status bar and prompt
- */
-console.log = function() {
-	clearprompt();
-	process.stdout.write(util.format.apply(null, arguments) + "\n");
-	redrawprompt(false);
-};
+if (process.env.NODE_ENV === "development") {
+	readline.emitKeypressEvents(process.stdin);
+	process.stdin.setRawMode(true);
 
-/**
- * console.error override that writes above the status bar and prompt and
- * displays with red text
- */
-console.error = function() {
-	console.log(chalk.red(util.format.apply(null, arguments)));
-};
+	process.stdin.on("keypress", (str, key) => {
+		// ctrl + C exit
+		if (key.sequence === "\u0003") {
+			// kill it
+			// eslint-disable-next-line no-process-exit
+			process.exit("SIGINT");
+		}
+
+		// only allow the above inputs while loading
+		if (loading) return;
+
+		// TODO: ctrl+A, arrow keys
+
+		// input has a 'code'
+		if (key.hasOwnProperty("code")) {
+			// key has a code
+			switch (key.name) {
+				case "up":
+					break;
+				case "down":
+					break;
+				case "left":
+					if (cursorpos !== 0) {
+						cursorpos = Math.max(0, cursorpos - 1);
+						redrawprompt();
+					}
+					break;
+				case "right":
+					if (cursorpos !== inputbuffer.length) {
+						cursorpos = Math.min(inputbuffer.length, cursorpos + 1);
+						redrawprompt();
+					}
+					break;
+				default:
+					break;
+			}
+		} else if (str) {
+			// non codes
+			// ascii code for key
+			let code = str.charCodeAt(0);
+
+			// normal chars
+			if (code >= 32 && code <= 126) {
+				inputbuffer =
+					inputbuffer.slice(0, cursorpos) +
+					str +
+					inputbuffer.slice(cursorpos);
+				cursorpos = Math.min(cursorpos + 1, inputbuffer.length);
+				redrawprompt();
+
+				// return / enter
+			} else if (code === 13) {
+				// TODO: handle commands here
+				console.log("command: " + inputbuffer);
+				cursorpos = 0;
+				inputbuffer = "";
+				redrawprompt();
+
+				// backspace
+			} else if (code === 8) {
+				if (inputbuffer.length > 0) {
+					inputbuffer =
+						inputbuffer.slice(0, cursorpos - 1) +
+						inputbuffer.slice(cursorpos);
+					cursorpos = Math.max(0, cursorpos - 1);
+					redrawprompt();
+				}
+			}
+		}
+	});
+
+	/**
+	 * console.log override that writes above the status bar and prompt
+	 */
+	console.log = function() {
+		clearprompt();
+		process.stdout.write(util.format.apply(null, arguments) + "\n");
+		redrawprompt(false);
+	};
+
+	/**
+	 * console.error override that writes above the status bar and prompt and
+	 * displays with red text
+	 */
+	console.error = function() {
+		console.log(chalk.red(util.format.apply(null, arguments)));
+	};
+
+	// start status bar render loop
+	redrawprompt(false);
+}
 
 export { status };

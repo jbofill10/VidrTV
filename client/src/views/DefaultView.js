@@ -139,7 +139,7 @@ export default class DefaultView extends React.Component {
 
 	componentDidMount() {
 		// TODO: request sorted list and limit number of results for pagination
-		fetch("http://localhost:3000/api/rooms")
+		fetch("/api/rooms")
 			.then(res => res.json())
 			.then(json => {
 				console.log("/api/rooms response", json);

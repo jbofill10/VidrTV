@@ -7,28 +7,6 @@ const chalk = require('chalk');
 // eslint-disable-next-line node/no-unpublished-require
 const fancy = require('../scripts/fancy');
 
-// keypress listener
-
-readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
-
-process.stdin.on('keypress', (str, key) => {
-	// ctrl + C exit
-	if (key.sequence === '\u0003') {
-		process.stdin.pause();
-
-		// async close watch task
-		watchcallback();
-
-		// kill process
-		// eslint-disable-next-line no-process-exit
-		process.exit('SIGINT');
-	}
-
-	// console.log('gulp keypress ' + key.name);
-});
-
-
 var lintfailed = false;
 
 /**
@@ -124,7 +102,8 @@ const spawnserver = gulp.series(killserver, (cb) => {
 
 	// start server process
 	node = child_process.fork('.', [], {
-		stdio: [process.stdin, 'inherit', 'pipe', 'ipc']
+		stdio: [ process.stdin, 'inherit', 'pipe', 'ipc' ],
+		env: { NODE_ENV: 'development' }
 	});
 
 	// pipe input to server process
@@ -179,10 +158,32 @@ const restart = gulp.series(
 	}
 );
 
-var watchcallback = () => { };
+var watchcallback = () => {};
 
 const watch = (cb) => {
 	watchcallback = cb;
+
+	// keypress listener
+
+	readline.emitKeypressEvents(process.stdin);
+	process.stdin.setRawMode(true);
+
+	process.stdin.on('keypress', (str, key) => {
+		// ctrl + C exit
+		if (key.sequence === '\u0003') {
+			process.stdin.pause();
+
+			// async close watch task
+			watchcallback();
+
+			// kill process
+			// eslint-disable-next-line no-process-exit
+			process.exit('SIGINT');
+		}
+
+		// console.log('gulp keypress ' + key.name);
+	});
+
 	return gulp.watch('src/**/*.*', restart);
 };
 
