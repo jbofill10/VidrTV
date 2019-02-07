@@ -1,59 +1,47 @@
 import React from "react";
 import Radium from "radium";
+import "whatwg-fetch";
 
 @Radium
 class CreateRoom extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { inputValue: "" };
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	handleChange(val) {
-		this.setState({
-			inputValue: val
-		});
+	handleChange(event) {
+		this.setState({ value: event.target.value });
 	}
 
-	increment() {
-		this.setState({
-			inputValue: this.state.inputValue + ""
-		});
-	}
-
-	submission() {
+	handleSubmit(event) {
 		fetch("/api/room/create", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
 			},
 			body: JSON.stringify({
-				submission: this.state.inputValue
+				submission: this.state.value
 			})
-		}).then(res => console.log("Success"));
+		}).then(res => res.json());
+
+		alert("A name was submitted: " + this.state.value);
+		event.preventDefault();
 	}
 
 	render() {
 		return (
-			<header>
-				Hello
-				<div>
-					<p>
-						<input
-							type="text"
-							name="input"
-							value={this.state.inputValue}
-							onChange={event =>
-								this.handleChange(event.target.val)
-							}
-						/>
-						<input
-							type="submit"
-							value="Ok"
-							onClick={() => this.submission()}
-						/>
-					</p>
-				</div>
-			</header>
+			<form onSubmit={this.handleSubmit}>
+				<label>
+					Name:
+					<input
+						type="text"
+						value={this.state.value}
+						onChange={this.handleChange}
+					/>
+				</label>
+				<input type="submit" value="Submit" />
+			</form>
 		);
 	}
 }

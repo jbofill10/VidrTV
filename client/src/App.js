@@ -92,9 +92,10 @@ export default class App extends React.Component {
 										path="/embed/*"
 										component={EmbedView}
 									/>
-									<Route path="/api/room/create">
-										<CreateRoom />
-									</Route>
+									<Route
+										path="/api/room/create"
+										component={CreateRoom}
+									/>
 								</div>
 							</div>
 						)}
