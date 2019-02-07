@@ -119,7 +119,7 @@ export function register(app, clientpath) {
 			title: "oembed test",
 			description: "oembed test",
 			version: "1.0",
-			type: "video",
+			type: "rich",
 			width: 480,
 			height: 270,
 			html: `<iframe width="480" height="270" src="${
