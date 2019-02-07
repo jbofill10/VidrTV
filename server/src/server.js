@@ -37,28 +37,8 @@ app.use(express.static(clientpath));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// get router instance
-const router = express.Router();
-
-router.use((req, res, next) => {
-	next();
-});
-
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get("/", (req, res) => {
-	res.json({ message: "hooray! welcome to our api!" });
-});
-
-register(app);
-
-// all of our routes will be prefixed with /api
-app.use("/api", router);
-
-// handles all non api requests
-app.get("*", (req, res) => {
-	// send index.html to client
-	res.sendFile(path.join(clientpath, "index.html"));
-});
+// register routes
+register(app, clientpath);
 
 const server = app.listen(port, () => {
 	console.log(chalk.green("[Express] Listening on " + port));

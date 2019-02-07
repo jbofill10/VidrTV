@@ -1,7 +1,8 @@
-import { RoomModel } from "./Room";
+import fs from "fs";
+import path from "path";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
-import { UserInfoModel } from "./Models";
+import { UserInfoModel, RoomModel } from "./Models";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -12,7 +13,7 @@ const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_API_KEY);
  * Register api routes
  * @param {Express.Application} app
  */
-export function register(app) {
+export function register(app, clientpath) {
 	// google login using id_token
 	app.post(
 		"/auth/google/tokensignin",
@@ -86,4 +87,56 @@ export function register(app) {
 			else res.json(docs);
 		});
 	});
+
+	// load index html file as a string
+	const indexhtml = fs
+		.readFileSync(path.join(clientpath, "index.html"), {
+			enchoding: "utf-8"
+		})
+		.toString();
+
+	// position to inject custom tags into the head
+	const insertpos = indexhtml.match(/<head>/).index + 6;
+
+	// handle room invite link meta tags
+	app.get("/r/*", (req, res) => {
+		// send index.html to client with modified meta
+		res.set("Content-Type", "text/html");
+		res.send(
+			`${indexhtml.slice(
+				0,
+				insertpos
+			)}<link rel="alternate" type="application/json+oembed" href="/oembed.json?r=${encodeURIComponent(
+				req.path.slice(3)
+			)}">${indexhtml.slice(insertpos)}`
+		);
+	});
+
+	app.get("/oembed.json", [], (req, res) => {
+		res.json({
+			title: "oembed test",
+			description: "oembed test",
+			version: "1.0",
+			type: "video",
+			width: 480,
+			height: 270,
+			html: `<iframe width="480" height="270" src="${
+				process.env.NODE_ENV === "development"
+					? "localhost"
+					: "https://jacobcoughenour.herokuapp.com"
+			}/embed/${req.query.r}" frameborder="0"></iframe>`
+		});
+	});
+
+	app.get("/embed/*", (req, res) => {
+		res.set("Content-Type", "text/html");
+		res.send(indexhtml);
+	});
+
+	// catch 404s
+	// redirects to home
+	// TODO: display 404 message (redirect to /404 ?)
+	// app.get('/*', (req, res) => {
+	// 	res.redirect('/');
+	// });
 }
