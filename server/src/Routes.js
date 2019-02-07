@@ -108,7 +108,9 @@ export function register(app, clientpath) {
 				insertpos
 			)}<link rel="alternate" type="application/json+oembed" href="/oembed.json?r=${encodeURIComponent(
 				req.path.slice(3)
-			)}">${indexhtml.slice(insertpos)}`
+			)}"><meta property="og:url" content="https://jacobcoughenour.herokuapp.com/${
+				req.path
+			}">${indexhtml.slice(insertpos)}`
 		);
 	});
 
