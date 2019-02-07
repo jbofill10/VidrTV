@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, NavLink, BrowserRouter, Switch } from "react-router-dom";
-import { ProfileArea } from "./components";
+import { ProfileArea, CreateRoom } from "./components";
 import { DefaultView, RoomView, EmbedView } from "./views";
 import "./App.css";
 
@@ -92,6 +92,9 @@ export default class App extends React.Component {
 										path="/embed/*"
 										component={EmbedView}
 									/>
+									<Route path="/api/room/create">
+										<CreateRoom />
+									</Route>
 								</div>
 							</div>
 						)}

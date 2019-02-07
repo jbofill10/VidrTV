@@ -141,4 +141,11 @@ export function register(app, clientpath) {
 	// app.get('/*', (req, res) => {
 	// 	res.redirect('/');
 	// });
+
+	app.post("api/room/create", (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty())
+			return res.status(442).json({ errors: errors.array() });
+		else console.log(req.body);
+	});
 }
