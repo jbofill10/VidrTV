@@ -39,11 +39,16 @@ export default class EmbedView extends React.Component {
 	render() {
 		if (this.state.joining) return <div>Joining Room...</div>;
 		return (
-			<div>
+			<div
+				style={{
+					position: "absolute",
+					overflow: "hidden"
+				}}
+			>
 				<MediaPlayer
 					className="player-container"
-					width={480}
-					height={270}
+					width={478}
+					height={268}
 					socket={this.socket}
 					room={this.state.room}
 				/>
