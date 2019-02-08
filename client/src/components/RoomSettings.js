@@ -3,7 +3,7 @@ import Radium from "radium";
 import "whatwg-fetch";
 
 @Radium
-class CreateRoom extends React.Component {
+class RoomSettings extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
@@ -23,27 +23,29 @@ class CreateRoom extends React.Component {
 			body: JSON.stringify({
 				submission: this.state.value
 			})
-		}).then(res => res.json());
-
-		alert("A name was submitted: " + this.state.value);
-		event.preventDefault();
+		}).then(res => {
+			event.preventDefault();
+			res.json();
+		});
 	}
 
 	render() {
 		return (
-			<form onSubmit={this.handleSubmit}>
-				<label>
-					Name:
-					<input
-						type="text"
-						value={this.state.value}
-						onChange={this.handleChange}
-					/>
-				</label>
-				<input type="submit" value="Submit" />
+			<form action="/" method="get">
+				<form onSubmit={this.handleSubmit}>
+					<label>
+						Name:
+						<input
+							type="text"
+							value={this.state.value}
+							onChange={this.handleChange}
+						/>
+					</label>
+					<input type="submit" value="Submit" />
+				</form>
 			</form>
 		);
 	}
 }
 
-export default CreateRoom;
+export default RoomSettings;

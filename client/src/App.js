@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, NavLink, BrowserRouter, Switch } from "react-router-dom";
-import { ProfileArea, CreateRoom } from "./components";
-import { DefaultView, RoomView, EmbedView } from "./views";
+import { ProfileArea } from "./components";
+import { DefaultView, RoomView, EmbedView, CreateRoomView } from "./views";
 import "./App.css";
 
 export default class App extends React.Component {
@@ -94,9 +94,22 @@ export default class App extends React.Component {
 									/>
 									<Route
 										path="/api/room/create"
-										component={CreateRoom}
+										component={CreateRoomView}
 									/>
 								</div>
+								<footer>
+									<form
+										action="/api/room/create"
+										method="get"
+									>
+										<input
+											type="submit"
+											value="Create a room"
+											name="Submit"
+											id="create_submit"
+										/>
+									</form>
+								</footer>
 							</div>
 						)}
 					/>
