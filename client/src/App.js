@@ -87,7 +87,7 @@ export default class App extends React.Component {
 										path="/"
 										component={DefaultView}
 									/>
-									<Route path="/r/*" component={RoomView} />
+									<Route path="/r/:id" component={RoomView} />
 									<Route
 										path="/embed/*"
 										component={EmbedView}

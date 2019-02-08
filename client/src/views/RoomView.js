@@ -3,9 +3,9 @@ import { PlaylistView, MediaPlayer } from "../components";
 import openSocket from "socket.io-client";
 
 export default class RoomView extends React.Component {
-	constructor() {
+	constructor(props) {
 		super();
-
+		this.roomid = props.match.params.id;
 		this.state = {
 			room: {},
 			joining: true
@@ -21,7 +21,7 @@ export default class RoomView extends React.Component {
 
 	componentDidMount() {
 		// join room by id
-		this.socket.emit("join", { roomid: "5c1c129c8134305cf00f2cfd" });
+		this.socket.emit("join", { roomid: this.roomid });
 
 		// first fullsync = joined room
 		this.socket.on("fullsync", data => {
