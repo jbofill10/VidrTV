@@ -31,8 +31,8 @@ class RoomSettings extends React.Component {
 
 	render() {
 		return (
-			<form action="/" method="get">
-				<form onSubmit={this.handleSubmit}>
+			<form onSubmit={this.handleSubmit}>
+				<form action="/" method="get">
 					<label>
 						Name:
 						<input
