@@ -3,12 +3,11 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"env": "node ./scripts/env.js",
 		"start": "cd server && npm start",
 		"heroku-postbuild": "npm run build-client && npm run build-server",
-		"client-dev": "cd client && npm start",
+		"client-dev": "lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm start",
 		"server-dev": "cd server && npm run start-dev",
-		"build-client": "cd client && npm run build",
+		"build-client": "lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm run build",
 		"build-server": "cd server && npm run build",
 		"install": "npm run client-install && npm run server-install",
 		"client-install": "cd client && npm i",
@@ -33,6 +32,8 @@
 	},
 	"dependencies": {
 		"chalk": "^2.4.2",
+		"joi": "^14.3.1",
+		"lookenv": "^1.0.1",
 		"yargs": "^12.0.5"
 	}
 }
