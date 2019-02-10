@@ -5,10 +5,13 @@ const child_process = require('child_process');
 const readline = require('readline');
 const chalk = require('chalk');
 const path = require('path');
+const fs = require('fs');
 // eslint-disable-next-line node/no-unpublished-require
 const fancy = require('../scripts/fancy');
 
 var lintfailed = false;
+
+const envpath = path.resolve(__dirname, '../.env');
 
 /**
  * ESLint Gulp task
@@ -99,12 +102,26 @@ const spawnserver = gulp.series(killserver, (cb) => {
 		return;
 	}
 
+	// check for index.html file needed for meta injection
+	try {
+		fs.accessSync('../client/build/index.html', fs.constants.R_OK);
+	} catch (err) {
+		fancy.space();
+		fancy.error('client/build/index.html not found!');
+		fancy.error('The client needs to be built at least once.  Use "npm run build-client"');
+		fancy.space();
+		cb();
+		throw chalk.red(
+			'\n\nclient/build/index.html not found!\nThe client needs to be built at least once.\nUse "npm run build-client"\n\n'
+		);
+	}
+
 	process.stdin.pause();
 
 	// start server process
 	node = child_process.fork('.', [], {
 		stdio: [ process.stdin, 'inherit', 'pipe', 'ipc' ],
-		env: { NODE_ENV: 'development', DOTENV_CONFIG_PATH: path.resolve(__dirname, '../.env') }
+		env: { NODE_ENV: 'development', DOTENV_CONFIG_PATH: envpath }
 	});
 
 	// pipe input to server process
