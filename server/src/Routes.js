@@ -3,8 +3,6 @@ import path from "path";
 import { check, validationResult } from "express-validator/check";
 import { OAuth2Client } from "google-auth-library";
 import { UserInfoModel, RoomModel } from "./Models";
-import dotenv from "dotenv";
-dotenv.config();
 
 // google auth client
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_API_KEY);

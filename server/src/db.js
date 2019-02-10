@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import chalk from "chalk";
 import { status } from "./log";
-import dotenv from "dotenv";
-dotenv.config();
 
 export default class db {
 	static init() {

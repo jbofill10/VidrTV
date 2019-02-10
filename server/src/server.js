@@ -1,3 +1,4 @@
+import "dotenv/config";
 import express from "express";
 import bodyParser from "body-parser";
 import socketio from "socket.io";
@@ -7,8 +8,6 @@ import { status } from "./log";
 import db from "./db";
 import RoomService from "./RoomService";
 import { register } from "./Routes.js";
-import dotenv from "dotenv";
-dotenv.config();
 
 // Setup database
 

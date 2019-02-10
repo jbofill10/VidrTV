@@ -30,7 +30,7 @@
 	},
 	"scripts": {
 		"build": "gulp build",
-		"start": "node ./build/server.js",
+		"start": "node -r dotenv/config ./build/server.js dotenv_config_path=../.env",
 		"start-dev": "gulp watch -S"
 	},
 	"devDependencies": {

@@ -6,6 +6,7 @@
 		"@babel/plugin-proposal-class-properties": "^7.3.0",
 		"@babel/plugin-proposal-decorators": "^7.3.0",
 		"customize-cra": "^0.2.11",
+		"env-path": "^1.0.6",
 		"radium": "^0.25.1",
 		"react": "^16.7.0",
 		"react-app-rewired": "^2.0.3",
@@ -23,19 +24,14 @@
 		"whatwg-fetch": "^3.0.0"
 	},
 	"scripts": {
-		"start": "react-app-rewired start",
-		"build": "react-app-rewired build",
-		"test": "react-app-rewired test",
-		"eject": "react-app-rewired eject"
+		"start": "env-path -p ../.env react-app-rewired start",
+		"build": "env-path -p ../.env react-app-rewired build",
+		"test": "env-path -p ../.env react-app-rewired test",
+		"eject": "env-path -p ../.env react-app-rewired eject"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
 	},
-	"browserslist": [
-		">0.2%",
-		"not dead",
-		"not ie <= 11",
-		"not op_mini all"
-	],
+	"browserslist": [ ">0.2%", "not dead", "not ie <= 11", "not op_mini all" ],
 	"proxy": "http://localhost:8080"
 }

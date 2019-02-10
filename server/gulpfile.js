@@ -4,6 +4,7 @@ const eslint = require('gulp-eslint');
 const child_process = require('child_process');
 const readline = require('readline');
 const chalk = require('chalk');
+const path = require('path');
 // eslint-disable-next-line node/no-unpublished-require
 const fancy = require('../scripts/fancy');
 
@@ -103,7 +104,7 @@ const spawnserver = gulp.series(killserver, (cb) => {
 	// start server process
 	node = child_process.fork('.', [], {
 		stdio: [ process.stdin, 'inherit', 'pipe', 'ipc' ],
-		env: { NODE_ENV: 'development' }
+		env: { NODE_ENV: 'development', DOTENV_CONFIG_PATH: path.resolve(__dirname, '../.env') }
 	});
 
 	// pipe input to server process
