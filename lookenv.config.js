@@ -3,6 +3,8 @@ const fs = require('fs');
 const path = require('path');
 const fancy = require('./scripts/fancy');
 
+console.log(process.env);
+
 const requirements = Joi.object().keys({
 	REACT_APP_GOOGLE_API_KEY: Joi.string().alphanum().length(39).required(),
 	REACT_APP_OAUTH_CLIENT_ID: Joi.string().required(),
