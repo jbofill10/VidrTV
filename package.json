@@ -4,15 +4,15 @@
 	"private": true,
 	"scripts": {
 		"start": "cd server && npm start",
+		"heroku-prebuild": "npm run client-install && npm run server-install",
 		"heroku-postbuild": "npm run build-client && npm run build-server",
-		"client-dev": "npm run checkdeps && lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm start",
-		"server-dev": "npm run checkdeps && cd server && npm run start-dev",
-		"build-client": "npm run checkdeps && lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm run build",
-		"build-server": "npm run checkdeps && cd server && npm run build",
-		"install": "npm run client-install && npm run server-install",
+		"client-dev": "node ./scripts/checkdeps.js ./ ./client && lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm start",
+		"server-dev": "node ./scripts/checkdeps.js ./ ./server && cd server && npm run start-dev",
+		"build-client": "node ./scripts/checkdeps.js ./ ./client && lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm run build",
+		"build-server": "node ./scripts/checkdeps.js ./ ./server && cd server && npm run build",
 		"client-install": "cd client && npm i",
 		"server-install": "cd server && npm i",
-		"checkdeps": "node ./scripts/checkdeps.js"
+		"checkdeps": "node ./scripts/checkdeps.js ./ ./client ./server"
 	},
 	"devDependencies": {
 		"husky": "^1.3.1",
