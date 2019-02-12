@@ -26,12 +26,12 @@ test:server:
   stage: test
   script: "npm run test-server"
 
-deploy:heroku-staging:
+deploy:heroku:
   stage: deploy
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl - provider=heroku - app=task-mgmt-app - api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=fsusmp --api-key=$HEROKU_API_KEY
   only:
     - master
