@@ -15,13 +15,14 @@ before_script:
   - npm run checkdeps
 
 stages:
-  - test_client
-  - test_server
+  - test
 
 test_client:
+  stage: test
   script: "npm run test-client"
 
 test_server:
+  stage: test
   script: "npm run test-server"
 
 
