@@ -18,23 +18,26 @@ const envpath = path.resolve(__dirname, '../.env');
  */
 const lint = () => {
 	lintfailed = false;
-	return (
-		gulp
-			.src('src/**/*.js')
-			// eslint
-			.pipe(eslint())
-			// ESLint report header
-			.pipe(
-				eslint.results((results) => {
-					if (results.errorCount > 0) {
-						fancy.error.bg('    ESLint Report    ');
-						lintfailed = true;
-					} else if (results.warningCount > 0) fancy.warn.bg('    ESLint Report    ');
-					else fancy.complete('ESLint Report: No Issues Found');
-				})
-			)
-			// format eslint report
-			.pipe(eslint.format('stylish', process.stdout))
+
+	let stream = gulp
+		.src('src/**/*.js')
+		// eslint
+		.pipe(eslint())
+		// ESLint report header
+		.pipe(
+			eslint.results((results) => {
+				if (results.errorCount > 0) {
+					fancy.error.bg('    ESLint Report    ');
+					lintfailed = true;
+				} else if (results.warningCount > 0) fancy.warn.bg('    ESLint Report    ');
+				else fancy.complete('ESLint Report: No Issues Found');
+			})
+		)
+		// format eslint report
+		.pipe(eslint.format('stylish', process.stdout));
+
+	if (watching) {
+		stream = stream
 			// ESLint report footer
 			.pipe(
 				eslint.results((results) => {
@@ -44,8 +47,12 @@ const lint = () => {
 						fancy.info('waiting for file changes to restart...');
 					} else if (results.warningCount > 0) fancy.space();
 				})
-			)
-	);
+			);
+	} else {
+		stream = stream.pipe(eslint.failAfterError());
+	}
+
+	return stream;
 };
 
 /**
@@ -177,6 +184,7 @@ const restart = gulp.series(
 );
 
 var watchcallback = () => {};
+var watching = false;
 
 const watch = (cb) => {
 	watchcallback = cb;
@@ -206,7 +214,17 @@ const watch = (cb) => {
 };
 
 // build and spawn then start watching
-exports.watch = gulp.series(build, spawnserver, watch);
+exports.watch = gulp.series(
+	(cb) => {
+		watching = true;
+		cb();
+	},
+	build,
+	spawnserver,
+	watch
+);
+
+exports.test = gulp.series(lint);
 
 // run the build task by default
 exports.default = exports.build = build;

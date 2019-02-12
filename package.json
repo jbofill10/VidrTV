@@ -8,10 +8,13 @@
 		"heroku-postbuild": "npm run build-client && npm run build-server",
 		"client-dev": "node ./scripts/checkdeps.js ./ ./client && lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm start",
 		"server-dev": "node ./scripts/checkdeps.js ./ ./server && cd server && npm run start-dev",
-		"build-client": "node ./scripts/checkdeps.js ./ ./client && lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm run build",
-		"build-server": "node ./scripts/checkdeps.js ./ ./server && cd server && npm run build",
+		"build-client": "lookenv --path=lookenv.config.js --dotenv=.env && cd client && npm run build",
+		"build-server": "cd server && npm run build",
 		"client-install": "cd client && npm i",
 		"server-install": "cd server && npm i",
+		"test-client": "cd client && npm test",
+		"test-server": "cd server && npm test",
+		"test": "npm run test-client && npm run test-server",
 		"checkdeps": "node ./scripts/checkdeps.js ./ ./client ./server"
 	},
 	"devDependencies": {
@@ -25,10 +28,7 @@
 		}
 	},
 	"lint-staged": {
-		"**/src/**/*.{js,json,css,md}": [
-			"prettier --write",
-			"git add"
-		]
+		"**/src/**/*.{js,json,css,md}": [ "prettier --write", "git add" ]
 	},
 	"prettier": {
 		"useTabs": true,

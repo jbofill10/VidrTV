@@ -32,7 +32,8 @@
 	"scripts": {
 		"build": "gulp build -LLLL",
 		"start": "lookenv --path=../lookenv.config.js --dotenv=../.env -- node ./build/server.js",
-		"start-dev": "lookenv --path=../lookenv.config.js --dotenv=../.env && gulp watch -L"
+		"start-dev": "lookenv --path=../lookenv.config.js --dotenv=../.env && gulp watch -L",
+		"test": "gulp test -S"
 	},
 	"devDependencies": {
 		"gulp-cli": "^2.0.1"
