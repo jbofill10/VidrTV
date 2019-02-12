@@ -12,8 +12,8 @@
 		"build-server": "cd server && npm run build",
 		"client-install": "cd client && npm i",
 		"server-install": "cd server && npm i",
-		"test-client": "cd client && npm test",
-		"test-server": "cd server && npm test",
+		"test-client": "node ./scripts/checkdeps.js ./ ./client && cd client && npm test",
+		"test-server": "node ./scripts/checkdeps.js ./ ./server && cd server && npm test",
 		"test": "npm run test-client && npm run test-server",
 		"checkdeps": "node ./scripts/checkdeps.js ./ ./client ./server"
 	},

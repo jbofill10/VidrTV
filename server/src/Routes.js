@@ -114,9 +114,9 @@ export function register(app, clientpath) {
 				insertpos
 			)}<link rel="alternate" type="application/json+oembed" href="/oembed.json?r=${encodeURIComponent(
 				req.path.slice(3)
-			)}"><meta property="og:url" content="https://jacobcoughenour.herokuapp.com/${
-				req.path
-			}">${indexhtml.slice(insertpos)}`
+			)}"><meta property="og:url" content="${req.protocol}://${req.get(
+				"host"
+			)}${req.originalUrl}">${indexhtml.slice(insertpos)}`
 		);
 	});
 
@@ -129,10 +129,10 @@ export function register(app, clientpath) {
 			width: 480,
 			height: 270,
 			html: `<iframe width="480" height="270" src="${
-				process.env.NODE_ENV === "development"
-					? "localhost"
-					: "https://jacobcoughenour.herokuapp.com"
-			}/embed/${req.query.r}" frameborder="0"></iframe>`
+				req.protocol
+			}://${req.get("host")}/embed/${
+				req.query.r
+			}" frameborder="0"></iframe>`
 		});
 	});
 
