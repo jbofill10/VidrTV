@@ -1,0 +1,27 @@
+# This file is a template, and might need editing before it works on your project.
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/node/tags/
+image: node:latest
+
+# This folder is cached zbetween builds
+# http://docs.gitlab.com/ce/ci/yaml/README.html#cache
+cache:
+  paths:
+  - node_modules/
+  - client/node_modules/
+  - server/node_modules/
+
+before_script:
+  - npm run checkdeps
+
+stages:
+  - test_client
+  - test_server
+
+test_client:
+  script: "npm run test-client"
+
+test_server:
+  script: "npm run test-server"
+
+
