@@ -16,13 +16,22 @@ before_script:
 
 stages:
   - test
+  - deploy
 
-test_client:
+test:client:
   stage: test
   script: "npm run test-client"
 
-test_server:
+test:server:
   stage: test
   script: "npm run test-server"
 
-
+deploy:heroku-staging:
+  stage: deploy
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl - provider=heroku - app=task-mgmt-app - api-key=$HEROKU_API_KEY
+  only:
+    - master
