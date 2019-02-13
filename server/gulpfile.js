@@ -1,17 +1,17 @@
-const gulp = require('gulp');
-const babel = require('gulp-babel');
-const eslint = require('gulp-eslint');
-const child_process = require('child_process');
-const readline = require('readline');
-const chalk = require('chalk');
-const path = require('path');
-const fs = require('fs');
+const gulp = require("gulp");
+const babel = require("gulp-babel");
+const eslint = require("gulp-eslint");
+const child_process = require("child_process");
+const readline = require("readline");
+const chalk = require("chalk");
+const path = require("path");
+const fs = require("fs");
 // eslint-disable-next-line node/no-unpublished-require
-const fancy = require('../scripts/fancy');
+const fancy = require("../scripts/fancy");
 
 var lintfailed = false;
 
-const envpath = path.resolve(__dirname, '../.env');
+const envpath = path.resolve(__dirname, "../.env");
 
 /**
  * ESLint Gulp task
@@ -20,21 +20,21 @@ const lint = () => {
 	lintfailed = false;
 
 	let stream = gulp
-		.src('src/**/*.js')
+		.src("src/**/*.js")
 		// eslint
 		.pipe(eslint())
 		// ESLint report header
 		.pipe(
 			eslint.results((results) => {
 				if (results.errorCount > 0) {
-					fancy.error.bg('    ESLint Report    ');
+					fancy.error.bg("    ESLint Report    ");
 					lintfailed = true;
-				} else if (results.warningCount > 0) fancy.warn.bg('    ESLint Report    ');
-				else fancy.complete('ESLint Report: No Issues Found');
+				} else if (results.warningCount > 0) fancy.warn.bg("    ESLint Report    ");
+				else fancy.complete("ESLint Report: No Issues Found");
 			})
 		)
 		// format eslint report
-		.pipe(eslint.format('stylish', process.stdout));
+		.pipe(eslint.format("stylish", process.stdout));
 
 	if (watching) {
 		stream = stream
@@ -43,8 +43,8 @@ const lint = () => {
 				eslint.results((results) => {
 					if (lintfailed) {
 						fancy.space();
-						fancy.error('ESLint has cancelled the build');
-						fancy.info('waiting for file changes to restart...');
+						fancy.error("ESLint has cancelled the build");
+						fancy.info("waiting for file changes to restart...");
 					} else if (results.warningCount > 0) fancy.space();
 				})
 			);
@@ -60,14 +60,14 @@ const lint = () => {
  */
 const compile = () =>
 	gulp
-		.src('src/**/*.js')
+		.src("src/**/*.js")
 		// babel compile
 		.pipe(babel())
 		// output to build dir
-		.pipe(gulp.dest('build'))
+		.pipe(gulp.dest("build"))
 		// console log when finished
-		.on('end', () => {
-			if (!lintfailed) fancy.complete('Finished Compiling');
+		.on("end", () => {
+			if (!lintfailed) fancy.complete("Finished Compiling");
 		});
 
 /**
@@ -77,7 +77,7 @@ const compile = () =>
  */
 const build = gulp.series((cb) => {
 	fancy.space();
-	fancy.info('Building Server...');
+	fancy.info("Building Server...");
 	fancy.space();
 	cb();
 }, gulp.parallel(lint, compile));
@@ -90,10 +90,10 @@ var node;
 const killserver = (cb) => {
 	if (node) {
 		// kill running node and callback when it exits
-		node.on('close', () => {
+		node.on("close", () => {
 			cb();
 		});
-		node.kill('SIGINT');
+		node.kill("SIGINT");
 	} else {
 		// no node to kill
 		cb();
@@ -111,10 +111,10 @@ const spawnserver = gulp.series(killserver, (cb) => {
 
 	// check for index.html file needed for meta injection
 	try {
-		fs.accessSync('../client/build/index.html', fs.constants.R_OK);
+		fs.accessSync("../client/build/index.html", fs.constants.R_OK);
 	} catch (err) {
 		fancy.space();
-		fancy.error('client/build/index.html not found!');
+		fancy.error("client/build/index.html not found!");
 		fancy.error('The client needs to be built at least once.  Use "npm run build-client"');
 		fancy.space();
 		cb();
@@ -126,27 +126,28 @@ const spawnserver = gulp.series(killserver, (cb) => {
 	process.stdin.pause();
 
 	// start server process
-	node = child_process.fork('.', [], {
-		stdio: [ process.stdin, 'inherit', 'pipe', 'ipc' ],
-		env: { NODE_ENV: 'development', DOTENV_CONFIG_PATH: envpath }
+	node = child_process.fork(".", [], {
+		stdio: [ process.stdin, "inherit", "pipe", "ipc" ],
+		env: { NODE_ENV: "development", DOTENV_CONFIG_PATH: envpath },
+		execArgv: [ "--inspect" ]
 	});
 
 	// pipe input to server process
 	// process.stdin.pipe(node.stdin);
 
 	// color stderr red
-	node.stderr.on('data', (data) => console.log(chalk.red(data)));
+	node.stderr.on("data", (data) => console.log(chalk.red(data)));
 
 	// handle process close event
-	node.on('close', (code) => {
+	node.on("close", (code) => {
 		if (!restarting) fancy.space(2);
 
 		if (code) {
-			if (code === 0) fancy.event(`server ${restarting ? 'killed' : 'exited'} with code ${code}`);
-			else fancy.error(`server ${restarting ? 'killed' : 'exited'} with code ${code}`);
-		} else fancy.event(`server ${restarting ? 'killed' : 'exited'}`);
+			if (code === 0) fancy.event(`server ${restarting ? "killed" : "exited"} with code ${code}`);
+			else fancy.error(`server ${restarting ? "killed" : "exited"} with code ${code}`);
+		} else fancy.event(`server ${restarting ? "killed" : "exited"}`);
 
-		if (!restarting) fancy.info('waiting for file changes to restart...');
+		if (!restarting) fancy.info("waiting for file changes to restart...");
 
 		//? this seems to work
 		process.stdin.resume();
@@ -157,7 +158,7 @@ const spawnserver = gulp.series(killserver, (cb) => {
 	cb();
 
 	fancy.space();
-	fancy.info('Launching Server...');
+	fancy.info("Launching Server...");
 	fancy.space();
 });
 
@@ -166,13 +167,13 @@ var restarting = false;
 const restart = gulp.series(
 	(cb) => {
 		fancy.space();
-		fancy.info('Restarting due to file change...');
+		fancy.info("Restarting due to file change...");
 		restarting = true;
 		cb();
 	},
 	killserver,
 	(cb) => {
-		console.log('------------------------------------------------------------');
+		console.log("------------------------------------------------------------");
 		cb();
 	},
 	build,
@@ -194,9 +195,9 @@ const watch = (cb) => {
 	readline.emitKeypressEvents(process.stdin);
 	process.stdin.setRawMode(true);
 
-	process.stdin.on('keypress', (str, key) => {
+	process.stdin.on("keypress", (str, key) => {
 		// ctrl + C exit
-		if (key.sequence === '\u0003') {
+		if (key.sequence === "\u0003") {
 			process.stdin.pause();
 
 			// async close watch task
@@ -204,13 +205,13 @@ const watch = (cb) => {
 
 			// kill process
 			// eslint-disable-next-line no-process-exit
-			process.exit('SIGINT');
+			process.exit("SIGINT");
 		}
 
 		// console.log('gulp keypress ' + key.name);
 	});
 
-	return gulp.watch('src/**/*.*', restart);
+	return gulp.watch("src/**/*.*", restart);
 };
 
 // build and spawn then start watching
