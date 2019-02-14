@@ -1,18 +1,18 @@
-const paths = process.argv.length > 2 ? process.argv.slice(2) : [ './', './client', './server' ];
+const paths = process.argv.length > 2 ? process.argv.slice(2) : [ "./", "./client", "./server" ];
 
-process.stdout.write('\n\x1b[36m ●  checking dependencies...\n\n\x1b[0m');
+process.stdout.write("\n\x1b[36m ●  checking dependencies...\n\n\x1b[0m");
 
-const child_process = require('child_process');
+const child_process = require("child_process");
 var npm;
 
 try {
-	npm = require('global-npm');
+	npm = require("global-npm");
 	start();
 } catch (error) {
 	// install global-npm if it fails to load
-	var install = child_process.spawn(process.platform === 'win32' ? 'npm.cmd' : 'npm', [ 'install', 'global-npm' ]);
-	install.on('exit', () => {
-		npm = require('global-npm');
+	var install = child_process.spawn(process.platform === "win32" ? "npm.cmd" : "npm", [ "install", "global-npm" ]);
+	install.on("exit", () => {
+		npm = require("global-npm");
 		start();
 	});
 }
@@ -54,7 +54,9 @@ function start() {
 
 			if (filtered.length > 0) {
 				console.log(
-					`${'\r\033[2A'}\x1b[36m ●  Installing ${total} missing package${total > 1 ? 's' : ''}...\n\x1b[0m`
+					`${"\r\033[2A"}\x1b[36m ●  Installing/Updating ${total} missing package${total > 1
+						? "s"
+						: ""}...\n\x1b[0m`
 				);
 
 				let complete = 0;
@@ -62,20 +64,15 @@ function start() {
 				filtered.forEach((path) => {
 					npm.prefix = path;
 
-					npm.commands.install([], (err, data) => {
+					npm.commands.update([], (err, data) => {
 						complete++;
 						if (complete === filtered.length)
-							console.log(`\n\x1b[32m ✔  All dependencies have been installed\x1b[0m\n`);
+							console.log(`\n\x1b[32m ✔  All dependencies have been installed/updated\x1b[0m\n`);
 					});
 				});
 			} else {
-				console.log(`${'\r\033[1A'}\x1b[32m ✔  All dependencies are installed\x1b[0m\n`);
+				console.log(`${"\r\033[1A"}\x1b[32m ✔  All dependencies are installed and up-to-date\x1b[0m\n`);
 			}
-
-			// if (data.length === 0) {
-			// process.stdout.write('\r\033[1A \x1b[32m ✔  All dependencies are up to date\n');
-			// } else {
-			// }
 		};
 	});
 }
