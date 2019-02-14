@@ -15,7 +15,8 @@
 		"test-client": "node ./scripts/checkdeps.js ./ ./client && cd client && npm test",
 		"test-server": "node ./scripts/checkdeps.js ./ ./server && cd server && npm test",
 		"test": "npm run test-client && npm run test-server",
-		"checkdeps": "node ./scripts/checkdeps.js ./ ./client ./server"
+		"checkdeps": "node ./scripts/checkdeps.js ./ ./client ./server",
+		"setup": "npm i && npm run client-install && npm run server-install && node ./lookenv.config.js "
 	},
 	"devDependencies": {
 		"husky": "^1.3.1",
@@ -38,7 +39,6 @@
 		"chalk": "^2.4.2",
 		"global-npm": "^0.3.0",
 		"joi": "^14.3.1",
-		"lookenv": "^1.0.1",
-		"yargs": "^12.0.5"
+		"lookenv": "^1.0.1"
 	}
 }
