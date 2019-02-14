@@ -147,7 +147,10 @@ const spawnserver = gulp.series(killserver, (cb) => {
 			else fancy.error(`server ${restarting ? "killed" : "exited"} with code ${code}`);
 		} else fancy.event(`server ${restarting ? "killed" : "exited"}`);
 
-		if (!restarting) fancy.info("waiting for file changes to restart...");
+		if (!restarting) {
+			fancy.info("waiting for file changes to restart...");
+			if (!code) fancy.info("do ctrl+c again to exit server-dev");
+		}
 
 		//? this seems to work
 		process.stdin.resume();
