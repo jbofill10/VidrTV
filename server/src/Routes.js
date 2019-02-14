@@ -60,8 +60,13 @@ export function register(app, clientpath) {
 		const errors = validationResult(req);
 		if (!errors.isEmpty())
 			return res.status(442).json({ errors: errors.array() });
-		else console.log(req.body.submission);
-		res.json(errors);
+		else console.log("Room created!");
+		RoomModel.save(err => {
+			if (err) {
+				console.log("Error in adding room to DB");
+				res.json(err);
+			} else console.log("Room added to DB successfully");
+		});
 	});
 
 	// room list and search
