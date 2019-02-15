@@ -8,9 +8,9 @@
 		"customize-cra": "^0.2.11",
 		"env-path": "^1.0.6",
 		"radium": "^0.25.1",
-		"react": "^16.8.1",
+		"react": "^16.8.2",
 		"react-app-rewired": "^2.1.0",
-		"react-dom": "^16.8.1",
+		"react-dom": "^16.8.2",
 		"react-icons": "^3.4.0",
 		"react-media-player": "^0.7.6",
 		"react-player": "^1.9.3",
@@ -32,6 +32,11 @@
 	"eslintConfig": {
 		"extends": "react-app"
 	},
-	"browserslist": [ ">0.2%", "not dead", "not ie <= 11", "not op_mini all" ],
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	],
 	"proxy": "http://localhost:8080"
 }

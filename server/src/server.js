@@ -36,13 +36,13 @@ app.use(express.static(clientpath));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// register routes
-register(app, clientpath);
-
 const server = app.listen(port, () => {
 	console.log(chalk.green("[Express] Listening on " + port));
 	status.express = true;
 });
 
 // start room service
-RoomService.start(socketio(server));
+RoomService.start(app, socketio(server));
+
+// register routes
+register(app, clientpath);

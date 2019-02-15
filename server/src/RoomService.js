@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { status } from "./log";
+import { check, validationResult } from "express-validator/check";
 import { default as Room, RoomModel } from "./Room";
 
 /**
@@ -21,12 +22,16 @@ class RoomService {
 	 * Starts the Room Service
 	 * @param {socketio.Server} io socket.io server
 	 */
-	start(io) {
+	start(app, io) {
 		this.io = io;
+
+		log("Starting...");
+
+		// register api routes
+		this.registerRoutes(app);
 
 		// get room data from db
 
-		log("Starting...");
 		log("Downloading room data from db...");
 
 		RoomModel.find({}, (err, docs) => {
@@ -39,6 +44,51 @@ class RoomService {
 				// load the rooms
 				this.loadRooms(docs);
 			}
+		});
+	}
+
+	registerRoutes(app) {
+		app.post("/api/room/create", (req, res) => {
+			const errors = validationResult(req);
+			if (!errors.isEmpty())
+				return res.status(442).json({ errors: errors.array() });
+			else console.log("Room created!");
+			RoomModel.save(err => {
+				if (err) {
+					console.log("Error in adding room to DB");
+					res.json(err);
+				} else console.log("Room added to DB successfully");
+			});
+		});
+
+		// room list and search
+		// TODO: query params for search and pagination
+		app.get("/api/rooms", [], (req, res) => {
+			const errors = validationResult(req);
+			if (!errors.isEmpty())
+				return res.status(442).json({ errors: errors.array() });
+
+			// fetch all room docs from mongo
+			RoomModel.find({}, (err, docs) => {
+				if (err) res.status(500).send(err);
+				// all good, send it
+				else res.json(docs);
+			});
+		});
+
+		// get room info by id
+		// TODO: optional params to only send specified info
+		app.get("/api/room/:id", [check("id").isMongoId()], (req, res) => {
+			const errors = validationResult(req);
+			if (!errors.isEmpty())
+				return res.status(442).json({ errors: errors.array() });
+
+			// fetch room doc from mongo
+			RoomModel.findById(req.params.id, (err, docs) => {
+				if (err) res.status(500).send(err);
+				// all good, send it
+				else res.json(docs);
+			});
 		});
 	}
 
