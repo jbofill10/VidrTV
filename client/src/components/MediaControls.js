@@ -111,7 +111,7 @@ class MediaControls extends Component {
 	};
 
 	render() {
-		const { className, style, player, lockedPlayback } = this.props;
+		const { className, style, player } = this.props;
 		const {
 			duration,
 			loaded,
@@ -140,22 +140,20 @@ class MediaControls extends Component {
 				onMouseOver={this._showControls}
 				onMouseLeave={this._hideControls}
 			>
-				{!lockedPlayback && (
-					<button
-						style={{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							background: "transparent",
-							height: "100%",
-							width: "100%",
-							zIndex: 2,
-							border: 0,
-							outline: "none"
-						}}
-						onClick={player.playPause}
-					/>
-				)}
+				<button
+					style={{
+						position: "absolute",
+						top: 0,
+						left: 0,
+						background: "transparent",
+						height: "100%",
+						width: "100%",
+						zIndex: 2,
+						border: 0,
+						outline: "none"
+					}}
+					onClick={player.playPause}
+				/>
 				<div
 					style={[
 						{
@@ -197,11 +195,11 @@ class MediaControls extends Component {
 					]}
 				>
 					<Slider
-						isEnabled={!lockedPlayback}
+						isEnabled={false}
 						style={{
 							flex: 1,
 							overflow: "hidden",
-							cursor: lockedPlayback ? "inherit" : "pointer",
+							cursor: "inherit",
 							height: this.state.hidden ? 2 : 4,
 							margin: this.state.hidden ? 0 : "0 6px",
 							borderRadius: this.state.hidden ? 0 : 4,
@@ -258,8 +256,7 @@ class MediaControls extends Component {
 						<PlayerButton
 							onClick={player.playPause}
 							style={{
-								padding: "4px 10px",
-								display: lockedPlayback ? "none" : "inherit"
+								padding: "4px 10px"
 							}}
 						>
 							{playing ? <MdPause /> : <MdPlayArrow />}

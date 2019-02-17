@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"dependencies": {
-		"@babel/plugin-proposal-class-properties": "^7.3.0",
+		"@babel/plugin-proposal-class-properties": "^7.3.3",
 		"@babel/plugin-proposal-decorators": "^7.3.0",
 		"customize-cra": "^0.2.11",
 		"env-path": "^1.0.6",

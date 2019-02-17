@@ -89,12 +89,13 @@ export default class MediaPlayer extends Component {
 					);
 				}
 
-				this.player.seekTo(
-					(time + (socket.io.lastPing | 0)) /
-						1000 /
-						this.state.duration
-				);
-				this.setState({ playing: true });
+				if (this.state.playing) {
+					this.player.seekTo(
+						(time + (socket.io.lastPing | 0)) /
+							1000 /
+							this.state.duration
+					);
+				}
 			}
 		});
 	}
@@ -247,11 +248,7 @@ export default class MediaPlayer extends Component {
 							}}
 						/>
 					</div>
-					<MediaControls
-						className="media-controls"
-						player={this}
-						lockedPlayback
-					/>
+					<MediaControls className="media-controls" player={this} />
 					{showStats && <StatsOverlay player={this} />}
 				</div>
 			</div>
