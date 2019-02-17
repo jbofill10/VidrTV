@@ -3,6 +3,7 @@ import Radium from "radium";
 import { Slider } from "react-player-controls";
 import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeOff } from "react-icons/md";
 import { utils } from "react-media-player";
+import { default as PlaylistView } from "./PlaylistView";
 
 const PlayerButton = Radium(({ style, children, ...props }) => (
 	<button
@@ -176,6 +177,24 @@ class MediaControls extends Component {
 						}
 					]}
 				/>
+				<div
+					style={[
+						{
+							position: "absolute",
+							top: -48,
+							left: -48,
+							height: "100%",
+							width: "100%",
+							opacity: 1
+						},
+						this.state.hidden && {
+							opacity: 0,
+							transition: "opacity 0.4s"
+						}
+					]}
+				>
+					<PlaylistView room={this.props.player.props.room} />
+				</div>
 				<div
 					style={[
 						{
@@ -450,6 +469,7 @@ class StatsOverlay extends Component {
 					{
 						position: "absolute",
 						top: "25%",
+						right: 0,
 						width:
 							Math.max(
 								maxNameLength + maxValueLength + 1,

@@ -1,5 +1,5 @@
 import React from "react";
-import { PlaylistView, MediaPlayer } from "../components";
+import { MediaPlayer } from "../components";
 import openSocket from "socket.io-client";
 
 export default class RoomView extends React.Component {
@@ -46,10 +46,6 @@ export default class RoomView extends React.Component {
 					height={360}
 					socket={this.socket}
 					room={this.state.room}
-				/>
-				<PlaylistView
-					items={this.state.room.media}
-					style={{ paddingTop: 16 }}
 				/>
 			</div>
 		);
