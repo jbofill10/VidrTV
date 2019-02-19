@@ -153,7 +153,14 @@ export default class DefaultView extends React.Component {
 	render() {
 		if (this.state.loading) return <div>Loading Rooms...</div>;
 		return (
-			<div className="room-list">
+			<div
+				className="room-list"
+				style={{
+					position: "absolute",
+					left: "50%",
+					transform: "translate(-50%)"
+				}}
+			>
 				{this.state.rooms.map(room => (
 					<RoomCard room={room} key={room._id} />
 				))}

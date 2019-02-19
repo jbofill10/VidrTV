@@ -42,7 +42,16 @@ export default class App extends React.Component {
 					<Route path="/embed/*" component={EmbedView} />
 					<Route
 						render={() => (
-							<div className="App">
+							<div
+								className="App"
+								style={{
+									display: "flex",
+									width: "100%",
+									height: "100%",
+									flexDirection: "column",
+									alignContent: "flex-start"
+								}}
+							>
 								<header
 									className="app-header"
 									style={{
@@ -50,7 +59,8 @@ export default class App extends React.Component {
 										display: "flex",
 										padding: "8px 16px",
 										color: "white",
-										height: 40
+										height: 40,
+										flexShrink: 0
 									}}
 								>
 									<NavLink
@@ -78,10 +88,8 @@ export default class App extends React.Component {
 								<div
 									className="content"
 									style={{
-										position: "absolute",
-										left: "50%",
-										margin: "20px 0",
-										transform: "translateX(-50%)"
+										position: "relative",
+										flex: 1
 									}}
 								>
 									<Route
@@ -91,27 +99,14 @@ export default class App extends React.Component {
 									/>
 									<Route path="/r/:id" component={RoomView} />
 									<Route
+										path="/create"
+										component={CreateRoomView}
+									/>
+									<Route
 										path="/embed/*"
 										component={EmbedView}
 									/>
-									<Route
-										path="/api/room/create"
-										component={CreateRoomView}
-									/>
 								</div>
-								<footer>
-									<form
-										action="/api/room/create"
-										method="get"
-									>
-										<input
-											type="submit"
-											value="Create a room"
-											name="Submit"
-											id="create_submit"
-										/>
-									</form>
-								</footer>
 							</div>
 						)}
 					/>

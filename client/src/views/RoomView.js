@@ -39,14 +39,35 @@ export default class RoomView extends React.Component {
 	render() {
 		if (this.state.joining) return <div>Joining Room...</div>;
 		return (
-			<div>
-				<MediaPlayer
-					className="player-container"
-					width={640}
-					height={360}
-					socket={this.socket}
-					room={this.state.room}
-				/>
+			<div
+				style={{
+					display: "flex"
+				}}
+			>
+				<div>
+					<MediaPlayer
+						className="player-container"
+						width={640}
+						height={360}
+						socket={this.socket}
+						room={this.state.room}
+					/>
+					<div
+						style={{
+							background: "red"
+						}}
+					>
+						<p>video title stuff</p>
+					</div>
+				</div>
+				<div
+					style={{
+						background: "blue",
+						width: 320
+					}}
+				>
+					sidebar
+				</div>
 			</div>
 		);
 	}
