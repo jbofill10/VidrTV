@@ -54,7 +54,7 @@ function start() {
 
 			if (filtered.length > 0) {
 				console.log(
-					`${"\r\033[2A"}\x1b[36m ●  Installing/Updating ${total} missing package${total > 1
+					`${"\r\033[2A"}\x1b[36m ●  Installing/Updating ${total} package${total > 1
 						? "s"
 						: ""}...\n\x1b[0m`
 				);
