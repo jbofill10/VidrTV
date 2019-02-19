@@ -90,6 +90,30 @@ class RoomService {
 				else res.json(docs);
 			});
 		});
+
+		app.post("/api/room/:id", [check("id").isMongoId()], (req, res) => {
+			const errors = validationResult(req);
+			if (!errors.isEmpty())
+				return res.status(442).json({ errors: errors.array() });
+			else {
+				var songID = req.body.submission.substring(
+					req.body.submission.indexOf("=") + 1,
+					req.body.submission.length + 1
+				);
+				RoomModel.findOneAndUpdate(
+					{ _id: req.params.id },
+					{ $push: { media: songID }, new: true, upsert: true },
+					err => {
+						if (err)
+							return console.log("Error in adding song to DB");
+						else
+							return console.log(
+								"Song successfully added to DB!"
+							);
+					}
+				);
+			}
+		});
 	}
 
 	/**

@@ -1,6 +1,7 @@
 import React from "react";
 import { MediaPlayer } from "../components";
 import openSocket from "socket.io-client";
+import "whatwg-fetch";
 
 export default class RoomView extends React.Component {
 	constructor(props) {
@@ -8,8 +9,12 @@ export default class RoomView extends React.Component {
 		this.roomid = props.match.params.id;
 		this.state = {
 			room: {},
-			joining: true
+			joining: true,
+			value: ""
 		};
+
+		this.handleChange = this.handleChange.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 
 		// open realtime socket connection
 		this.socket = openSocket(
@@ -36,10 +41,40 @@ export default class RoomView extends React.Component {
 		this.socket.disconnect();
 	}
 
+	handleChange(event) {
+		this.setState({ value: event.target.value });
+	}
+
+	handleSubmit(event) {
+		event.preventDefault();
+		fetch("/api/room/" + this.roomid, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				submission: this.state.value
+			})
+		}).then(res => {
+			res.json();
+		});
+	}
+
 	render() {
 		if (this.state.joining) return <div>Joining Room...</div>;
 		return (
 			<div>
+				<form onSubmit={this.handleSubmit}>
+					<label>
+						Enter Song:
+						<input
+							type="text"
+							value={this.state.value}
+							onChange={this.handleChange}
+						/>
+					</label>
+					<input type="submit" value="Submit" />
+				</form>
 				<MediaPlayer
 					className="player-container"
 					width={640}
