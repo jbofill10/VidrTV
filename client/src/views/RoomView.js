@@ -41,10 +41,20 @@ export default class RoomView extends React.Component {
 		return (
 			<div
 				style={{
-					display: "flex"
+					display: "flex",
+					overflow: "hidden",
+					textAlign: "center",
+					height: "100%",
+					width: "100%"
 				}}
 			>
-				<div>
+				<main
+					style={{
+						overflowX: "hidden",
+						overflowY: "auto",
+						flex: 1
+					}}
+				>
 					<MediaPlayer
 						className="player-container"
 						width={640}
@@ -54,12 +64,13 @@ export default class RoomView extends React.Component {
 					/>
 					<div
 						style={{
-							background: "red"
+							background: "red",
+							height: 40
 						}}
 					>
-						<p>video title stuff</p>
+						<span>video info</span>
 					</div>
-				</div>
+				</main>
 				<div
 					style={{
 						background: "blue",

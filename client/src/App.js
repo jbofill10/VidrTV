@@ -48,6 +48,7 @@ export default class App extends React.Component {
 									display: "flex",
 									width: "100%",
 									height: "100%",
+									overflow: "hidden",
 									flexDirection: "column",
 									alignContent: "flex-start"
 								}}
@@ -88,7 +89,7 @@ export default class App extends React.Component {
 								<div
 									className="content"
 									style={{
-										position: "relative",
+										display: "flex",
 										flex: 1
 									}}
 								>
