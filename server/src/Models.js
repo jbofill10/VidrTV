@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import {
 	GraphQLSchema,
-	graphql,
 	GraphQLObjectType,
 	GraphQLString,
 	GraphQLList,
@@ -28,19 +27,10 @@ const RoomSchema = new GraphQLSchema({
 	query: new GraphQLObjectType({
 		name: "Room",
 		fields: {
+			name: { type: GraphQLString },
 			media: { type: GraphQLList(GraphQLString) },
-			name: {
-				type: GraphQLString,
-				resolve() {
-					RoomModel.find({}, { name: String }, (err, docs) => {
-						if (err) console.log(err);
-						else console.log(docs);
-					});
-				}
-			},
-			__v: GraphQLInt,
-			cur: GraphQLInt,
-			time: GraphQLInt
+			cur: { type: GraphQLInt },
+			time: { type: GraphQLInt }
 		}
 	})
 });
