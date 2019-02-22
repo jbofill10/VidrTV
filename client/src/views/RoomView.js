@@ -1,5 +1,6 @@
 import React from "react";
-import { MediaPlayer, PlaylistView } from "../components";
+import { MediaPlayer } from "../components";
+import { SidebarView } from "./";
 import openSocket from "socket.io-client";
 import { youtube } from "../youtube";
 
@@ -133,7 +134,7 @@ export default class RoomView extends React.Component {
 						</div>
 					</div>
 				</main>
-				<div
+				<SidebarView
 					style={{
 						background: "rgb(44, 40, 52)",
 						minWidth: 320,
@@ -141,39 +142,7 @@ export default class RoomView extends React.Component {
 						display: "flex",
 						flexDirection: "column"
 					}}
-				>
-					<div
-						style={{
-							background: "rgb(44, 40, 52)",
-							height: 40,
-							flexShrink: 0,
-							display: "flex"
-						}}
-					>
-						<button
-							style={{
-								flex: 1
-							}}
-						>
-							Chat
-						</button>
-						<button
-							style={{
-								flex: 1
-							}}
-						>
-							Playlist
-						</button>
-					</div>
-					<div
-						style={{
-							background: "rgb(0, 0, 0, 0.3)",
-							flex: 1
-						}}
-					>
-						sidebar
-					</div>
-				</div>
+				/>
 			</div>
 		);
 	}

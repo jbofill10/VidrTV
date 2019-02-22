@@ -5,8 +5,10 @@
 	"dependencies": {
 		"@babel/plugin-proposal-class-properties": "^7.3.3",
 		"@babel/plugin-proposal-decorators": "^7.3.0",
+		"@material-ui/core": "^3.9.2",
 		"customize-cra": "^0.2.11",
 		"env-path": "^1.0.6",
+		"prop-types": "^15.7.2",
 		"radium": "^0.25.1",
 		"react": "^16.8.2",
 		"react-app-rewired": "^2.1.0",
@@ -18,6 +20,7 @@
 		"react-redux": "^6.0.1",
 		"react-router-dom": "^4.3.1",
 		"react-scripts": "2.1.5",
+		"react-swipeable-views": "^0.13.1",
 		"redux": "^4.0.1",
 		"simple-youtube-api": "^5.1.1",
 		"socket.io-client": "^2.2.0",
