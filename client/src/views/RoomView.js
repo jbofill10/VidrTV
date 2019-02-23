@@ -137,11 +137,10 @@ export default class RoomView extends React.Component {
 				<SidebarView
 					style={{
 						background: "rgb(44, 40, 52)",
-						minWidth: 320,
-						maxWidth: 360,
 						display: "flex",
 						flexDirection: "column"
 					}}
+					roomview={this}
 				/>
 			</div>
 		);

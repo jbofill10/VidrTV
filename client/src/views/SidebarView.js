@@ -1,36 +1,24 @@
 import React from "react";
+import Radium from "radium";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import SwipeableViews from "react-swipeable-views";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import Typography from "@material-ui/core/Typography";
-
-function TabContainer({ children, dir }) {
-	return (
-		<Typography component="div" dir={dir} style={{ padding: 8 * 3 }}>
-			{children}
-		</Typography>
-	);
-}
-
-TabContainer.propTypes = {
-	children: PropTypes.node.isRequired,
-	dir: PropTypes.string.isRequired
-};
+import { ChatView, PlaylistView } from "./";
 
 const styles = theme => ({
 	root: {
 		backgroundColor: theme.palette.background.paper,
-		width: 500
+		width: 380
 	}
 });
 
+@Radium
 class SidebarView extends React.Component {
 	state = {
-		value: 0
+		value: 1
 	};
 
 	handleChange = (event, value) => {
@@ -42,11 +30,11 @@ class SidebarView extends React.Component {
 	};
 
 	render() {
-		const { classes, theme, style } = this.props;
+		const { classes, theme, style, roomview } = this.props;
 
 		return (
 			<div className={classes.root} style={style}>
-				<AppBar position="static" color="main">
+				<AppBar position="static" color="default">
 					<Tabs
 						value={this.state.value}
 						onChange={this.handleChange}
@@ -63,8 +51,8 @@ class SidebarView extends React.Component {
 					index={this.state.value}
 					onChangeIndex={this.handleChangeIndex}
 				>
-					<TabContainer dir={theme.direction}>Item One</TabContainer>
-					<TabContainer dir={theme.direction}>Item Two</TabContainer>
+					<ChatView roomview={roomview} />
+					<PlaylistView roomview={roomview} />
 				</SwipeableViews>
 			</div>
 		);

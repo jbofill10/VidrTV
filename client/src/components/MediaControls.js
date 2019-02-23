@@ -3,7 +3,6 @@ import Radium from "radium";
 import { Slider } from "react-player-controls";
 import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeOff } from "react-icons/md";
 import { utils } from "react-media-player";
-import { default as PlaylistView } from "./PlaylistView";
 
 const PlayerButton = Radium(({ style, children, ...props }) => (
 	<button
