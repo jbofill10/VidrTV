@@ -24,6 +24,9 @@ const theme = createMuiTheme({
 				transform: "scaleX(0.9)"
 			}
 		}
+	},
+	typography: {
+		useNextVariants: true
 	}
 });
 

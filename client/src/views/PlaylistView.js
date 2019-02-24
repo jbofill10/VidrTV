@@ -1,5 +1,4 @@
 import React from "react";
-import Radium from "radium";
 import { withStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -39,60 +38,57 @@ const cardstyles = theme => ({
 		maxHeight: "2.5rem"
 	},
 	header: {
-		padding: "12px 18px"
+		padding: "8px 18px 0px 18px"
 		// textAlign: "center"
 	}
 });
 
-const MediaCard = withStyles(cardstyles)(
-	Radium(({ style, children, ...props }) => {
-		const { id, cache, index, classes } = props;
+const MediaCard = withStyles(cardstyles)(({ style, children, ...props }) => {
+	const { id, cache, index, classes } = props;
 
-		if (!cache.hasOwnProperty(id))
-			return (
-				<Card>
-					<Typography className={classes.title} color="textSecondary">
-						Loading...
-					</Typography>
-				</Card>
-			);
-
+	if (!cache.hasOwnProperty(id))
 		return (
-			<div>
-				{index === 0 && (
-					<div className={classes.header}>Now Playing</div>
-				)}
-				{index === 1 && <div className={classes.header}>Up Next</div>}
-				<Card
-					className={classes.card}
-					// raised={index === 0}
-				>
-					<CardMedia
-						className={classes.thumb}
-						image={cache[id].thumbnails.medium.url}
-						title={cache[id].title}
-					/>
-					<CardContent className={classes.details}>
-						<Typography
-							className={classes.title}
-							color="textPrimary"
-						>
-							{cache[id].title}
-						</Typography>
-						<Typography
-							className={classes.channel}
-							color="textSecondary"
-						>
-							{cache[id].channel.title}
-						</Typography>
-					</CardContent>
-				</Card>
-			</div>
+			<Card>
+				<Typography className={classes.title} color="textSecondary">
+					Loading...
+				</Typography>
+			</Card>
 		);
-	})
-);
 
-@Radium
+	return (
+		<div>
+			{index < 2 ? (
+				<Typography className={classes.header} variant="overline">
+					{index === 0 ? "Now Playing" : "Up Next"}
+				</Typography>
+			) : (
+				""
+			)}
+			<Card
+				className={classes.card}
+				// raised={index === 0}
+			>
+				<CardMedia
+					className={classes.thumb}
+					image={cache[id].thumbnails.medium.url}
+					title={cache[id].title}
+				/>
+				<CardContent className={classes.details}>
+					<Typography className={classes.title} color="textPrimary">
+						{cache[id].title}
+					</Typography>
+					<Typography
+						className={classes.channel}
+						color="textSecondary"
+					>
+						{cache[id].channel.title}
+					</Typography>
+				</CardContent>
+			</Card>
+		</div>
+	);
+});
+
 class PlaylistView extends React.Component {
 	constructor(props) {
 		super(props);
@@ -113,6 +109,7 @@ class PlaylistView extends React.Component {
 			<div
 				className={classes.root}
 				style={{
+					paddingTop: 8,
 					display: "flex",
 					flexDirection: "column"
 				}}
