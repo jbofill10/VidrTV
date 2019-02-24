@@ -1,5 +1,5 @@
 import React from "react";
-import { MediaPlayer } from "../components";
+import { MediaPlayer, Loader } from "../components";
 import { SidebarView } from "./";
 import openSocket from "socket.io-client";
 import { youtube } from "../youtube";
@@ -12,21 +12,46 @@ export default class RoomView extends React.Component {
 		this.state = {
 			room: {},
 			mediacache: {},
-			joining: true
+			joining: true,
+			error: false,
+			loadingmessage: "Joining Room"
 		};
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+	}
 
+	componentDidMount() {
 		// open realtime socket connection
 		this.socket = openSocket(
 			process.env.NODE_ENV === "development"
 				? window.location.hostname + ":8080"
 				: null
 		);
-	}
 
-	componentDidMount() {
+		this.socket.on("connect_error", error => {
+			console.error(error);
+			this.setState({
+				joining: true,
+				error: true,
+				loadingmessage: (
+					<span>
+						<div>Connection Error</div>
+						<div>{error.toString()}</div>
+					</span>
+				)
+			});
+		});
+
+		this.socket.on("connect_timeout", () => {
+			console.error("connect_timeout");
+			this.setState({
+				joining: true,
+				error: true,
+				loadingmessage: "Connection Timeout"
+			});
+		});
+
 		// join room by id
 		this.socket.emit("join", { roomid: this.roomid });
 
@@ -83,7 +108,13 @@ export default class RoomView extends React.Component {
 	}
 
 	render() {
-		if (this.state.joining) return <div>Joining Room...</div>;
+		if (this.state.joining)
+			return (
+				<Loader
+					error={this.state.error}
+					message={this.state.loadingmessage}
+				/>
+			);
 
 		return (
 			<div

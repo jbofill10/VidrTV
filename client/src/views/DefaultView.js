@@ -1,6 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import { NavLink } from "react-router-dom";
+import { Loader } from "../components";
 import "whatwg-fetch";
 
 const RoomCard = Radium(({ ...props }) => (
@@ -133,25 +134,39 @@ export default class DefaultView extends React.Component {
 
 		this.state = {
 			rooms: {},
-			loading: true
+			loading: true,
+			error: false,
+			message: "Loading Rooms List"
 		};
 	}
 
 	componentDidMount() {
 		// TODO: request sorted list and limit number of results for pagination
 		fetch("/api/rooms")
-			.then(res => res.json())
+			.then(res => {
+				if (!res.ok) throw res.statusText;
+				return res.json();
+			})
+			// .then((res) => res.json())
 			.then(json => {
 				console.log("/api/rooms response", json);
 				this.setState({ rooms: json, loading: false });
 			})
 			.catch(ex => {
-				console.error("parsing failed", ex);
+				console.error("/api/rooms error", ex);
+				this.setState({
+					loading: true,
+					error: true,
+					message: ex.toString()
+				});
 			});
 	}
 
 	render() {
-		if (this.state.loading) return <div>Loading Rooms...</div>;
+		if (this.state.loading)
+			return (
+				<Loader error={this.state.error} message={this.state.message} />
+			);
 		return (
 			<div
 				className="room-list"
