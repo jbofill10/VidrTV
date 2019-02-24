@@ -1,21 +1,28 @@
-import { GraphQLObjectType, GraphQLString, GraphQLSchema } from "graphql";
-import { RoomSchema, RoomModel } from "../index";
+import {
+	GraphQLObjectType,
+	GraphQLID,
+	GraphQLSchema,
+	GraphQLString,
+	GraphQLList
+} from "graphql";
+import { RoomType, RoomModel } from "../index";
 
 const RoomQuery = new GraphQLObjectType({
 	name: "RoomQuery",
 	fields: {
 		room: {
-			type: RoomSchema,
-			args: { id: { type: { GraphQLString } } },
-			resolve(args) {
-				return RoomModel.findById(args.id);
-			}
+			type: new GraphQLList(RoomType),
+			resolve: () =>
+				RoomModel.find({}, (err, res) => {
+					if (err) console.log(err);
+					else return JSON.stringify(res);
+				})
 		}
 	}
 });
 
-const finalProduct = new GraphQLSchema({
+const QueryRoomById = new GraphQLSchema({
 	query: RoomQuery
 });
 
-export { finalProduct };
+export { QueryRoomById };

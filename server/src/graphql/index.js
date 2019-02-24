@@ -1,4 +1,4 @@
-import { RoomSchema, RoomModel } from "../Models";
-import { finalProduct } from "./Rooms/Queries";
+import { RoomType, RoomModel } from "../Models";
+import { QueryRoomById } from "./Rooms/Queries";
 
-export { RoomSchema, RoomModel, finalProduct };
+export { RoomType, RoomModel, QueryRoomById };

@@ -9,7 +9,7 @@ import db from "./db";
 import RoomService from "./RoomService";
 import { register } from "./Routes.js";
 import graphqlHTTP from "express-graphql";
-import { finalProduct } from "./graphql/index";
+import { QueryRoomById } from "./graphql/index";
 
 // Setup database
 
@@ -46,10 +46,10 @@ const server = app.listen(port, () => {
 //graphql endpoint
 app.use(
 	"/graphql",
-	graphqlHTTP(req => ({
-		schema: finalProduct,
+	graphqlHTTP({
+		schema: QueryRoomById,
 		graphiql: true
-	}))
+	})
 );
 
 // start room service

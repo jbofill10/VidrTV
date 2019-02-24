@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import {
-	GraphQLSchema,
 	GraphQLObjectType,
 	GraphQLString,
 	GraphQLList,
-	GraphQLInt
+	GraphQLInt,
+	GraphQLNonNull
 } from "graphql";
 
 // user info model
@@ -23,16 +23,14 @@ const RoomModel = mongoose.model("room", {
 });
 
 //graphQl Schema
-const RoomSchema = new GraphQLSchema({
-	query: new GraphQLObjectType({
-		name: "Room",
-		fields: {
-			name: { type: GraphQLString },
-			media: { type: GraphQLList(GraphQLString) },
-			cur: { type: GraphQLInt },
-			time: { type: GraphQLInt }
-		}
+const RoomType = new GraphQLObjectType({
+	name: "Room",
+	fields: () => ({
+		media: { type: GraphQLList(GraphQLString) },
+		name: { type: GraphQLString },
+		cur: { type: GraphQLInt },
+		time: { type: GraphQLInt }
 	})
 });
 
-export { RoomModel, UserInfoModel, RoomSchema };
+export { RoomModel, UserInfoModel, RoomType };
