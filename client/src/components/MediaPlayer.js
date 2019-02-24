@@ -92,13 +92,12 @@ class MediaPlayer extends Component {
 					);
 				}
 
-				if (this.state.playing) {
-					this.player.seekTo(
-						(time + (socket.io.lastPing | 0)) /
-							1000 /
-							this.state.duration
-					);
-				}
+				// if (this.state.playing)
+				this.player.seekTo(
+					(time + (socket.io.lastPing | 0)) /
+						1000 /
+						this.state.duration
+				);
 			}
 		});
 
