@@ -8,6 +8,8 @@ import { status } from "./log";
 import db from "./db";
 import RoomService from "./RoomService";
 import { register } from "./Routes.js";
+import graphqlHTTP from "express-graphql";
+import { QueryRoomById } from "./graphql/index";
 
 // Setup database
 
@@ -40,6 +42,15 @@ const server = app.listen(port, () => {
 	console.log(chalk.green("[Express] Listening on " + port));
 	status.express = true;
 });
+
+//graphql endpoint
+app.use(
+	"/graphql",
+	graphqlHTTP({
+		schema: QueryRoomById,
+		graphiql: true
+	})
+);
 
 // start room service
 RoomService.start(app, socketio(server));
