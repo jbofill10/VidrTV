@@ -3,7 +3,6 @@ import Radium from "radium";
 import { Slider } from "react-player-controls";
 import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeOff } from "react-icons/md";
 import { utils } from "react-media-player";
-import { default as PlaylistView } from "./PlaylistView";
 
 const PlayerButton = Radium(({ style, children, ...props }) => (
 	<button
@@ -181,11 +180,36 @@ class MediaControls extends Component {
 					style={[
 						{
 							position: "absolute",
-							top: -48,
-							left: -48,
-							height: "100%",
+							top: 0,
+							left: 0,
+							right: 0,
+							background:
+								"linear-gradient(0, transparent, rgba(0, 0, 0, 0.35))",
+							opacity: 1,
+							transition: "all 0.2s",
+							height: 64,
 							width: "100%",
-							opacity: 1
+							zIndex: 1
+						},
+						this.state.hidden && {
+							height: 16,
+							opacity: 0,
+							transition: "all 0.8s"
+						}
+					]}
+				/>
+				<div
+					style={[
+						{
+							position: "absolute",
+							top: 0,
+							left: 0,
+							right: 0,
+							// height: "100%",
+							margin: "12px 18px",
+							width: "100%",
+							opacity: 1,
+							zIndex: 3
 						},
 						this.state.hidden && {
 							opacity: 0,
@@ -193,7 +217,58 @@ class MediaControls extends Component {
 						}
 					]}
 				>
-					<PlaylistView room={this.props.player.props.room} />
+					<div
+						style={{
+							color: "#FFF"
+						}}
+					>
+						{player.props.mediacache.hasOwnProperty(
+							player.state.url
+						) ? (
+							<a
+								style={{
+									color: "#FFF"
+								}}
+								target="_blank"
+								rel="noopener noreferrer"
+								href={`https://www.youtube.com/watch?v=${
+									player.state.url
+								}`}
+							>
+								{
+									player.props.mediacache[player.state.url]
+										.title
+								}
+							</a>
+						) : (
+							"Loading..."
+						)}
+					</div>
+					<div>
+						{player.props.mediacache.hasOwnProperty(
+							player.state.url
+						) ? (
+							<a
+								style={{
+									color: "#FFF",
+									opacity: 0.8
+								}}
+								target="_blank"
+								rel="noopener noreferrer"
+								href={
+									player.props.mediacache[player.state.url]
+										.channel.url
+								}
+							>
+								{
+									player.props.mediacache[player.state.url]
+										.channel.title
+								}
+							</a>
+						) : (
+							"Loading..."
+						)}
+					</div>
 				</div>
 				<div
 					style={[

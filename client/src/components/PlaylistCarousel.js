@@ -3,7 +3,7 @@ import Radium from "radium";
 import { youtube } from "../youtube";
 
 @Radium
-class PlaylistView extends React.Component {
+class PlaylistCarousel extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -188,4 +188,4 @@ class PlaylistView extends React.Component {
 	}
 }
 
-export default PlaylistView;
+export default PlaylistCarousel;

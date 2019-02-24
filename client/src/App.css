@@ -3,6 +3,12 @@ body {
 	color: rgba(255, 255, 255, 0.637);
 }
 
+#root {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+
 a {
 	color: rgb(173, 163, 255);
 	text-decoration: none;
