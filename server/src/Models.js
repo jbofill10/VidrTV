@@ -1,11 +1,4 @@
 import mongoose from "mongoose";
-import {
-	GraphQLObjectType,
-	GraphQLString,
-	GraphQLList,
-	GraphQLInt,
-	GraphQLNonNull
-} from "graphql";
 
 // user info model
 const UserInfoModel = mongoose.model("user", {
@@ -22,15 +15,4 @@ const RoomModel = mongoose.model("room", {
 	time: Number
 });
 
-//graphQl Schema
-const RoomType = new GraphQLObjectType({
-	name: "Room",
-	fields: () => ({
-		media: { type: GraphQLList(GraphQLString) },
-		name: { type: GraphQLString },
-		cur: { type: GraphQLInt },
-		time: { type: GraphQLInt }
-	})
-});
-
-export { RoomModel, UserInfoModel, RoomType };
+export { RoomModel, UserInfoModel };

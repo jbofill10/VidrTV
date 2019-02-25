@@ -7,10 +7,10 @@ export default class db {
 		console.log("[DB] Connecting to MongoDB Atlas...");
 
 		// connect to mongoose server
-		mongoose.connect(
-			process.env.MONGO_URL,
-			{ useNewUrlParser: true }
-		);
+		mongoose.connect(process.env.MONGO_URL, {
+			useNewUrlParser: true,
+			useFindAndModify: false
+		});
 
 		const db = mongoose.connection;
 
