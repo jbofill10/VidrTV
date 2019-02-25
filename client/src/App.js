@@ -1,7 +1,13 @@
 import React from "react";
 import { Route, NavLink, BrowserRouter, Switch } from "react-router-dom";
 import { ProfileArea } from "./components";
-import { DefaultView, RoomView, EmbedView, CreateRoomView } from "./views";
+import {
+	DefaultView,
+	RoomView,
+	EmbedView,
+	CreateRoomView,
+	JoinRoomView
+} from "./views";
 import "./App.css";
 
 export default class App extends React.Component {
@@ -41,7 +47,7 @@ export default class App extends React.Component {
 				<Switch>
 					<Route path="/embed/*" component={EmbedView} />
 					<Route
-						render={() => (
+						render={({ ...props }) => (
 							<div
 								className="App"
 								style={{
@@ -53,39 +59,42 @@ export default class App extends React.Component {
 									alignContent: "flex-start"
 								}}
 							>
-								<header
-									className="app-header"
-									style={{
-										backgroundColor: "#2c2834",
-										display: "flex",
-										padding: "8px 16px",
-										color: "white",
-										height: 40,
-										flexShrink: 0
-									}}
-								>
-									<NavLink
-										to="/"
+								{props.location.pathname !== "/" && (
+									<header
+										className="app-header"
 										style={{
-											display: "inline-block",
-											background: "rgba(56, 51, 66, 0.5)",
-											color: "rgb(242,242,242)",
-											verticalAlign: "middle",
-											textAlign: "center",
+											backgroundColor: "#2c2834",
+											display: "flex",
+											padding: "8px 16px",
+											color: "white",
 											height: 40,
-											padding: "0 16px 0 16px",
-											lineHeight: "42px",
-											fontSize: 14,
-											textTransform: "uppercase",
-											userSelect: "none",
-											borderRadius: 4
+											flexShrink: 0
 										}}
 									>
-										Home
-									</NavLink>
-									<div style={{ flex: 1 }} />
-									<ProfileArea />
-								</header>
+										<NavLink
+											to="/"
+											style={{
+												display: "inline-block",
+												background:
+													"rgba(56, 51, 66, 0.5)",
+												color: "rgb(242,242,242)",
+												verticalAlign: "middle",
+												textAlign: "center",
+												height: 40,
+												padding: "0 16px 0 16px",
+												lineHeight: "42px",
+												fontSize: 14,
+												textTransform: "uppercase",
+												userSelect: "none",
+												borderRadius: 4
+											}}
+										>
+											Home
+										</NavLink>
+										<div style={{ flex: 1 }} />
+										<ProfileArea />
+									</header>
+								)}
 								<div
 									className="content"
 									style={{
@@ -99,6 +108,10 @@ export default class App extends React.Component {
 										component={DefaultView}
 									/>
 									<Route path="/r/:id" component={RoomView} />
+									<Route
+										path="/join"
+										component={JoinRoomView}
+									/>
 									<Route
 										path="/create"
 										component={CreateRoomView}
