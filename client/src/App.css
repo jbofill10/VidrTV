@@ -3,6 +3,10 @@ body {
 	color: rgba(255, 255, 255, 0.637);
 }
 
+.logo {
+	font-family: "Dosis", sans-serif;
+}
+
 #root {
 	position: absolute;
 	width: 100%;

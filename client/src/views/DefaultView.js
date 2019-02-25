@@ -33,7 +33,12 @@ export default class DefaultView extends React.Component {
 						bottom: 0
 					}}
 				>
-					<Typography variant="h2">App Logo</Typography>
+					<div
+						className="logo"
+						style={{ color: "#FFF", fontSize: 64 }}
+					>
+						<span style={{ fontSize: 96 }}>Vidr</span>.tv
+					</div>
 					<Typography
 						variant="subtitle1"
 						style={{ margin: 18, maxWidth: 600 }}
