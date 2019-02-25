@@ -18,7 +18,8 @@ const styles = theme => ({
 	root: {
 		position: "relative",
 		backgroundColor: theme.palette.background.paper,
-		width: 380
+		width: 380,
+		overflow: "hidden"
 	},
 	container: {
 		height: "100%"
@@ -44,7 +45,7 @@ class SidebarView extends React.Component {
 		super(props);
 
 		this.state = {
-			value: 0,
+			value: 1,
 			input: ""
 		};
 	}

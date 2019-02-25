@@ -4,6 +4,7 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
+import { Loader } from "../components";
 
 const styles = theme => ({
 	root: {
@@ -102,8 +103,18 @@ class PlaylistView extends React.Component {
 		const { classes } = this.props;
 		const { room, mediacache } = this.props.roomview.state;
 
-		if (!room || !room.media)
-			return <div className={classes.root}>Loading...</div>;
+		console.log();
+
+		if (
+			!room ||
+			!room.media ||
+			!room.media.every(e => mediacache.hasOwnProperty(e))
+		)
+			return (
+				<div className={classes.root}>
+					<Loader />
+				</div>
+			);
 
 		return (
 			<div

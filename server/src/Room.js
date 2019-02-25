@@ -7,8 +7,8 @@ export { RoomModel };
 export default class Room {
 	constructor(io, doc) {
 		/** room channel */
-		this.io = io.in(doc._id);
-		this.broadcast = io.sockets.in(doc._id);
+		this.io = io;
+		this.id = doc._id;
 
 		/** room db model */
 		this.model = RoomModel(doc);
@@ -88,7 +88,7 @@ export default class Room {
 			mediaInfoCache[this.model.media[this.model.cur]].durationSeconds *
 			1000;
 
-		this.broadcast.emit("fullsync", {
+		this.io.to(this.id).emit("fullsync", {
 			name: this.model.name,
 			media: this.model.media,
 			cur: this.model.cur,
@@ -98,7 +98,7 @@ export default class Room {
 		// sync time every 3 seconds
 		let syncloop = setInterval(() => {
 			this.updateTime();
-			this.broadcast.emit("timesync", this.model.time);
+			this.io.to(this.id).emit("timesync", this.model.time);
 
 			// stop loop at the end of the video
 			if (this.model.time + 3000 >= duration) {
