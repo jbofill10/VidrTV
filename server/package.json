@@ -1,5 +1,5 @@
 {
-	"name": "server",
+	"name": "vidr.tv-server",
 	"version": "0.1.0",
 	"private": true,
 	"main": "build/server.js",
