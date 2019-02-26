@@ -9,10 +9,11 @@ import rootReducer from "./reducers";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import ApolloClient from "apollo-boost";
+import ApolloClient, { InMemoryCache } from "apollo-boost";
 
 const client = new ApolloClient({
-	uri: "http://localhost:3000/graphql"
+	uri: "http://localhost:3000/graphql",
+	cache: new InMemoryCache()
 });
 
 const store = createStore(rootReducer);

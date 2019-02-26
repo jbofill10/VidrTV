@@ -1,8 +1,8 @@
 import React from "react";
 import Radium from "radium";
+import "whatwg-fetch";
 import gql from "graphql-tag";
 import { client } from "./index";
-import "whatwg-fetch";
 
 @Radium
 class ProfileArea extends React.Component {
@@ -119,9 +119,21 @@ class ProfileArea extends React.Component {
 		let authres = response.getAuthResponse();
 
 		// console.log(profile, authres);
-		client.mutate;
+		client
+			.query({
+				query: gql`
+					query Users {
+						users {
+							id
+							lastLogin
+						}
+					}
+				`
+			})
+			.then(data => console.log(data))
+			.catch(err => console.log(err));
 
-		/*fetch("/auth/google/tokensignin", {
+		fetch("/auth/google/tokensignin", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -142,7 +154,7 @@ class ProfileArea extends React.Component {
 			})
 			.catch(ex => {
 				console.error("parsing failed", ex);
-			});*/
+			});
 	}
 }
 
