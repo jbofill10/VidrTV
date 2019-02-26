@@ -2,7 +2,7 @@ import React from "react";
 import Radium from "radium";
 import "whatwg-fetch";
 import gql from "graphql-tag";
-import { client } from "./index";
+import { client } from "../apollo";
 
 @Radium
 class ProfileArea extends React.Component {

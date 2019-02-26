@@ -9,12 +9,6 @@ import rootReducer from "./reducers";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import ApolloClient, { InMemoryCache } from "apollo-boost";
-
-const client = new ApolloClient({
-	uri: "http://localhost:3000/graphql",
-	cache: new InMemoryCache()
-});
 
 const store = createStore(rootReducer);
 
@@ -33,5 +27,3 @@ render(
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
-
-export { client };
