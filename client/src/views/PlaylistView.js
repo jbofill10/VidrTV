@@ -44,7 +44,7 @@ const styles = theme => ({
 		display: "flex"
 	},
 	input: {
-		marginLeft: 12,
+		marginLeft: 14,
 		flex: 1
 	}
 });
@@ -158,7 +158,7 @@ class PlaylistView extends React.Component {
 					className={classes.list}
 					style={{
 						transition: `opacity ${
-							this.state.searchopen
+							searchopen
 								? duration.enteringScreen
 								: duration.leavingScreen
 						}ms`,
