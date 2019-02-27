@@ -36,6 +36,12 @@ const styles = theme => ({
 	},
 	textField: {
 		margin: "8px 12px 6px 8px"
+	},
+	bottom: {
+		position: "absolute",
+		bottom: 0,
+		left: 0,
+		right: 0
 	}
 });
 
@@ -46,6 +52,7 @@ class SidebarView extends React.Component {
 
 		this.state = {
 			value: 1,
+			searchopen: false,
 			input: ""
 		};
 	}
@@ -97,12 +104,31 @@ class SidebarView extends React.Component {
 			},
 			{
 				name: "Playlist",
-				content: <PlaylistView roomview={roomview} />,
+				content: (
+					<PlaylistView
+						roomview={roomview}
+						searchopen={this.state.searchopen}
+					/>
+				),
 				fab: {
 					color: "secondary",
 					className: classes.fab,
-					icon: <AddIcon />,
-					click: null
+					icon: (
+						<AddIcon
+							style={{
+								transition: `transform ${
+									this.state.searchopen
+										? transitionDuration.enter
+										: transitionDuration.exit
+								}ms ${theme.transitions.easing.easeInOut} 0ms`,
+								transform: this.state.searchopen
+									? "rotate(135deg)"
+									: "rotate(0deg)"
+							}}
+						/>
+					),
+					click: () =>
+						this.setState({ searchopen: !this.state.searchopen })
 				}
 			}
 		];
@@ -122,76 +148,93 @@ class SidebarView extends React.Component {
 						))}
 					</Tabs>
 				</AppBar>
-				<SwipeableViews
-					axis={theme.direction === "rtl" ? "x-reverse" : "x"}
-					index={this.state.value}
-					onChangeIndex={this.handleChangeIndex}
-					style={{ height: "100%" }}
-					containerStyle={{ height: "100%" }}
-					slideStyle={{ height: "100%" }}
+				<div
+					style={{
+						position: "relative",
+						flex: 1,
+						display: "flex",
+						flexDirection: "column"
+					}}
 				>
-					{pages.map((page, index) => (
-						<span key={index}>{page.content}</span>
-					))}
-				</SwipeableViews>
-				<div className={classes.bottom}>
-					<Slide
-						direction="up"
-						in={this.state.value === 0}
-						timeout={transitionDuration}
+					<SwipeableViews
+						axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+						index={this.state.value}
+						onChangeIndex={this.handleChangeIndex}
+						containerStyle={{ height: "100%" }}
+						style={{ flex: 1, overflow: "hidden" }}
+						slideStyle={{ height: "100%", overflow: "hidden" }}
+					>
+						{pages.map((page, index) => (
+							<span key={index}>{page.content}</span>
+						))}
+					</SwipeableViews>
+					<div
+						className={classes.bottom}
 						style={{
-							transitionDelay: `${
-								this.state.value === 0
-									? transitionDuration.exit
-									: 0
-							}ms`
+							pointerEvents:
+								this.state.value === 0 ? "auto" : "none"
 						}}
 					>
-						<form
-							className={classes.form}
-							noValidate
-							autoComplete="off"
-							onSubmit={this.onSubmit}
-						>
-							<TextField
-								id="outlined-full-width"
-								variant="outlined"
-								label="Message"
-								className={classes.textField}
-								value={this.state.input}
-								onChange={this.handleInputChange}
-								margin="normal"
-								fullWidth
-							/>
-						</form>
-					</Slide>
-					{pages.map((page, index) => (
-						<Zoom
-							key={page.fab.color}
-							in={this.state.value === index}
+						<Slide
+							direction="up"
+							in={this.state.value === 0}
 							timeout={transitionDuration}
 							style={{
 								transitionDelay: `${
-									this.state.value === index
+									this.state.value === 0
 										? transitionDuration.exit
 										: 0
-								}ms`
+								}ms`,
+								opacity: this.state.value === 0 ? 1 : 0
 							}}
-							unmountOnExit
 						>
-							<Fab
-								disabled={
-									page.name === "Chat" &&
-									this.state.input.length === 0
-								}
-								className={page.fab.className}
-								color={page.fab.color}
-								onClick={page.fab.click}
+							<form
+								className={classes.form}
+								noValidate
+								autoComplete="off"
+								onSubmit={this.onSubmit}
 							>
-								{page.fab.icon}
-							</Fab>
-						</Zoom>
-					))}
+								<TextField
+									id="outlined-full-width"
+									variant="outlined"
+									label="Message"
+									className={classes.textField}
+									value={this.state.input}
+									onChange={this.handleInputChange}
+									margin="normal"
+									fullWidth
+								/>
+							</form>
+						</Slide>
+						{pages.map((page, index) => (
+							<Zoom
+								key={page.fab.color}
+								in={this.state.value === index}
+								timeout={transitionDuration}
+								style={{
+									transitionDelay: `${
+										this.state.value === index
+											? transitionDuration.exit
+											: 0
+									}ms`,
+									pointerEvents: "auto"
+								}}
+								unmountOnExit
+							>
+								<Fab
+									disabled={
+										page.name === "Chat" &&
+										this.state.input.length === 0
+									}
+									className={page.fab.className}
+									color={page.fab.color}
+									onClick={page.fab.click}
+								>
+									{page.fab.icon}
+								</Fab>
+							</Zoom>
+						))}
+					</div>
 				</div>
 			</div>
 		);

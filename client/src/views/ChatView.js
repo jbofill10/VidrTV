@@ -4,13 +4,19 @@ import Avatar from "@material-ui/core/Avatar";
 
 const styles = theme => ({
 	root: {
-		display: "flex",
-		flexDirection: "column",
-		height: "100%"
+		width: "100%",
+		height: "100%",
+		position: "relative",
+		maxWidth: 500,
+		backgroundColor: theme.palette.background.paper
 	},
 	log: {
-		flex: 1,
-		paddingTop: 20,
+		position: "absolute",
+		top: 0,
+		bottom: 87,
+		left: 0,
+		right: 0,
+		padding: "20px 0px 2px 0px",
 		overflowY: "auto",
 		backgroundColor: theme.palette.grey[900]
 	},
@@ -41,12 +47,13 @@ class ChatView extends React.Component {
 
 		this.state = {
 			messages: [
-				// { type: "chat", from: "Jacob Coughenour", body: "hello world" },
-				// {
-				// 	type: "chat",
-				// 	from: "Jacob Coughenour",
-				// 	body: "ouiweoriuwoeiruwio eruwioeroiweriouweriouw eoriwueroweurioweruweoiru weoiruw"
-				// }
+				{ type: "chat", from: "Jacob Coughenour", body: "hello world" },
+				{
+					type: "chat",
+					from: "Jacob Coughenour",
+					body:
+						"ouiweoriuwoeiruwio eruwioeroiweriouweriouw eoriwueroweurioweruweoiru weoiruw"
+				}
 			]
 		};
 	}
