@@ -160,6 +160,8 @@ export default class JoinRoomView extends React.Component {
 					message: ex.toString()
 				});
 			});
+
+		document.title = "Vidr.tv - Join a Room";
 	}
 
 	render() {

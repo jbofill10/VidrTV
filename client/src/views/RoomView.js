@@ -22,6 +22,8 @@ export default class RoomView extends React.Component {
 	}
 
 	componentDidMount() {
+		document.title = "Vidr.tv - Joining...";
+
 		// open realtime socket connection
 		this.socket = openSocket(
 			process.env.NODE_ENV === "development"
@@ -31,6 +33,7 @@ export default class RoomView extends React.Component {
 
 		this.socket.on("connect_error", error => {
 			console.error(error);
+			document.title = "Vidr.tv - Connection Error";
 			this.setState({
 				joining: true,
 				error: true,
@@ -45,6 +48,7 @@ export default class RoomView extends React.Component {
 
 		this.socket.on("connect_timeout", () => {
 			console.error("connect_timeout");
+			document.title = "Vidr.tv - Connection Timeout";
 			this.setState({
 				joining: true,
 				error: true,
@@ -60,6 +64,8 @@ export default class RoomView extends React.Component {
 			console.log("fullsync", data);
 
 			this.setState({ room: data, joining: false });
+
+			document.title = `Vidr.tv - ${data.name}`;
 
 			let mediacache = {};
 

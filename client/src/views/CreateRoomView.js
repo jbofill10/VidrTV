@@ -5,6 +5,10 @@ import RoomSettings from "../components/RoomSettings";
 
 @Radium
 class CreateRoom extends React.Component {
+	componentDidMount() {
+		document.title = "Vidr.tv - Create a Room";
+	}
+
 	render() {
 		return <RoomSettings />;
 	}
