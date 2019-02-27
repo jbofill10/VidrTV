@@ -118,4 +118,15 @@ export default class Room {
 	log(message) {
 		console.log(`${chalk.cyan(`[Room<${this.model._id}>]`)} ${message}`);
 	}
+
+	getInfo() {
+		const infoObj = {
+			media: this.model.media,
+			name: this.model.name,
+			cur: this.model.cur,
+			time: this.model.time,
+			open: this.open
+		};
+		return infoObj;
+	}
 }

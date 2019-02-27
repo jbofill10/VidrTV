@@ -14,8 +14,14 @@ const RoomType = new GraphQLObjectType({
 		media: { type: GraphQLList(GraphQLString) },
 		name: { type: GraphQLString },
 		cur: { type: GraphQLInt },
-		time: { type: GraphQLInt }
+		time: { type: GraphQLInt },
+		open: { type: GraphQLString }
 	})
+});
+
+const CacheRoom = new GraphQLObjectType({
+	name: "TheRoom",
+	fields: () => ({})
 });
 
 export { RoomType };
