@@ -129,4 +129,11 @@ export default class Room {
 		};
 		return infoObj;
 	}
+
+	getId() {
+		const info = {
+			roomid: this.id
+		};
+		return info;
+	}
 }
