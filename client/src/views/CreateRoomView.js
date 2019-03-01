@@ -1,7 +1,7 @@
 import React from "react";
 import Radium from "radium";
 import "whatwg-fetch";
-import RoomSettings from "../components/RoomSettings";
+import RoomSettingsView from "../views/RoomSettingsView";
 
 @Radium
 class CreateRoom extends React.Component {
@@ -10,7 +10,24 @@ class CreateRoom extends React.Component {
 	}
 
 	render() {
-		return <RoomSettings />;
+		return (
+			<div
+				className="create-room"
+				style={{
+					position: "absolute",
+					left: "50%",
+					transform: "translate(-50%)",
+					width: "100%",
+					maxWidth: 400
+				}}
+			>
+				<RoomSettingsView
+					style={{
+						paddingTop: 16
+					}}
+				/>
+			</div>
+		);
 	}
 }
 

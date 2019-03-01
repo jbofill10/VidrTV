@@ -4,7 +4,7 @@ import { default as MediaControls, StatsOverlay } from "./MediaControls";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
-const PlaybackDeltaThreshold = 3000;
+const PlaybackDeltaThreshold = 1500;
 
 @Radium
 class MediaPlayer extends Component {
