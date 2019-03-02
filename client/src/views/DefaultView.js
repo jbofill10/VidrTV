@@ -14,7 +14,7 @@ export default class DefaultView extends React.Component {
 					className="bg"
 					style={{
 						background:
-							"radial-gradient(circle at 50% 200%, rgb(199, 139, 255), #1A237E)",
+							"radial-gradient(circle at 50% 120%, #6200ea, #311b92)",
 						position: "absolute",
 						left: 0,
 						right: 0,
