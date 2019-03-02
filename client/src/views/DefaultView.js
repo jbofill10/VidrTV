@@ -15,6 +15,7 @@ export default class DefaultView extends React.Component {
 					style={{
 						background:
 							"radial-gradient(circle at 50% 120%, #6200ea, #311b92)",
+						display: "none",
 						position: "absolute",
 						left: 0,
 						right: 0,

@@ -1,4 +1,5 @@
 import React from "react";
+import { withStyles } from "@material-ui/core/styles";
 import { Route, NavLink, BrowserRouter, Switch } from "react-router-dom";
 import { ProfileArea } from "./components";
 import {
@@ -10,7 +11,7 @@ import {
 } from "./views";
 import "./App.css";
 
-export default class App extends React.Component {
+class App extends React.Component {
 	constructor() {
 		super();
 
@@ -42,6 +43,8 @@ export default class App extends React.Component {
 	}
 
 	render() {
+		const { theme } = this.props;
+
 		return (
 			<BrowserRouter>
 				<Switch>
@@ -52,6 +55,8 @@ export default class App extends React.Component {
 								className="App"
 								style={{
 									display: "flex",
+									background:
+										theme.palette.background.default,
 									width: "100%",
 									height: "100%",
 									overflow: "hidden",
@@ -59,6 +64,24 @@ export default class App extends React.Component {
 									alignContent: "flex-start"
 								}}
 							>
+								<div
+									className="bg"
+									style={{
+										background:
+											"radial-gradient(circle at 50% 120%, #6200ea, #311b92)",
+										transition: "opacity 0.33s",
+										opacity:
+											props.location.pathname === "/"
+												? 1
+												: 0,
+										position: "absolute",
+										left: 0,
+										right: 0,
+										top: 0,
+										bottom: 0,
+										zIndex: 0
+									}}
+								/>
 								{props.location.pathname !== "/" && (
 									<header
 										className="app-header"
@@ -68,38 +91,71 @@ export default class App extends React.Component {
 											padding: "8px 16px",
 											color: "white",
 											height: 40,
-											flexShrink: 0
+											flexShrink: 0,
+											zIndex: 1
 										}}
 									>
+										<div style={{ flex: 1 }}>
+											<NavLink
+												to="/"
+												style={{
+													display: "inline-block",
+													background:
+														"rgba(56, 51, 66, 0.5)",
+													color: "rgb(242,242,242)",
+													verticalAlign: "middle",
+													textAlign: "center",
+													height: 36,
+													padding: "0 16px 0 16px",
+													lineHeight: "36px",
+													fontSize: 14,
+													textTransform: "uppercase",
+													userSelect: "none",
+													borderRadius: 4
+												}}
+											>
+												Back
+											</NavLink>
+										</div>
 										<NavLink
 											to="/"
 											style={{
+												flex: 0,
 												display: "inline-block",
-												background:
-													"rgba(56, 51, 66, 0.5)",
+												// background: "rgba(56, 51, 66, 0.5)",
 												color: "rgb(242,242,242)",
 												verticalAlign: "middle",
 												textAlign: "center",
 												height: 40,
-												padding: "0 16px 0 16px",
-												lineHeight: "42px",
-												fontSize: 14,
-												textTransform: "uppercase",
+												marginLeft: -8,
+												padding: "0 12px 0 12px",
+												lineHeight: "38px",
+												fontSize: 24,
+												fontFamily: `"Dosis", sans-serif`,
+												// textTransform: "uppercase",
 												userSelect: "none",
 												borderRadius: 4
 											}}
 										>
-											Home
+											Vidr.tv
 										</NavLink>
-										<div style={{ flex: 1 }} />
-										<ProfileArea />
+										<div
+											style={{
+												flex: 1,
+												display: "flex",
+												justifyContent: "flex-end"
+											}}
+										>
+											<ProfileArea />
+										</div>
 									</header>
 								)}
 								<div
 									className="content"
 									style={{
 										display: "flex",
-										flex: 1
+										flex: 1,
+										zIndex: 1
 									}}
 								>
 									<Route
@@ -129,3 +185,5 @@ export default class App extends React.Component {
 		);
 	}
 }
+
+export default withStyles({}, { withTheme: true })(App);
