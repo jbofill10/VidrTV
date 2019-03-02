@@ -19,9 +19,4 @@ const RoomType = new GraphQLObjectType({
 	})
 });
 
-const CacheRoom = new GraphQLObjectType({
-	name: "TheRoom",
-	fields: () => ({})
-});
-
 export { RoomType };

@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLObjectType } from "graphql";
+import { GraphQLSchema } from "graphql";
 //Room Imports
 import { RoomModel, UserInfoModel } from "../Models";
 import { RootQuery } from "./Roots/RootQuery";

@@ -33,7 +33,9 @@ let RootQuery = new GraphQLObjectType({
 				page: { type: GraphQLInt }
 			},
 			resolve: (root, args) => {
-				return console.log(RoomService.currentRooms.getId());
+				var rooms = Object.keys(RoomService.currentRooms);
+				console.log(rooms.splice((args.id - 1) * 10, args.id * 10 + 1));
+				return rooms.splice((args.id - 1) * 10, args.id * 10 + 1);
 			}
 		}
 	}
