@@ -15,8 +15,17 @@ const RoomType = new GraphQLObjectType({
 		name: { type: GraphQLString },
 		cur: { type: GraphQLInt },
 		time: { type: GraphQLInt },
-		open: { type: GraphQLString }
+		open: { type: GraphQLString },
+		ids: { type: GraphQLList(GraphQLString) }
 	})
 });
 
-export { RoomType };
+const SongType = new GraphQLObjectType({
+	name: "Song",
+	fields: () => ({
+		roomid: { type: GraphQLString },
+		link: { type: GraphQLString }
+	})
+});
+
+export { RoomType, SongType };

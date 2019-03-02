@@ -27,15 +27,18 @@ let RootQuery = new GraphQLObjectType({
 				return UserInfoModel.find({});
 			}
 		},
-		getPageOfRooms: {
-			type: new GraphQLList(RoomType),
+		getPage: {
+			type: RoomType,
 			args: {
 				page: { type: GraphQLInt }
 			},
 			resolve: (root, args) => {
-				var rooms = Object.keys(RoomService.currentRooms);
-				console.log(rooms.splice((args.id - 1) * 10, args.id * 10 + 1));
-				return rooms.splice((args.id - 1) * 10, args.id * 10 + 1);
+				return {
+					ids: Object.keys(RoomService.currentRooms).splice(
+						(args.page - 1) * 10,
+						args.page * 10
+					)
+				};
 			}
 		}
 	}

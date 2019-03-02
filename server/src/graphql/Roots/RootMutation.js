@@ -1,5 +1,5 @@
-import { GraphQLString, GraphQLObjectType } from "graphql";
-import { RoomType } from "../Rooms/Types";
+import { GraphQLString, GraphQLObjectType, GraphQLList } from "graphql";
+import { RoomType, SongType } from "../Rooms/Types";
 import { UserType } from "../Users/Types";
 import { RoomModel, UserInfoModel } from "../index";
 import { OAuth2Client } from "google-auth-library";
@@ -48,6 +48,29 @@ let RootMutation = new GraphQLObjectType({
 						);
 						return userid.json({ loggedin: true });
 					});
+			}
+		},
+		addSong: {
+			type: new GraphQLList(SongType),
+			args: {
+				roomid: { type: GraphQLString },
+				link: { type: GraphQLString }
+			},
+			resolve: (root, args) => {
+				var songID = args.link.substring(
+					args.link.indexOf("=") + 1,
+					args.link.length + 1
+				);
+
+				RoomModel.findOneAndUpdate(
+					{ _id: args.roomid },
+					{ $push: { media: songID }, new: true, upsert: true },
+					err => {
+						if (err)
+							return console.log("Error in adding song to DB");
+						else return { roomid: args.roomid, link: args.link };
+					}
+				);
 			}
 		}
 	}
