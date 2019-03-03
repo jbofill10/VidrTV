@@ -1,7 +1,7 @@
 import { GraphQLString, GraphQLObjectType, GraphQLList } from "graphql";
 import { RoomType, SongType } from "../Rooms/Types";
 import { UserType } from "../Users/Types";
-import { RoomModel, UserInfoModel } from "../index";
+import { UserInfoModel, RoomService, RoomModel } from "../index";
 import { OAuth2Client } from "google-auth-library";
 
 const client = new OAuth2Client(process.env.REACT_APP_GOOGLE_API_KEY);
@@ -12,18 +12,10 @@ let RootMutation = new GraphQLObjectType({
 		addRoom: {
 			type: RoomType,
 			args: {
-				id: { type: GraphQLString },
-				media: { type: GraphQLString }
+				name: { type: GraphQLString }
 			},
 			resolve: (root, args) => {
-				RoomModel.findOneAndUpdate(
-					{ _id: args.id },
-					{ $push: { media: args.media }, new: true, upsert: true },
-					(err, res) => {
-						if (err) return console.log(err);
-						else return JSON.stringify(res);
-					}
-				);
+				RoomService.createRoom({ media: [], name: args.id, cur: 0 });
 			}
 		},
 		addUser: {

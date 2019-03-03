@@ -12,7 +12,8 @@ const RoomModel = mongoose.model("room", {
 	name: String,
 	media: [String],
 	cur: Number,
-	time: Number
+	time: Number,
+	persistent: { type: Boolean, default: false }
 });
 
 export { RoomModel, UserInfoModel };

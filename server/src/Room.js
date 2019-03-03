@@ -16,13 +16,15 @@ export default class Room {
 
 		// get info for the current video
 		// TODO: move media info caching stuff to youtube.js
-		if (this.model.media[this.model.cur] in mediaInfoCache) {
+		if (this.model.media.length == 0) {
+			this.log("room is open for connections");
+		} else if (this.model.media[this.model.cur] in mediaInfoCache) {
 			this.open = true;
 
 			this.log("room is open for connections");
 
 			this.startPlayback(0);
-		} else
+		} else {
 			youtube
 				.getVideoByID(this.model.media[this.model.cur])
 				.then(result => {
@@ -35,14 +37,20 @@ export default class Room {
 				})
 				.catch(console.error);
 
-		// get info for the other videos async
-		for (let i = 0; i < this.model.media.length; i++) {
-			if (i === this.model.cur || this.model.media[i] in mediaInfoCache)
-				continue;
-			youtube
-				.getVideoByID(this.model.media[i])
-				.then(result => (mediaInfoCache[this.model.media[i]] = result))
-				.catch(console.error);
+			// get info for the other videos async
+			for (let i = 0; i < this.model.media.length; i++) {
+				if (
+					i === this.model.cur ||
+					this.model.media[i] in mediaInfoCache
+				)
+					continue;
+				youtube
+					.getVideoByID(this.model.media[i])
+					.then(
+						result => (mediaInfoCache[this.model.media[i]] = result)
+					)
+					.catch(console.error);
+			}
 		}
 	}
 

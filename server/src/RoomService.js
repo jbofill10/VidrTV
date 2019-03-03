@@ -161,6 +161,15 @@ class RoomService {
 
 		this.currentRooms[roomid].join(socket);
 	}
+
+	createRoom(options) {
+		let model = new RoomModel(options);
+
+		this.currentRooms[model._id] = new Room(this.io, model);
+		status.rooms = this.currentRooms.length;
+
+		return this.currentRooms[model._id];
+	}
 }
 
 /**
