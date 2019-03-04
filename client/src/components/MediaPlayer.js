@@ -4,7 +4,7 @@ import { default as MediaControls, StatsOverlay } from "./MediaControls";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
-const PlaybackDeltaThreshold = 1500;
+const PlaybackDeltaThreshold = 1200;
 
 @Radium
 class MediaPlayer extends Component {
@@ -13,6 +13,7 @@ class MediaPlayer extends Component {
 
 		this.state = {
 			url: props.room.media[props.room.cur],
+			start: props.room.start,
 			pip: false,
 			playing: false,
 			volume: 1,
@@ -27,6 +28,9 @@ class MediaPlayer extends Component {
 			showStats: true,
 			aspect: 9 / 16
 		};
+
+		this._startBuffer = Date.now();
+		this._startTimeout = -1;
 	}
 
 	componentDidMount() {
@@ -34,7 +38,11 @@ class MediaPlayer extends Component {
 		const { showStats } = this.state;
 
 		socket.on("fullsync", data => {
-			this.setState({ url: data.media[data.cur], playing: true });
+			this.setState({
+				url: data.media[data.cur],
+				playing: true,
+				start: data.start
+			});
 
 			if (showStats) this._statsOverlay.event("fullsync");
 		});
@@ -55,25 +63,27 @@ class MediaPlayer extends Component {
 				);
 		});
 
-		socket.on("timesync", time => {
-			let delta = this.state.playedSeconds * 1000 - time;
-			let norm = Math.abs(delta);
+		socket.on("clocksync", () => {
+			let now = Date.now();
 
-			// console.log(
-			// 	`timesync ${norm > timeSyncThreshold ? '🔴' : '🔵'} ${norm.toFixed(0)}ms ${delta < 0
-			// 		? 'behind'
-			// 		: 'ahead'}`
-			// );
+			if (this.state.start - now > 0) {
+				this.setState({ playing: false });
 
-			if (showStats) {
-				this._statsOverlay.remove("Playback Delta");
-				this._statsOverlay.set(
-					"Playback Delta",
-					delta.toFixed(0) + "ms",
-					`The current difference between the server and client playback time.\nIf delta is larger than the ${PlaybackDeltaThreshold}ms threshold, the player will try seeking to match the server playback time`,
-					norm > PlaybackDeltaThreshold ? "bad" : "good"
-				);
+				clearTimeout(this._startTimeout);
+				this._startTimeout = setTimeout(() => {
+					this.setState({ playing: true });
+				}, this.state.start - Date.now());
+
+				return;
 			}
+
+			let playingAt =
+				(this.player && this.player.getCurrentTime() | 0) * 1000;
+			let shouldBeAt =
+				now + (this.props.clock.getDelta() | 0) - this.state.start;
+
+			let delta = playingAt - shouldBeAt;
+			let norm = Math.abs(delta);
 
 			if (norm > PlaybackDeltaThreshold) {
 				// console.log(`\tover ${timeSyncThreshold}ms threshold, seeking to catch up...`);
@@ -92,11 +102,19 @@ class MediaPlayer extends Component {
 					);
 				}
 
-				// if (this.state.playing)
-				this.player.seekTo(
-					(time + (socket.io.lastPing | 0)) /
-						1000 /
-						this.state.duration
+				let prog = shouldBeAt / 1000 / this.state.duration;
+
+				if (prog >= 1) this.setState({ playing: false });
+				else this.player.seekTo(prog);
+			}
+
+			if (showStats) {
+				this._statsOverlay.remove("Playback Delta");
+				this._statsOverlay.set(
+					"Playback Delta",
+					delta.toFixed(0) + "ms",
+					`The current difference between the server and client playback time.\nIf delta is larger than the ${PlaybackDeltaThreshold}ms threshold, the player will try seeking to match the server playback time`,
+					norm > PlaybackDeltaThreshold ? "bad" : "good"
 				);
 			}
 		});
@@ -134,11 +152,28 @@ class MediaPlayer extends Component {
 	};
 
 	onReady = () => {
+		console.log(Date.now() - this._startBuffer);
+
+		if (this.state.start - Date.now() > 0) {
+			this.setState({ playing: false });
+
+			console.log("queued");
+
+			clearTimeout(this._startTimeout);
+			this._startTimeout = setTimeout(() => {
+				this.setState({ playing: true });
+			}, this.state.start - Date.now());
+		} else {
+			this.player.seekTo(
+				(Date.now() - this.props.clock.getDelta() - this.state.start) /
+					1000
+			);
+			console.log("play");
+			this.setState({ playing: true });
+		}
+
 		if (this.state.showStats)
 			this._statsOverlay.set("Player State", "Ready");
-
-		this.player.seekTo(this.props.time / 1000);
-		this.setState({ playing: true });
 	};
 
 	onStart = () => {
@@ -147,6 +182,11 @@ class MediaPlayer extends Component {
 	};
 
 	onPlay = () => {
+		console.log(Date.now() - this._startBuffer);
+
+		if (this.state.start <= Date.now());
+		else this.setState({ playing: false });
+
 		if (this.state.showStats)
 			this._statsOverlay.set("Player State", "Playing");
 	};
@@ -160,6 +200,7 @@ class MediaPlayer extends Component {
 	};
 
 	onBuffer = () => {
+		this._startBuffer = Date.now();
 		if (this.state.showStats)
 			this._statsOverlay.set("Player State", "Buffering");
 	};

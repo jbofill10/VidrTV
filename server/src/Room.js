@@ -5,9 +5,9 @@ import { RoomModel } from "./Models";
 const mediaInfoCache = {};
 export { RoomModel };
 export default class Room {
-	constructor(io, doc) {
-		/** room channel */
+	constructor(io, clock, doc) {
 		this.io = io;
+		this.clock = clock;
 		this.id = doc._id;
 
 		/** room db model */
@@ -23,7 +23,7 @@ export default class Room {
 
 			this.log("room is open for connections");
 
-			this.startPlayback(0);
+			this.queuePlayback(0);
 		} else {
 			youtube
 				.getVideoByID(this.model.media[this.model.cur])
@@ -33,7 +33,7 @@ export default class Room {
 
 					this.log("room is open for connections");
 
-					this.startPlayback(0);
+					this.queuePlayback(0);
 				})
 				.catch(console.error);
 
@@ -59,12 +59,20 @@ export default class Room {
 
 		this.log(socket.id + " joined room");
 
-		this.updateTime();
+		// this.updateTime();
 		socket.emit("fullsync", {
 			name: this.model.name,
 			media: this.model.media,
 			cur: this.model.cur,
-			time: this.model.time
+			start: this.model.start
+		});
+
+		socket.on("clocksync", data => {
+			// immediately respond
+			socket.emit("clocksync", this.clock.processRequest(data));
+			// do a time update and sync
+			// this.updateTime();
+			// this.io.to(this.id).emit("timesync", this.model.start);
 		});
 
 		socket.on("disconnect", () => {
@@ -77,20 +85,20 @@ export default class Room {
 		this.log("saved room to db");
 	}
 
-	_lastUpdate = Date.now();
+	// _lastUpdate = Date.now();
 
-	updateTime() {
-		let now = Date.now();
-		let delta = now - this._lastUpdate;
-		this._lastUpdate = now;
+	// updateTime() {
+	// 	let now = Date.now();
+	// 	let delta = now - this._lastUpdate;
+	// 	this._lastUpdate = now;
 
-		this.model.time += delta;
-	}
+	// 	this.model.time += delta;
+	// }
 
-	startPlayback(index) {
+	queuePlayback(index, delay = 10000) {
 		this.model.cur = index;
-		this.model.time = 0;
-		this._lastUpdate = Date.now();
+		this.model.start = Date.now() + delay;
+		// this._lastUpdate = Date.now();
 
 		let duration =
 			mediaInfoCache[this.model.media[this.model.cur]].durationSeconds *
@@ -100,27 +108,28 @@ export default class Room {
 			name: this.model.name,
 			media: this.model.media,
 			cur: this.model.cur,
-			time: this.model.time
+			duration: duration,
+			start: this.model.start
 		});
 
 		// sync time every 3 seconds
-		let syncloop = setInterval(() => {
-			this.updateTime();
-			this.io.to(this.id).emit("timesync", this.model.time);
+		// let syncloop = setInterval(() => {
+		// 	this.updateTime();
+		// 	this.io.to(this.id).emit("timesync", this.model.time);
 
-			// stop loop at the end of the video
-			if (this.model.time + 3000 >= duration) {
-				clearInterval(syncloop);
-			}
-		}, 3000);
+		// 	// stop loop at the end of the video
+		// 	if (this.model.time + 3000 >= duration) {
+		// 		clearInterval(syncloop);
+		// 	}
+		// }, 3000);
 
 		setTimeout(() => {
 			// make sure syncloop is dead
-			clearInterval(syncloop);
+			// clearInterval(syncloop);
 
 			// start next video
-			this.startPlayback((index + 1) % this.model.media.length);
-		}, duration + 3000);
+			this.queuePlayback((index + 1) % this.model.media.length);
+		}, duration + delay);
 	}
 
 	log(message) {
@@ -132,7 +141,7 @@ export default class Room {
 			media: this.model.media,
 			name: this.model.name,
 			cur: this.model.cur,
-			time: this.model.time,
+			start: this.model.start,
 			open: this.open
 		};
 		return infoObj;

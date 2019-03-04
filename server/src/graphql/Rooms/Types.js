@@ -14,7 +14,7 @@ const RoomType = new GraphQLObjectType({
 		media: { type: GraphQLList(GraphQLString) },
 		name: { type: GraphQLString },
 		cur: { type: GraphQLInt },
-		time: { type: GraphQLInt },
+		start: { type: GraphQLInt },
 		open: { type: GraphQLString },
 		ids: { type: GraphQLList(GraphQLString) }
 	})

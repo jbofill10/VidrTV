@@ -12,7 +12,7 @@ const RoomModel = mongoose.model("room", {
 	name: String,
 	media: [String],
 	cur: Number,
-	time: Number,
+	start: Number,
 	persistent: { type: Boolean, default: false }
 });
 

@@ -15,7 +15,11 @@ let RootMutation = new GraphQLObjectType({
 				name: { type: GraphQLString }
 			},
 			resolve: (root, args) => {
-				RoomService.createRoom({ media: [], name: args.id, cur: 0 });
+				return RoomService.createRoom({
+					media: [],
+					name: args.name,
+					cur: 0
+				});
 			}
 		},
 		addUser: {

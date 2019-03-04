@@ -2,6 +2,7 @@ import chalk from "chalk";
 import { status } from "./log";
 import { check, validationResult } from "express-validator/check";
 import { default as Room, RoomModel } from "./Room";
+import { ClocksyServer } from "clocksy";
 
 /**
  * console.log prepended with [RoomService]
@@ -24,6 +25,7 @@ class RoomService {
 	 */
 	start(app, io) {
 		this.io = io;
+		this.clock = new ClocksyServer();
 
 		log("Starting...");
 
@@ -124,8 +126,8 @@ class RoomService {
 		log(`Loading ${docs.length} room(s) from data...`);
 
 		docs.forEach(doc => {
-			this.currentRooms[doc._id] = new Room(this.io, doc);
-			status.rooms++;
+			this.currentRooms[doc._id] = new Room(this.io, this.clock, doc);
+			status.rooms = Object.keys(this.currentRooms).length;
 		});
 
 		log(`Loaded ${docs.length} room(s)`);
@@ -165,8 +167,8 @@ class RoomService {
 	createRoom(options) {
 		let model = new RoomModel(options);
 
-		this.currentRooms[model._id] = new Room(this.io, model);
-		status.rooms = this.currentRooms.length;
+		this.currentRooms[model._id] = new Room(this.io, this.clock, model);
+		status.rooms = Object.keys(this.currentRooms).length;
 
 		return this.currentRooms[model._id];
 	}

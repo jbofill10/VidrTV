@@ -10,6 +10,7 @@
 		"apollo": "^2.5.3",
 		"apollo-boost": "^0.3.1",
 		"apollo-react": "^0.7.1",
+		"clocksy": "^1.1.0",
 		"customize-cra": "^0.2.12",
 		"env-path": "^1.0.6",
 		"prop-types": "^15.7.2",

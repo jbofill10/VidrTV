@@ -3,6 +3,7 @@ import { MediaPlayer, Loader } from "../components";
 import { SidebarView } from "./";
 import openSocket from "socket.io-client";
 import { youtube } from "../youtube";
+import { ClocksyClient } from "clocksy";
 import "whatwg-fetch";
 
 export default class RoomView extends React.Component {
@@ -16,6 +17,12 @@ export default class RoomView extends React.Component {
 			error: false,
 			loadingmessage: "Joining Room"
 		};
+
+		this.clock = new ClocksyClient({
+			sendRequest: req => this.socket.emit("clocksync", req),
+			alpha: 0.15,
+			updatePeriod: 3000
+		});
 
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
@@ -56,33 +63,43 @@ export default class RoomView extends React.Component {
 			});
 		});
 
-		// join room by id
-		this.socket.emit("join", { roomid: this.roomid });
+		this.socket.on("connect", () => {
+			// join room by id
+			this.socket.emit("join", { roomid: this.roomid });
 
-		// first fullsync = joined room
-		this.socket.on("fullsync", data => {
-			console.log("fullsync", data);
+			// start clock
+			this.clock.start();
+			this.socket.on("clocksync", data => {
+				this.clock.processResponse(data);
+			});
 
-			this.setState({ room: data, joining: false });
+			// first fullsync = joined room
+			this.socket.on("fullsync", data => {
+				console.log("fullsync", data);
 
-			document.title = `Vidr.tv - ${data.name}`;
+				this.setState({ room: data, joining: false });
 
-			let mediacache = {};
+				document.title = `Vidr.tv - ${data.name}`;
 
-			for (let i = 0; i < this.state.room.media.length; i++) {
-				if (!this._isMounted) break;
-				youtube
-					.getVideoByID(this.state.room.media[i])
-					.then(result => {
-						if (this._isMounted) {
-							mediacache[this.state.room.media[i]] = result;
+				let mediacache = {};
 
-							this.setState({ mediacache: mediacache });
-						}
-					})
-					.catch(console.error);
-			}
+				for (let i = 0; i < this.state.room.media.length; i++) {
+					if (!this._isMounted) break;
+					youtube
+						.getVideoByID(this.state.room.media[i])
+						.then(result => {
+							if (this._isMounted) {
+								mediacache[this.state.room.media[i]] = result;
+
+								this.setState({ mediacache: mediacache });
+							}
+						})
+						.catch(console.error);
+				}
+			});
 		});
+
+		this.socket.on("disconnect", () => this.clock.stop());
 
 		this._isMounted = true;
 	}
@@ -154,6 +171,7 @@ export default class RoomView extends React.Component {
 							// player height + heightdiff = player height breakpoint
 							heightdiff={110}
 							socket={this.socket}
+							clock={this.clock}
 							room={this.state.room}
 							mediacache={this.state.mediacache}
 						/>
