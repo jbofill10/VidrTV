@@ -103,8 +103,9 @@ class YouTube {
 						thumbs.standard ||
 						thumbs.high
 					).url,
-					// duration: toSeconds(parse(result[0].contentDetails.duration)) * 1000
-					duration: 2000
+					duration:
+						toSeconds(parse(result[0].contentDetails.duration)) *
+						1000
 				};
 			});
 	}
