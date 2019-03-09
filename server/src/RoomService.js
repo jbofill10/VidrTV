@@ -1,7 +1,8 @@
 import chalk from "chalk";
 import { status } from "./log";
 import { check, validationResult } from "express-validator/check";
-import { default as Room, RoomModel } from "./Room";
+import Room from "./Room";
+import { RoomModel } from "./Models";
 import { ClocksyServer } from "clocksy";
 
 /**
