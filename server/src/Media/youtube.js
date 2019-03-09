@@ -83,6 +83,8 @@ class YouTube {
 				// result[0] video info
 				// result[1] channel info
 
+				const thumbs = result[0].snippet.thumbnails;
+
 				return {
 					raw: result,
 					url: `https://www.youtube.com/watch?v=${id}`,
@@ -94,12 +96,15 @@ class YouTube {
 					authorUrl: `https://www.youtube.com/channel/${
 						result[1].id
 					}`,
-					smallThumb: result[0].snippet.thumbnails.default.url,
-					mediumThumb: result[0].snippet.thumbnails.medium.url,
-					largeThumb: result[0].snippet.thumbnails.maxres.url,
-					duration:
-						toSeconds(parse(result[0].contentDetails.duration)) *
-						1000
+					smallThumb: thumbs.default.url,
+					mediumThumb: thumbs.medium.url,
+					largeThumb: (
+						thumbs.maxres ||
+						thumbs.standard ||
+						thumbs.high
+					).url,
+					// duration: toSeconds(parse(result[0].contentDetails.duration)) * 1000
+					duration: 2000
 				};
 			});
 	}
