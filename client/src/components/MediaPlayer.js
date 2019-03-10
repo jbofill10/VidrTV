@@ -40,7 +40,7 @@ class MediaPlayer extends Component {
 		socket.on("fullsync", data => {
 			this.setState({
 				url: data.media[data.cur],
-				playing: true,
+				playing: false,
 				start: data.start
 			});
 
@@ -152,7 +152,7 @@ class MediaPlayer extends Component {
 	};
 
 	onReady = () => {
-		console.log(Date.now() - this._startBuffer);
+		// console.log(Date.now() - this._startBuffer);
 
 		if (this.state.start - Date.now() > 0) {
 			this.setState({ playing: false });
