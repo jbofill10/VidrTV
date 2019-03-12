@@ -84,7 +84,7 @@ class SidebarView extends React.Component {
 	}
 
 	render() {
-		const { classes, theme, style, roomview } = this.props;
+		const { classes, theme, style, roomview, className } = this.props;
 
 		const transitionDuration = {
 			enter: theme.transitions.duration.enteringScreen,
@@ -134,7 +134,7 @@ class SidebarView extends React.Component {
 		];
 
 		return (
-			<div className={classes.root} style={style}>
+			<div className={className} style={style}>
 				<AppBar position="static" color="default">
 					<Tabs
 						value={this.state.value}

@@ -1,12 +1,52 @@
 import React from "react";
 import { MediaPlayer, Loader } from "../components";
 import { SidebarView } from "./";
+import { withStyles } from "@material-ui/core/styles";
 import openSocket from "socket.io-client";
 import { youtube } from "../youtube";
 import { ClocksyClient } from "clocksy";
 import "whatwg-fetch";
 
-export default class RoomView extends React.Component {
+const styles = theme => ({
+	root: {
+		display: "flex",
+		overflow: "hidden",
+		height: "100%",
+		width: "100%",
+		maxWidth: "1920px",
+		margin: "0 auto",
+		[theme.breakpoints.down("sm")]: {
+			overflowY: "scroll",
+			// display: "block",
+			flexDirection: "column"
+		}
+	},
+	main: {
+		overflow: "hidden",
+		display: "flex",
+		flexDirection: "column",
+		[theme.breakpoints.up("md")]: {
+			flex: 1
+		}
+	},
+	sidebar: {
+		background: "rgb(44, 40, 52)",
+		display: "flex",
+		flexDirection: "column",
+		position: "relative",
+		backgroundColor: theme.palette.background.paper,
+		overflow: "hidden",
+		[theme.breakpoints.up("md")]: {
+			width: 380
+		},
+		[theme.breakpoints.down("sm")]: {
+			minHeight: 320,
+			flex: 1
+		}
+	}
+});
+
+class RoomView extends React.Component {
 	constructor(props) {
 		super();
 		this.roomid = props.match.params.id;
@@ -139,25 +179,11 @@ export default class RoomView extends React.Component {
 				/>
 			);
 
+		const { classes } = this.props;
+
 		return (
-			<div
-				style={{
-					display: "flex",
-					overflow: "hidden",
-					height: "100%",
-					width: "100%",
-					maxWidth: "1920px",
-					margin: "0 auto"
-				}}
-			>
-				<main
-					style={{
-						overflow: "hidden",
-						flex: 1,
-						display: "flex",
-						flexDirection: "column"
-					}}
-				>
+			<div className={classes.root}>
+				<main className={classes.main}>
 					<div
 						style={{
 							position: "relative",
@@ -212,15 +238,10 @@ export default class RoomView extends React.Component {
 						</div>
 					</div>
 				</main>
-				<SidebarView
-					style={{
-						background: "rgb(44, 40, 52)",
-						display: "flex",
-						flexDirection: "column"
-					}}
-					roomview={this}
-				/>
+				<SidebarView className={classes.sidebar} roomview={this} />
 			</div>
 		);
 	}
 }
+
+export default withStyles(styles)(RoomView);

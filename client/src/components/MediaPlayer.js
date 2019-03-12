@@ -182,7 +182,7 @@ class MediaPlayer extends Component {
 	};
 
 	onPlay = () => {
-		console.log(Date.now() - this._startBuffer);
+		// console.log(Date.now() - this._startBuffer);
 
 		if (this.state.start <= Date.now());
 		else this.setState({ playing: false });
