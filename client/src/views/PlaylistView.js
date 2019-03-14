@@ -15,7 +15,7 @@ const styles = theme => ({
 		width: "100%",
 		height: "100%",
 		position: "relative",
-		maxWidth: 500,
+		// maxWidth: 500,
 		backgroundColor: theme.palette.background.paper
 	},
 	list: {

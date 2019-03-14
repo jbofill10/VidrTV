@@ -95,28 +95,6 @@ class App extends React.Component {
 											zIndex: 1
 										}}
 									>
-										<div style={{ flex: 1 }}>
-											<NavLink
-												to="/"
-												style={{
-													display: "inline-block",
-													background:
-														"rgba(56, 51, 66, 0.5)",
-													color: "rgb(242,242,242)",
-													verticalAlign: "middle",
-													textAlign: "center",
-													height: 36,
-													padding: "0 16px 0 16px",
-													lineHeight: "36px",
-													fontSize: 14,
-													textTransform: "uppercase",
-													userSelect: "none",
-													borderRadius: 4
-												}}
-											>
-												Back
-											</NavLink>
-										</div>
 										<NavLink
 											to="/"
 											style={{

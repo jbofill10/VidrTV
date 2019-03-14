@@ -15,7 +15,7 @@ const styles = theme => ({
 		width: "100%",
 		maxWidth: "1920px",
 		margin: "0 auto",
-		[theme.breakpoints.down("sm")]: {
+		[theme.breakpoints.down("xs")]: {
 			overflowY: "scroll",
 			// display: "block",
 			flexDirection: "column"
@@ -25,7 +25,7 @@ const styles = theme => ({
 		overflow: "hidden",
 		display: "flex",
 		flexDirection: "column",
-		[theme.breakpoints.up("md")]: {
+		[theme.breakpoints.up("sm")]: {
 			flex: 1
 		}
 	},
@@ -36,10 +36,10 @@ const styles = theme => ({
 		position: "relative",
 		backgroundColor: theme.palette.background.paper,
 		overflow: "hidden",
-		[theme.breakpoints.up("md")]: {
+		[theme.breakpoints.up("sm")]: {
 			width: 380
 		},
-		[theme.breakpoints.down("sm")]: {
+		[theme.breakpoints.down("xs")]: {
 			minHeight: 320,
 			flex: 1
 		}

@@ -28,9 +28,9 @@
 		"gulp": "^4.0.0",
 		"gulp-babel": "^8.0.0",
 		"gulp-eslint": "^5.0.0",
-		"iso8601-duration": "^1.1.7",
+		"iso8601-duration": "^1.2.0",
 		"lookenv": "^1.0.1",
-		"mongoose": "^5.4.18",
+		"mongoose": "^5.4.19",
 		"node-fetch": "^2.3.0",
 		"simple-youtube-api": "^5.1.1",
 		"socket.io": "^2.2.0"

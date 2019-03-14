@@ -45,12 +45,10 @@ export default class DefaultView extends React.Component {
 						<span style={{ fontSize: 96 }}>Vidr</span>.tv
 					</div>
 					<Typography
-						variant="subtitle1"
-						style={{ margin: 18, maxWidth: 600 }}
+						variant="h5"
+						style={{ margin: "0px 12px 28px 12px", maxWidth: 600 }}
 					>
-						{
-							"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-						}
+						{"Experience Together"}
 					</Typography>
 					<div>
 						<NavLink
