@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import Radium from "radium";
-import { default as MediaControls, StatsOverlay } from "./MediaControls";
+import { Component } from "react";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
+import { MediaControls, StatsOverlay } from "./";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
 const PlaybackDeltaThreshold = 1200;
 
-@Radium
-class MediaPlayer extends Component {
+export default class MediaPlayer extends Component {
 	constructor(props) {
 		super(props);
 
@@ -235,7 +235,7 @@ class MediaPlayer extends Component {
 		return (
 			<div
 				className={this.props.className}
-				style={[
+				css={[
 					{
 						border: "solid 1px #c78bff",
 						borderRadius: "1px",
@@ -331,5 +331,3 @@ class MediaPlayer extends Component {
 		);
 	}
 }
-
-export default MediaPlayer;

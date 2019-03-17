@@ -1,52 +1,15 @@
-import React from "react";
+import { Component } from "react";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import { MediaPlayer, Loader } from "../components";
 import { SidebarView } from "./";
-import { withStyles } from "@material-ui/core/styles";
+import { withTheme } from "@material-ui/core/styles";
 import openSocket from "socket.io-client";
 import { youtube } from "../youtube";
 import { ClocksyClient } from "clocksy";
 import "whatwg-fetch";
 
-const styles = theme => ({
-	root: {
-		display: "flex",
-		overflow: "hidden",
-		height: "100%",
-		width: "100%",
-		maxWidth: "1920px",
-		margin: "0 auto",
-		[theme.breakpoints.down("xs")]: {
-			overflowY: "scroll",
-			// display: "block",
-			flexDirection: "column"
-		}
-	},
-	main: {
-		overflow: "hidden",
-		display: "flex",
-		flexDirection: "column",
-		[theme.breakpoints.up("sm")]: {
-			flex: 1
-		}
-	},
-	sidebar: {
-		background: "rgb(44, 40, 52)",
-		display: "flex",
-		flexDirection: "column",
-		position: "relative",
-		backgroundColor: theme.palette.background.paper,
-		overflow: "hidden",
-		[theme.breakpoints.up("sm")]: {
-			width: 380
-		},
-		[theme.breakpoints.down("xs")]: {
-			minHeight: 320,
-			flex: 1
-		}
-	}
-});
-
-class RoomView extends React.Component {
+class RoomView extends Component {
 	constructor(props) {
 		super();
 		this.roomid = props.match.params.id;
@@ -179,11 +142,34 @@ class RoomView extends React.Component {
 				/>
 			);
 
-		const { classes } = this.props;
+		const { theme } = this.props;
 
 		return (
-			<div className={classes.root}>
-				<main className={classes.main}>
+			<div
+				css={{
+					display: "flex",
+					overflow: "hidden",
+					height: "100%",
+					width: "100%",
+					maxWidth: "1920px",
+					margin: "0 auto",
+					[theme.breakpoints.down("xs")]: {
+						overflowY: "scroll",
+						// display: "block",
+						flexDirection: "column"
+					}
+				}}
+			>
+				<main
+					css={{
+						overflow: "hidden",
+						display: "flex",
+						flexDirection: "column",
+						[theme.breakpoints.up("sm")]: {
+							flex: 1
+						}
+					}}
+				>
 					<div
 						style={{
 							position: "relative",
@@ -238,10 +224,27 @@ class RoomView extends React.Component {
 						</div>
 					</div>
 				</main>
-				<SidebarView className={classes.sidebar} roomview={this} />
+				<SidebarView
+					css={{
+						background: "rgb(44, 40, 52)",
+						display: "flex",
+						flexDirection: "column",
+						position: "relative",
+						backgroundColor: theme.palette.background.paper,
+						overflow: "hidden",
+						[theme.breakpoints.up("sm")]: {
+							width: 380
+						},
+						[theme.breakpoints.down("xs")]: {
+							minHeight: 320,
+							flex: 1
+						}
+					}}
+					roomview={this}
+				/>
 			</div>
 		);
 	}
 }
 
-export default withStyles(styles)(RoomView);
+export default withTheme()(RoomView);

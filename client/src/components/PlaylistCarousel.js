@@ -1,9 +1,9 @@
 import React from "react";
-import Radium from "radium";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import { youtube } from "../youtube";
 
-@Radium
-class PlaylistCarousel extends React.Component {
+export default class PlaylistCarousel extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -92,7 +92,7 @@ class PlaylistCarousel extends React.Component {
 		return (
 			<div
 				className="playlist-view"
-				style={[
+				css={[
 					{
 						// background: "red",
 						position: "relative",
@@ -187,5 +187,3 @@ class PlaylistCarousel extends React.Component {
 		);
 	}
 }
-
-export default PlaylistCarousel;

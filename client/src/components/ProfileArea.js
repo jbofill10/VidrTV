@@ -1,11 +1,9 @@
 import React from "react";
-import Radium from "radium";
 import "whatwg-fetch";
 import gql from "graphql-tag";
 import { client } from "../apollo";
 
-@Radium
-class ProfileArea extends React.Component {
+export default class ProfileArea extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -13,6 +11,60 @@ class ProfileArea extends React.Component {
 			profile: {},
 			loggedin: false
 		};
+	}
+
+	signIn() {
+		let auth2 = window.gapi.auth2.getAuthInstance();
+
+		auth2.signIn().then(
+			res => this.responseGoogle(res),
+			err => {
+				console.error(err);
+			}
+		);
+	}
+
+	responseGoogle(response) {
+		let profile = response.getBasicProfile();
+		let authres = response.getAuthResponse();
+
+		// console.log(profile, authres);
+		client
+			.query({
+				query: gql`
+					query Users {
+						users {
+							id
+							lastLogin
+						}
+					}
+				`
+			})
+			.then(data => console.log(data))
+			.catch(err => console.log(err));
+
+		fetch("/auth/google/tokensignin", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				idtoken: authres.id_token
+			})
+		})
+			.then(res => res.json())
+			.then(json => {
+				if (json.loggedin) {
+					console.log("/auth/google/tokensignin response", json);
+					// TODO: do something with user info response
+					this.setState({ profile: profile, loggedin: true });
+				} else {
+					console.error("/auth/google/tokensignin response", json);
+				}
+			})
+			.catch(ex => {
+				console.error("parsing failed", ex);
+			});
 	}
 
 	render() {
@@ -102,60 +154,4 @@ class ProfileArea extends React.Component {
 				</button>
 			);
 	}
-
-	signIn() {
-		let auth2 = window.gapi.auth2.getAuthInstance();
-
-		auth2.signIn().then(
-			res => this.responseGoogle(res),
-			err => {
-				console.error(err);
-			}
-		);
-	}
-
-	responseGoogle(response) {
-		let profile = response.getBasicProfile();
-		let authres = response.getAuthResponse();
-
-		// console.log(profile, authres);
-		client
-			.query({
-				query: gql`
-					query Users {
-						users {
-							id
-							lastLogin
-						}
-					}
-				`
-			})
-			.then(data => console.log(data))
-			.catch(err => console.log(err));
-
-		fetch("/auth/google/tokensignin", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				idtoken: authres.id_token
-			})
-		})
-			.then(res => res.json())
-			.then(json => {
-				if (json.loggedin) {
-					console.log("/auth/google/tokensignin response", json);
-					// TODO: do something with user info response
-					this.setState({ profile: profile, loggedin: true });
-				} else {
-					console.error("/auth/google/tokensignin response", json);
-				}
-			})
-			.catch(ex => {
-				console.error("parsing failed", ex);
-			});
-	}
 }
-
-export default ProfileArea;

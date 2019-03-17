@@ -1,12 +1,15 @@
-import React, { Component } from "react";
-import Radium from "radium";
+import { Component } from "react";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
+import PlayArrow from "@material-ui/icons/PlayArrow";
+import Pause from "@material-ui/icons/Pause";
+import VolumeUp from "@material-ui/icons/VolumeUp";
+import VolumeOff from "@material-ui/icons/VolumeOff";
 import { Slider } from "react-player-controls";
-import { MdPlayArrow, MdPause, MdVolumeUp, MdVolumeOff } from "react-icons/md";
-import { utils } from "react-media-player";
 
-const PlayerButton = Radium(({ style, children, ...props }) => (
+const PlayerButton = ({ style, children, ...props }) => (
 	<button
-		style={[
+		css={[
 			{
 				appearance: "none",
 				outline: "none",
@@ -16,7 +19,7 @@ const PlayerButton = Radium(({ style, children, ...props }) => (
 				color: "white",
 				opacity: 0.9,
 				transition: "all 0.15s",
-				":hover": {
+				"&:hover": {
 					opacity: 1,
 					cursor: "pointer",
 					transform: "scale(1.08)"
@@ -31,11 +34,11 @@ const PlayerButton = Radium(({ style, children, ...props }) => (
 	>
 		{children}
 	</button>
-));
+);
 
-const SliderBar = Radium(({ value, style, ...props }) => (
+const SliderBar = ({ value, style, ...props }) => (
 	<div
-		style={[
+		css={[
 			{
 				position: "absolute",
 				background: "#878c88",
@@ -49,11 +52,11 @@ const SliderBar = Radium(({ value, style, ...props }) => (
 		]}
 		{...props}
 	/>
-));
+);
 
-const SliderHandle = Radium(({ value, style, ...props }) => (
+const SliderHandle = ({ value, style, ...props }) => (
 	<div
-		style={[
+		css={[
 			{
 				position: "absolute",
 				width: 16,
@@ -62,7 +65,7 @@ const SliderHandle = Radium(({ value, style, ...props }) => (
 				borderRadius: "100%",
 				transform: "scale(1)",
 				transition: "transform 0.2s",
-				":hover": {
+				"&:hover": {
 					transform: "scale(1.3)"
 				},
 				top: 0,
@@ -74,10 +77,9 @@ const SliderHandle = Radium(({ value, style, ...props }) => (
 		]}
 		{...props}
 	/>
-));
+);
 
-@Radium
-class MediaControls extends Component {
+export default class MediaControls extends Component {
 	constructor(props) {
 		super(props);
 
@@ -126,7 +128,7 @@ class MediaControls extends Component {
 		return (
 			<div
 				className={className}
-				style={[
+				css={[
 					{
 						background: "transparent",
 						border: 0,
@@ -155,7 +157,7 @@ class MediaControls extends Component {
 					onClick={player.playPause}
 				/>
 				<div
-					style={[
+					css={[
 						{
 							position: "absolute",
 							bottom: 0,
@@ -177,7 +179,7 @@ class MediaControls extends Component {
 					]}
 				/>
 				<div
-					style={[
+					css={[
 						{
 							position: "absolute",
 							top: 0,
@@ -199,7 +201,7 @@ class MediaControls extends Component {
 					]}
 				/>
 				<div
-					style={[
+					css={[
 						{
 							position: "absolute",
 							top: 0,
@@ -271,7 +273,7 @@ class MediaControls extends Component {
 					</div>
 				</div>
 				<div
-					style={[
+					css={[
 						{
 							position: "absolute",
 							bottom: 0,
@@ -317,7 +319,7 @@ class MediaControls extends Component {
 						/>
 						<SliderBar
 							value={played.toFixed(3)}
-							style={[
+							css={[
 								{
 									background: "#fff"
 								},
@@ -335,7 +337,7 @@ class MediaControls extends Component {
 						/>
 					</Slider>
 					<div
-						style={[
+						css={[
 							{
 								display: "flex",
 								padding: "2px 8px",
@@ -353,32 +355,33 @@ class MediaControls extends Component {
 								padding: "4px 10px"
 							}}
 						>
-							{playing ? <MdPause /> : <MdPlayArrow />}
+							{playing ? <Pause /> : <PlayArrow />}
 						</PlayerButton>
 						<span
-							style={{
+							css={{
 								display: "flex",
 								width: 34,
 								overflow: "hidden",
 								transition: "width 0.1s",
-								":hover": {
+								"&:hover": {
 									width: 100
 								}
 							}}
 						>
 							<PlayerButton onClick={player.toggleMute}>
 								{muted || volume === 0 ? (
-									<MdVolumeOff />
+									<VolumeOff />
 								) : (
-									<MdVolumeUp />
+									<VolumeUp />
 								)}
 							</PlayerButton>
 							<Slider
 								className="volume-slider"
 								isEnabled={true}
 								style={{
+									verticalAlign: "middle",
 									flex: 1,
-									margin: "15px 8px",
+									margin: "16px 8px",
 									borderRadius: "4px",
 									background: "rgba(255,255,255,0.2)",
 									transition: "width 0.1s",
@@ -410,10 +413,10 @@ class MediaControls extends Component {
 								userSelect: "none"
 							}}
 						>
-							<time>{utils.formatTime(playedSeconds | 0)}</time>
+							<time>{formatTime(playedSeconds)}</time>
 							<span style={{ opacity: 0.7 }}>
 								{" / "}
-								<time>{utils.formatTime(duration | 0)}</time>
+								<time>{formatTime(duration)}</time>
 							</span>
 						</span>
 					</div>
@@ -423,207 +426,11 @@ class MediaControls extends Component {
 	}
 }
 
-export default MediaControls;
-
-@Radium
-class StatsOverlay extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			info: {}
-		};
-
-		this._updated = [];
-		this._eventTimeout = -1;
-
-		props.player._statsOverlay = this;
-	}
-
-	componentDidMount() {
-		this._isMounted = true;
-	}
-
-	componentWillUnmount() {
-		this._isMounted = false;
-		clearTimeout(this._eventTimeout);
-	}
-
-	color(input) {
-		if (input === "yellow" || input === "warn") return "#FFEE58";
-		if (input === "red" || input === "error" || input === "bad")
-			return "#F50057";
-		if (input === "green" || input === "good") return "#76FF03";
-		if (input === "blue" || input === "event") return "#00E5FF";
-
-		return input;
-	}
-
-	set(name, value, description = "", color = "white", flash = true) {
-		if (!this._isMounted) return;
-
-		let next = this.state.info;
-		next[name] = {
-			type: "value",
-			description: description,
-			color: this.color(color),
-			text: value.toString(),
-			flash: flash
-		};
-
-		this._updated.push(name);
-
-		this.setState({
-			info: next
-		});
-	}
-
-	event(text, color = "event", timeout = 1000, align = "left") {
-		if (!this._isMounted) return;
-
-		let now = Date.now().toString();
-
-		let next = this.state.info;
-		next[now] = {
-			type: "event",
-			color: this.color(color),
-			text: text,
-			timeout: timeout,
-			align: align
-		};
-
-		this._eventTimeout = setTimeout(() => {
-			this.remove(now);
-		}, timeout);
-
-		this.setState({
-			info: next
-		});
-	}
-
-	remove(name) {
-		if (!this._isMounted) return;
-
-		let next = this.state.info;
-		delete next[name];
-
-		this.setState({
-			info: next
-		});
-	}
-
-	componentDidUpdate() {
-		this._updated = [];
-	}
-
-	render() {
-		let info = this.state.info;
-		let lines = Object.keys(this.state.info);
-
-		let maxNameLength = 5;
-		let maxValueLength = 5;
-		let maxEventLength = 10;
-
-		lines.forEach(line => {
-			if (info[line].type === "value") {
-				maxNameLength = Math.max(line.length, maxNameLength);
-				maxValueLength = Math.max(
-					info[line].text.length,
-					maxValueLength
-				);
-			} else
-				maxEventLength = Math.max(
-					info[line].text.length,
-					maxEventLength
-				);
-		});
-
-		return (
-			<div
-				style={[
-					{
-						position: "absolute",
-						top: "25%",
-						right: 0,
-						width:
-							Math.max(
-								maxNameLength + maxValueLength + 1,
-								maxEventLength
-							) * 7,
-						height: lines.length * 16 + 8,
-						margin: 8,
-						padding: "4px 6px",
-						fontSize: 12,
-						borderRadius: 4,
-						fontFamily: "monospace",
-						color: "#ECEFF1",
-						background: "rgba(0,0,0,0.3)",
-						textShadow: "1px 0 5px rgba(0,0,0,0.8)",
-						overflow: "hidden",
-						transition: "all 0.3s",
-						userSelect: "none"
-					}
-				]}
-			>
-				<table style={{ width: "100%" }}>
-					<tbody>
-						{lines.map(id => {
-							if (info[id].type === "event") {
-								return (
-									<tr key={id}>
-										<td
-											colSpan="2"
-											style={{
-												textAlign: info[id].align,
-												color: info[id].color,
-												animation:
-													"fadeout 0.3s ease " +
-													(
-														info[id].timeout /
-															1000 -
-														0.3
-													).toFixed(1) +
-													"s forwards"
-											}}
-										>
-											{info[id].text}
-										</td>
-									</tr>
-								);
-							}
-							return (
-								<tr
-									key={id}
-									title={info[id].description}
-									style={{
-										cursor:
-											info[id].description.length > 0
-												? "help"
-												: "auto"
-									}}
-								>
-									<td>{id}</td>
-									<td
-										style={{
-											textAlign: "right",
-											color: info[id].color,
-											animation:
-												info[id].flash &&
-												this._updated.indexOf(id) !== -1
-													? "flash 1s"
-													: ""
-										}}
-									>
-										{info[id].text}
-									</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
-			</div>
-		);
-	}
+function formatTime(current = 0) {
+	let h = Math.floor(current / 3600);
+	let m = Math.floor((current - h * 3600) / 60);
+	let s = Math.floor(current % 60);
+	return h > 0
+		? h + ":" + (m < 10 ? `0${m}` : m) + ":" + (s < 10 ? `0${s}` : s)
+		: m + ":" + s;
 }
-
-export { StatsOverlay };

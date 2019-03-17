@@ -2,7 +2,6 @@ import React from "react";
 import { render } from "react-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import { IconContext } from "react-icons";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import { default as theme } from "./theme";
 import rootReducer from "./reducers";
@@ -14,11 +13,9 @@ const store = createStore(rootReducer);
 
 render(
 	<Provider store={store}>
-		<IconContext.Provider value={{ style: { verticalAlign: "middle" } }}>
-			<MuiThemeProvider theme={theme}>
-				<App />
-			</MuiThemeProvider>
-		</IconContext.Provider>
+		<MuiThemeProvider theme={theme}>
+			<App />
+		</MuiThemeProvider>
 	</Provider>,
 	document.getElementById("root")
 );
