@@ -38,6 +38,9 @@ const PlayerButton = ({ style, children, ...props }) => (
 
 const SliderBar = ({ value, style, ...props }) => (
 	<div
+		style={{
+			width: `${value * 100}%`
+		}}
 		css={[
 			{
 				position: "absolute",
@@ -45,8 +48,7 @@ const SliderBar = ({ value, style, ...props }) => (
 				borderRadius: 4,
 				top: 0,
 				bottom: 0,
-				left: 0,
-				width: `${value * 100}%`
+				left: 0
 			},
 			style
 		]}
@@ -56,6 +58,9 @@ const SliderBar = ({ value, style, ...props }) => (
 
 const SliderHandle = ({ value, style, ...props }) => (
 	<div
+		style={{
+			left: `${value * 100}%`
+		}}
 		css={[
 			{
 				position: "absolute",
@@ -69,7 +74,6 @@ const SliderHandle = ({ value, style, ...props }) => (
 					transform: "scale(1.3)"
 				},
 				top: 0,
-				left: `${value * 100}%`,
 				marginTop: -4,
 				marginLeft: -8
 			},
@@ -80,36 +84,12 @@ const SliderHandle = ({ value, style, ...props }) => (
 );
 
 export default class MediaControls extends Component {
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			hidden: true
-		};
-	}
-
-	componentWillUnmount() {
-		clearTimeout(this._hideTimeout);
-	}
-
 	_handleVolumeChange = val => {
 		this.props.player.setState({ muted: false });
 		if (!isNaN(val))
 			this.props.player.setVolume(
 				Math.max(0, Math.min(1, val.toFixed(4)))
 			);
-	};
-
-	_showControls = () => {
-		clearTimeout(this._hideTimeout);
-		this.setState({ hidden: false });
-	};
-
-	_hideControls = () => {
-		// hide controls after 400ms
-		this._hideTimeout = setTimeout(() => {
-			this.setState({ hidden: true });
-		}, 400);
 	};
 
 	render() {
@@ -135,15 +115,82 @@ export default class MediaControls extends Component {
 						outline: "none",
 						width: "100%",
 						height: "100%",
-						padding: 0
+						padding: 0,
+						".overlaygradient, .overlaytop, .overlaybottom": {
+							position: "absolute",
+							left: 0,
+							right: 0
+						},
+						".overlaygradient": {
+							opacity: 0,
+							height: 16,
+							zIndex: 1,
+							transition: "all 0.8s 0.4s"
+						},
+						".overlaytop": {
+							top: 0,
+							margin: "12px 18px",
+							zIndex: 3,
+							opacity: 0,
+							transition: "opacity 0.4s 0.4s"
+						},
+						".overlaybottom": {
+							bottom: 0,
+							padding: 0,
+							zIndex: 3,
+							height: 2,
+							transition: "height 0.4s 0.4s",
+							".overlayprogress": {
+								flex: 1,
+								overflow: "hidden",
+								cursor: "inherit",
+								height: 2,
+								margin: 0,
+								borderRadius: 0,
+								background: "rgba(255,255,255,0)",
+								transition:
+									"margin 0.2s ease 0.6s, height 0.2s ease 0.6s, borderRadius 0.15s 0.4s, background 0.3s 0.4s"
+							},
+							".overlaybuttons": {
+								display: "flex",
+								padding: "2px 8px",
+								opacity: 0,
+								transition: "opacity 0.15s 0.4s"
+							}
+						},
+						"&:hover": {
+							".overlaygradient": {
+								height: 64,
+								opacity: 1,
+								transition: "all 0.2s 0s"
+							},
+							".overlaytop": {
+								opacity: 1,
+								transition: "height 0.1s 0s"
+							},
+							".overlaybottom": {
+								height: 46,
+								transition: "height 0.1s 0s",
+								".overlayprogress": {
+									height: 4,
+									margin: "0 8px",
+									borderRadius: 4,
+									background: "rgba(255,255,255,0.2)",
+									transition:
+										"margin 0.1s ease 0s, height 0.1s ease 0s, borderRadius 0.1s 0s, background 0.3s 0s"
+								},
+								".overlaybuttons": {
+									opacity: 1,
+									transition: "opacity 0.05s 0s"
+								}
+							}
+						}
 					},
 					style
 				]}
-				onMouseOver={this._showControls}
-				onMouseLeave={this._hideControls}
 			>
 				<button
-					style={{
+					css={{
 						position: "absolute",
 						top: 0,
 						left: 0,
@@ -157,68 +204,22 @@ export default class MediaControls extends Component {
 					onClick={player.playPause}
 				/>
 				<div
-					css={[
-						{
-							position: "absolute",
-							bottom: 0,
-							left: 0,
-							right: 0,
-							background:
-								"linear-gradient(0, rgba(0, 0, 0, 0.35), transparent)",
-							opacity: 1,
-							transition: "all 0.2s",
-							height: 64,
-							width: "100%",
-							zIndex: 1
-						},
-						this.state.hidden && {
-							height: 16,
-							opacity: 0,
-							transition: "all 0.8s"
-						}
-					]}
+					className="overlaygradient"
+					css={{
+						bottom: 0,
+						background:
+							"linear-gradient(0, rgba(0, 0, 0, 0.35), transparent)"
+					}}
 				/>
 				<div
-					css={[
-						{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							background:
-								"linear-gradient(0, transparent, rgba(0, 0, 0, 0.35))",
-							opacity: 1,
-							transition: "all 0.2s",
-							height: 64,
-							width: "100%",
-							zIndex: 1
-						},
-						this.state.hidden && {
-							height: 16,
-							opacity: 0,
-							transition: "all 0.8s"
-						}
-					]}
+					className="overlaygradient"
+					css={{
+						top: 0,
+						background:
+							"linear-gradient(0, transparent, rgba(0, 0, 0, 0.35))"
+					}}
 				/>
-				<div
-					css={[
-						{
-							position: "absolute",
-							top: 0,
-							left: 0,
-							right: 0,
-							// height: "100%",
-							margin: "12px 18px",
-							width: "100%",
-							opacity: 1,
-							zIndex: 3
-						},
-						this.state.hidden && {
-							opacity: 0,
-							transition: "opacity 0.4s"
-						}
-					]}
-				>
+				<div className="overlaytop">
 					<div
 						style={{
 							color: "#FFF"
@@ -272,40 +273,10 @@ export default class MediaControls extends Component {
 						)}
 					</div>
 				</div>
-				<div
-					css={[
-						{
-							position: "absolute",
-							bottom: 0,
-							padding: 0,
-							left: 0,
-							right: 0,
-							zIndex: 3,
-							transition: "height 0.1s",
-							height: 46
-						},
-						this.state.hidden && {
-							height: 2,
-							transition: "height 0.4s"
-						}
-					]}
-				>
+				<div className="overlaybottom">
 					<Slider
+						className="overlayprogress"
 						isEnabled={false}
-						style={{
-							flex: 1,
-							overflow: "hidden",
-							cursor: "inherit",
-							height: this.state.hidden ? 2 : 4,
-							margin: this.state.hidden ? 0 : "0 6px",
-							borderRadius: this.state.hidden ? 0 : 4,
-							background: this.state.hidden
-								? "rgba(255,255,255,0)"
-								: "rgba(255,255,255,0.2)",
-							transition: this.state.hidden
-								? "margin 0.2s ease 0.2s, height 0.2s ease 0.2s, borderRadius 0.15s, background 0.3s"
-								: "margin 0.1s, height 0.1s, borderRadius 0.1s, background 0.3s"
-						}}
 						onChangeStart={player.onSeekMouseDown}
 						onChange={player.onSeekChange}
 						onChangeEnd={player.onSeekMouseUp}
@@ -319,12 +290,16 @@ export default class MediaControls extends Component {
 						/>
 						<SliderBar
 							value={played.toFixed(3)}
-							css={[
-								{
-									background: "#fff"
-								},
-								!seeking && { transition: "width 0.2s linear" }
-							]}
+							style={
+								seeking
+									? {
+											background: "#fff"
+									  }
+									: {
+											background: "#fff",
+											transition: "width 0.2s linear"
+									  }
+							}
 						/>
 						<SliderHandle
 							value={played.toFixed(3)}
@@ -336,19 +311,7 @@ export default class MediaControls extends Component {
 							}}
 						/>
 					</Slider>
-					<div
-						css={[
-							{
-								display: "flex",
-								padding: "2px 8px",
-								opacity: 1,
-								transition: "opacity 0.15s"
-							},
-							this.state.hidden && {
-								opacity: 0
-							}
-						]}
-					>
+					<div className="overlaybuttons">
 						<PlayerButton
 							onClick={player.playPause}
 							style={{
@@ -405,7 +368,7 @@ export default class MediaControls extends Component {
 							</Slider>
 						</span>
 						<span
-							style={{
+							css={{
 								padding: "7px 12px",
 								fontSize: 14,
 								color: "white",
@@ -432,5 +395,5 @@ function formatTime(current = 0) {
 	let s = Math.floor(current % 60);
 	return h > 0
 		? h + ":" + (m < 10 ? `0${m}` : m) + ":" + (s < 10 ? `0${s}` : s)
-		: m + ":" + s;
+		: m + ":" + (s < 10 ? `0${s}` : s);
 }

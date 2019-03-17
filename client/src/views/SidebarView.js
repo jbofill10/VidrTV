@@ -101,17 +101,7 @@ class SidebarView extends Component {
 		];
 
 		return (
-			<div
-				css={[
-					{
-						position: "relative",
-						backgroundColor: theme.palette.background.paper,
-						width: 380,
-						overflow: "hidden"
-					},
-					style
-				]}
-			>
+			<div css={style}>
 				<AppBar position="static" color="default">
 					<Tabs
 						value={this.state.value}

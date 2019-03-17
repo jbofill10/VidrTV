@@ -1,4 +1,5 @@
 import React from "react";
+import { Global, css } from "@emotion/core";
 
 export default class StatsOverlay extends React.Component {
 	constructor(props) {
@@ -137,6 +138,36 @@ export default class StatsOverlay extends React.Component {
 					userSelect: "none"
 				}}
 			>
+				<Global
+					styles={css`
+						@keyframes flash {
+							from {
+								filter: brightness(2);
+								transform: scale(1.05);
+							}
+							to {
+								filter: brightness(1);
+								transform: scale(1);
+							}
+						}
+						@keyframes fadein {
+							from {
+								opacity: 0;
+							}
+							to {
+								opacity: 1;
+							}
+						}
+						@keyframes fadeout {
+							from {
+								opacity: 1;
+							}
+							to {
+								opacity: 0;
+							}
+						}
+					`}
+				/>
 				<table style={{ width: "100%" }}>
 					<tbody>
 						{lines.map(id => {
@@ -148,14 +179,10 @@ export default class StatsOverlay extends React.Component {
 											style={{
 												textAlign: info[id].align,
 												color: info[id].color,
-												animation:
-													"fadeout 0.3s ease " +
-													(
-														info[id].timeout /
-															1000 -
-														0.3
-													).toFixed(1) +
-													"s forwards"
+												animation: `fadeout 0.3s ease ${(
+													info[id].timeout / 1000 -
+													0.3
+												).toFixed(1)}s forwards`
 											}}
 										>
 											{info[id].text}

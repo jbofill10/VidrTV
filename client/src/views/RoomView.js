@@ -155,7 +155,7 @@ class RoomView extends Component {
 					maxWidth: "1920px",
 					margin: "0 auto",
 					[theme.breakpoints.down("xs")]: {
-						overflowY: "scroll",
+						overflowY: "auto",
 						// display: "block",
 						flexDirection: "column"
 					}
