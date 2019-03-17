@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import { withTheme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
@@ -10,83 +10,21 @@ import SearchIcon from "@material-ui/icons/Search";
 import Paper from "@material-ui/core/Paper";
 import { Loader } from "../components";
 
-const styles = theme => ({
-	root: {
-		width: "100%",
-		height: "100%",
-		position: "relative",
-		// maxWidth: 500,
-		backgroundColor: theme.palette.background.paper
-	},
-	list: {
-		position: "absolute",
-		width: "100%",
-		top: 0,
-		left: 0,
-		bottom: 0,
-		overflowY: "auto",
-		paddingTop: 8,
-		display: "flex",
-		flexDirection: "column"
-	},
-	search: {
-		position: "absolute",
-		width: "100%",
-		height: "100%",
-		left: 0,
-		background: theme.palette.background.paper
-	},
-	searchinputbar: {
-		margin: "12px 12px",
-		background: "rgba(255,255,255,0.08)"
-	},
-	form: {
-		display: "flex"
-	},
-	input: {
-		marginLeft: 14,
-		flex: 1
-	}
-});
-
-const cardstyles = theme => ({
-	card: {
-		background: "rgba(255,255,255,0.02)",
-		display: "flex",
-		flexDirection: "row",
-		padding: "6px 8px",
-		margin: "2px 0",
-		borderRadius: 0,
-		height: 60,
-		boxShadow: "none"
-	},
-	thumb: {
-		width: "106px",
-		height: "60px"
-	},
-	details: {
-		flex: 1,
-		padding: "4px 18px"
-	},
-	title: {
-		padding: 0,
-		overflow: "hidden",
-		textOverflow: "ellipsis",
-		maxHeight: "2.5rem"
-	},
-	header: {
-		padding: "8px 18px 0px 18px"
-		// textAlign: "center"
-	}
-});
-
-const MediaCard = withStyles(cardstyles)(({ style, children, ...props }) => {
-	const { id, cache, index, classes } = props;
+const MediaCard = ({ style, children, ...props }) => {
+	const { id, cache, index } = props;
 
 	if (!cache.hasOwnProperty(id))
 		return (
 			<Card>
-				<Typography className={classes.title} color="textSecondary">
+				<Typography
+					style={{
+						padding: 0,
+						overflow: "hidden",
+						textOverflow: "ellipsis",
+						maxHeight: "2.5rem"
+					}}
+					color="textSecondary"
+				>
 					Loading...
 				</Typography>
 			</Card>
@@ -95,37 +33,65 @@ const MediaCard = withStyles(cardstyles)(({ style, children, ...props }) => {
 	return (
 		<div>
 			{index < 2 ? (
-				<Typography className={classes.header} variant="overline">
+				<Typography
+					style={{
+						padding: "8px 18px 0px 18px"
+					}}
+					variant="overline"
+				>
 					{index === 0 ? "Now Playing" : "Up Next"}
 				</Typography>
 			) : (
 				""
 			)}
 			<Card
-				className={classes.card}
+				style={{
+					background: "rgba(255,255,255,0.02)",
+					display: "flex",
+					flexDirection: "row",
+					padding: "6px 8px",
+					margin: "2px 0",
+					borderRadius: 0,
+					height: 60,
+					boxShadow: "none"
+				}}
 				// raised={index === 0}
 			>
 				<CardMedia
-					className={classes.thumb}
+					style={{
+						width: "106px",
+						height: "60px"
+					}}
 					image={cache[id].thumbnails.medium.url}
 					title={cache[id].title}
 				/>
-				<CardContent className={classes.details}>
-					<Typography className={classes.title} color="textPrimary">
+				<CardContent
+					style={{
+						flex: 1,
+						padding: "4px 18px"
+					}}
+				>
+					<Typography
+						style={{
+							padding: 0,
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+							maxHeight: "2.5rem"
+						}}
+						color="textPrimary"
+					>
 						{cache[id].title}
 					</Typography>
-					<Typography
-						className={classes.channel}
-						color="textSecondary"
-					>
+					<Typography color="textSecondary">
 						{cache[id].channel.title}
 					</Typography>
 				</CardContent>
 			</Card>
 		</div>
 	);
-});
+};
 
+@withTheme()
 class PlaylistView extends React.Component {
 	constructor(props) {
 		super(props);
@@ -136,7 +102,7 @@ class PlaylistView extends React.Component {
 	}
 
 	render() {
-		const { classes, theme, searchopen } = this.props;
+		const { theme, searchopen } = this.props;
 		const { room, mediacache } = this.props.roomview.state;
 
 		if (
@@ -145,7 +111,15 @@ class PlaylistView extends React.Component {
 			!room.media.every(e => mediacache.hasOwnProperty(e))
 		)
 			return (
-				<div className={classes.root}>
+				<div
+					style={{
+						width: "100%",
+						height: "100%",
+						position: "relative",
+						// maxWidth: 500,
+						backgroundColor: theme.palette.background.paper
+					}}
+				>
 					<Loader />
 				</div>
 			);
@@ -153,10 +127,25 @@ class PlaylistView extends React.Component {
 		const { easing, duration } = theme.transitions;
 
 		return (
-			<div className={classes.root}>
+			<div
+				style={{
+					width: "100%",
+					height: "100%",
+					position: "relative",
+					backgroundColor: theme.palette.background.paper
+				}}
+			>
 				<div
-					className={classes.list}
 					style={{
+						position: "absolute",
+						width: "100%",
+						top: 0,
+						left: 0,
+						bottom: 0,
+						overflowY: "auto",
+						paddingTop: 8,
+						display: "flex",
+						flexDirection: "column",
 						transition: `opacity ${
 							searchopen
 								? duration.enteringScreen
@@ -181,8 +170,12 @@ class PlaylistView extends React.Component {
 				</div>
 				<Paper
 					elevation={1}
-					className={classes.search}
 					style={{
+						position: "absolute",
+						width: "100%",
+						height: "100%",
+						left: 0,
+						background: theme.palette.background.paper,
 						transition: `all ${
 							searchopen
 								? duration.enteringScreen
@@ -192,21 +185,29 @@ class PlaylistView extends React.Component {
 						opacity: searchopen ? 1 : 0.5
 					}}
 				>
-					<Paper elevation={0} className={classes.searchinputbar}>
+					<Paper
+						elevation={0}
+						style={{
+							margin: "12px 12px",
+							background: "rgba(255,255,255,0.08)"
+						}}
+					>
 						<form
-							className={classes.form}
+							style={{
+								display: "flex"
+							}}
 							noValidate
 							autoComplete="off"
 							onSubmit={this.onSubmit}
 						>
 							<InputBase
-								className={classes.input}
+								style={{
+									marginLeft: 14,
+									flex: 1
+								}}
 								placeholder="Search YouTube"
 							/>
-							<IconButton
-								className={classes.iconButton}
-								aria-label="Search"
-							>
+							<IconButton aria-label="Search">
 								<SearchIcon />
 							</IconButton>
 						</form>
@@ -217,4 +218,4 @@ class PlaylistView extends React.Component {
 	}
 }
 
-export default withStyles(styles, { withTheme: true })(PlaylistView);
+export default PlaylistView;

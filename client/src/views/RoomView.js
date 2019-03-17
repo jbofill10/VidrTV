@@ -9,6 +9,7 @@ import { youtube } from "../youtube";
 import { ClocksyClient } from "clocksy";
 import "whatwg-fetch";
 
+@withTheme()
 class RoomView extends Component {
 	constructor(props) {
 		super();
@@ -225,7 +226,7 @@ class RoomView extends Component {
 					</div>
 				</main>
 				<SidebarView
-					css={{
+					style={{
 						background: "rgb(44, 40, 52)",
 						display: "flex",
 						flexDirection: "column",
@@ -247,4 +248,4 @@ class RoomView extends Component {
 	}
 }
 
-export default withTheme()(RoomView);
+export default RoomView;
