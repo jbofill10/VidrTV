@@ -1,4 +1,5 @@
 import React from "react";
+import SimpleBar from "simplebar-react";
 import { withTheme } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
@@ -135,7 +136,7 @@ class PlaylistView extends React.Component {
 					backgroundColor: theme.palette.background.paper
 				}}
 			>
-				<div
+				<SimpleBar
 					style={{
 						position: "absolute",
 						width: "100%",
@@ -143,7 +144,6 @@ class PlaylistView extends React.Component {
 						left: 0,
 						bottom: 0,
 						overflowY: "auto",
-						paddingTop: 8,
 						display: "flex",
 						flexDirection: "column",
 						transition: `opacity ${
@@ -167,7 +167,7 @@ class PlaylistView extends React.Component {
 								/>
 							);
 						})}
-				</div>
+				</SimpleBar>
 				<Paper
 					elevation={1}
 					style={{

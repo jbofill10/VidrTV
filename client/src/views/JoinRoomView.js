@@ -1,4 +1,5 @@
 import React from "react";
+import SimpleBar from "simplebar-react";
 import { Loader, RoomCard } from "../components";
 import "whatwg-fetch";
 
@@ -44,11 +45,10 @@ export default class JoinRoomView extends React.Component {
 				<Loader error={this.state.error} message={this.state.message} />
 			);
 		return (
-			<div
+			<SimpleBar
 				style={{
 					width: "100%",
-					height: "100%",
-					overflowY: "auto"
+					height: "100%"
 				}}
 			>
 				<div
@@ -64,7 +64,7 @@ export default class JoinRoomView extends React.Component {
 						<RoomCard room={room} key={room._id} />
 					))}
 				</div>
-			</div>
+			</SimpleBar>
 		);
 	}
 }

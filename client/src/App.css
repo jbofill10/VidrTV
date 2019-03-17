@@ -21,3 +21,7 @@ a {
 video::-webkit-media-controls {
 	display: none !important;
 }
+
+.simplebar-scrollbar:before {
+	background: #eeeeee;
+}

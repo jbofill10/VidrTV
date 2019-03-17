@@ -168,6 +168,9 @@ class RoomView extends Component {
 						flexDirection: "column",
 						[theme.breakpoints.up("sm")]: {
 							flex: 1
+						},
+						[theme.breakpoints.down("xs")]: {
+							flexShrink: 0
 						}
 					}}
 				>
@@ -237,7 +240,7 @@ class RoomView extends Component {
 							width: 380
 						},
 						[theme.breakpoints.down("xs")]: {
-							minHeight: 320,
+							minHeight: 200,
 							flex: 1
 						}
 					}}

@@ -9,6 +9,7 @@ import {
 	CreateRoomView,
 	JoinRoomView
 } from "./views";
+import "simplebar/dist/simplebar.min.css";
 import "./App.css";
 
 class App extends React.Component {

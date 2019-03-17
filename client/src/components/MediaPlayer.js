@@ -240,7 +240,7 @@ export default class MediaPlayer extends Component {
 						border: "solid 1px #c78bff",
 						borderRadius: "1px",
 						// boxShadow: "0 0 32px #c78bff75",
-						background: "rgba(255, 255, 255, 0.082)",
+						background: "#000000",
 						position: "relative",
 						// maxHeight: `calc((${heightdiff | 0}px) * 9 / 16)`,
 						// height: "200px",
