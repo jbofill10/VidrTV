@@ -69,10 +69,56 @@ class App extends React.Component {
 									className="bg"
 									style={{
 										background:
-											"radial-gradient(circle at 50% 120%, #6200ea, #311b92)",
-										transition: "opacity 0.33s",
+											theme.palette.background.grad1,
+										backgroundBlendMode: "multiply",
+										transition: "opacity 0.4s",
 										opacity:
 											props.location.pathname === "/"
+												? 1
+												: 0,
+										position: "absolute",
+										left: 0,
+										right: 0,
+										top: 0,
+										bottom: 0,
+										zIndex: 0
+									}}
+								/>
+								<div
+									className="bg"
+									style={{
+										background:
+											theme.palette.background.grad2,
+										backgroundBlendMode: "multiply",
+										transition: "opacity 0.4s",
+										opacity:
+											props.location.pathname !== "/" &&
+											props.location.pathname.lastIndexOf(
+												"/r/",
+												0
+											) !== 0
+												? 0.35
+												: 0,
+										position: "absolute",
+										left: 0,
+										right: 0,
+										top: 0,
+										bottom: 0,
+										zIndex: 0
+									}}
+								/>
+								<div
+									className="bg"
+									style={{
+										background:
+											theme.palette.background.grad3,
+										backgroundBlendMode: "multiply",
+										transition: "opacity 0.4s",
+										opacity:
+											props.location.pathname.lastIndexOf(
+												"/r/",
+												0
+											) === 0
 												? 1
 												: 0,
 										position: "absolute",
@@ -87,45 +133,52 @@ class App extends React.Component {
 									<header
 										className="app-header"
 										style={{
-											backgroundColor: "#2c2834",
+											background: "transparent",
 											display: "flex",
-											padding: "8px 16px",
 											color: "white",
-											height: 40,
 											flexShrink: 0,
-											zIndex: 1
+											zIndex: 1,
+											justifyContent: "center"
 										}}
 									>
-										<NavLink
-											to="/"
-											style={{
-												flex: 0,
-												display: "inline-block",
-												// background: "rgba(56, 51, 66, 0.5)",
-												color: "rgb(242,242,242)",
-												verticalAlign: "middle",
-												textAlign: "center",
-												height: 40,
-												marginLeft: -8,
-												padding: "0 12px 0 12px",
-												lineHeight: "38px",
-												fontSize: 24,
-												fontFamily: `"Dosis", sans-serif`,
-												// textTransform: "uppercase",
-												userSelect: "none",
-												borderRadius: 4
-											}}
-										>
-											Vidr.tv
-										</NavLink>
 										<div
 											style={{
-												flex: 1,
 												display: "flex",
-												justifyContent: "flex-end"
+												padding: "8px 0",
+												flex: 1,
+												maxWidth: 1920
 											}}
 										>
-											<ProfileArea />
+											<NavLink
+												to="/"
+												style={{
+													flex: 0,
+													display: "inline-block",
+													// background: "rgba(56, 51, 66, 0.5)",
+													color: "rgb(242,242,242)",
+													verticalAlign: "middle",
+													textAlign: "center",
+													height: 40,
+													padding: "0 12px 0 28px",
+													lineHeight: "38px",
+													fontSize: 24,
+													fontFamily: `"Dosis", sans-serif`,
+													// textTransform: "uppercase",
+													userSelect: "none",
+													borderRadius: 4
+												}}
+											>
+												Vidr.tv
+											</NavLink>
+											<div
+												style={{
+													flex: 1,
+													display: "flex",
+													justifyContent: "flex-end"
+												}}
+											>
+												<ProfileArea />
+											</div>
 										</div>
 									</header>
 								)}

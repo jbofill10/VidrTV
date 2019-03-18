@@ -231,14 +231,15 @@ export default class MediaPlayer extends Component {
 			pip,
 			showStats
 		} = this.state;
+		const { className, style } = this.props;
 
 		return (
 			<div
-				className={this.props.className}
+				className={className}
 				css={[
 					{
-						border: "solid 1px #c78bff",
-						borderRadius: "1px",
+						// border: `solid 0px ${theme.palette.primary.main}`,
+						// borderRadius: `${theme.shape.borderRadius}px`,
 						// boxShadow: "0 0 32px #c78bff75",
 						background: "#000000",
 						position: "relative",
@@ -248,7 +249,7 @@ export default class MediaPlayer extends Component {
 						overflow: "hidden",
 						boxSizing: "border-box"
 					},
-					this.props.style
+					style
 				]}
 				ref={div => (this._parentdiv = div)}
 			>
