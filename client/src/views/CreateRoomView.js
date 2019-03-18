@@ -1,10 +1,8 @@
 import React from "react";
-import Radium from "radium";
 import "whatwg-fetch";
 import RoomSettingsView from "../views/RoomSettingsView";
 
-@Radium
-class CreateRoom extends React.Component {
+export default class CreateRoom extends React.Component {
 	componentDidMount() {
 		document.title = "Vidr.tv - Create a Room";
 	}
@@ -30,5 +28,3 @@ class CreateRoom extends React.Component {
 		);
 	}
 }
-
-export default CreateRoom;

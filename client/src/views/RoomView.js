@@ -1,12 +1,17 @@
-import React from "react";
+import { Component } from "react";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
 import { MediaPlayer, Loader } from "../components";
 import { SidebarView } from "./";
+import { withTheme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import openSocket from "socket.io-client";
 import { youtube } from "../youtube";
 import { ClocksyClient } from "clocksy";
 import "whatwg-fetch";
 
-export default class RoomView extends React.Component {
+@withTheme()
+class RoomView extends Component {
 	constructor(props) {
 		super();
 		this.roomid = props.match.params.id;
@@ -81,20 +86,31 @@ export default class RoomView extends React.Component {
 
 				document.title = `Vidr.tv - ${data.name}`;
 
-				let mediacache = {};
+				let mediacache = this.state.mediacache;
 
 				for (let i = 0; i < this.state.room.media.length; i++) {
-					if (!this._isMounted) break;
-					youtube
-						.getVideoByID(this.state.room.media[i])
-						.then(result => {
-							if (this._isMounted) {
-								mediacache[this.state.room.media[i]] = result;
+					if (!mediacache.hasOwnProperty(this.state.room.media[i]))
+						youtube
+							.getVideoByID(this.state.room.media[i], {
+								part: "snippet,contentDetails,statistics"
+							})
+							.then(result => {
+								youtube
+									.getChannelByID(result.channel.id, {
+										part: "snippet"
+									})
+									.then(channel => {
+										result.channel = channel;
+										mediacache[
+											this.state.room.media[i]
+										] = result;
 
-								this.setState({ mediacache: mediacache });
-							}
-						})
-						.catch(console.error);
+										this.setState({
+											mediacache: mediacache
+										});
+									});
+							})
+							.catch(console.error);
 				}
 			});
 		});
@@ -139,23 +155,38 @@ export default class RoomView extends React.Component {
 				/>
 			);
 
+		const { theme } = this.props;
+
+		console.log(this.state.mediacache);
+
 		return (
 			<div
-				style={{
+				css={{
 					display: "flex",
 					overflow: "hidden",
-					height: "100%",
+					// height: "100%",
 					width: "100%",
 					maxWidth: "1920px",
-					margin: "0 auto"
+					margin: `0 auto ${theme.spacing.unit}px auto`,
+					[theme.breakpoints.down("xs")]: {
+						overflowY: "auto",
+						flexDirection: "column",
+						margin: 0
+					}
 				}}
 			>
 				<main
-					style={{
+					css={{
 						overflow: "hidden",
-						flex: 1,
 						display: "flex",
-						flexDirection: "column"
+						flexDirection: "column",
+						[theme.breakpoints.up("sm")]: {
+							flex: 1,
+							margin: `0 ${theme.spacing.unit}px`
+						},
+						[theme.breakpoints.down("xs")]: {
+							flexShrink: 0
+						}
 					}}
 				>
 					<div
@@ -169,7 +200,7 @@ export default class RoomView extends React.Component {
 						<MediaPlayer
 							className="player-container"
 							// player height + heightdiff = player height breakpoint
-							heightdiff={110}
+							heightdiff={110 + theme.spacing.unit}
 							socket={this.socket}
 							clock={this.clock}
 							room={this.state.room}
@@ -177,50 +208,182 @@ export default class RoomView extends React.Component {
 						/>
 					</div>
 					<div
+						css={{
+							backgroundColor: theme.palette.background.paper,
+							borderRadius: theme.shape.borderRadius,
+							padding: "12px 16px",
+							[theme.breakpoints.up("sm")]: {
+								marginTop: `${theme.spacing.unit}px`
+							}
+						}}
+					>
+						{this.state.mediacache.hasOwnProperty(
+							this.state.room.media[this.state.room.cur]
+						) ? (
+							<div>
+								<Typography
+									variant="subtitle1"
+									style={{ color: "#FFF", fontSize: 18 }}
+								>
+									{
+										this.state.mediacache[
+											this.state.room.media[
+												this.state.room.cur
+											]
+										].title
+									}
+								</Typography>
+								<div
+									style={{
+										borderBottom:
+											"solid 1px rgba(255,255,255,0.1)",
+										paddingBottom: "8px"
+									}}
+								>
+									<Typography
+										variant="subtitle1"
+										style={{ color: "#aaa", fontSize: 16 }}
+									>
+										{parseInt(
+											this.state.mediacache[
+												this.state.room.media[
+													this.state.room.cur
+												]
+											].raw.statistics.viewCount
+										).toLocaleString()}
+										{" views"}
+									</Typography>
+								</div>
+								<div
+									style={{
+										margin: "12px 0",
+										display: "flex"
+									}}
+								>
+									<img
+										alt={
+											this.state.mediacache[
+												this.state.room.media[
+													this.state.room.cur
+												]
+											].channel.title
+										}
+										style={{
+											borderRadius: "50%",
+											height: 48,
+											width: 48
+										}}
+										src={
+											this.state.mediacache[
+												this.state.room.media[
+													this.state.room.cur
+												]
+											].channel.thumbnails.default.url
+										}
+									/>
+									<div
+										style={{
+											flex: 1,
+											margin: "4px 12px"
+										}}
+									>
+										<a
+											target="_blank"
+											rel="noopener noreferrer"
+											href={
+												this.state.mediacache[
+													this.state.room.media[
+														this.state.room.cur
+													]
+												].channel.url
+											}
+											style={{
+												color: "#fff",
+												opacity: 0.88,
+												fontSize: 14,
+												fontWeight: 500
+											}}
+										>
+											{
+												this.state.mediacache[
+													this.state.room.media[
+														this.state.room.cur
+													]
+												].channel.title
+											}
+										</a>
+										<div
+											style={{
+												color: "#fff",
+												opacity: 0.6,
+												fontSize: 13,
+												fontWeight: 400
+											}}
+										>
+											{"Published on "}
+											{this.state.mediacache[
+												this.state.room.media[
+													this.state.room.cur
+												]
+											].publishedAt.toDateString()}
+										</div>
+									</div>
+								</div>
+							</div>
+						) : (
+							<div>Loading...</div>
+						)}
+					</div>
+				</main>
+				<div
+					css={{
+						display: "flex",
+						flexDirection: "column",
+						position: "relative",
+						overflow: "hidden",
+						[theme.breakpoints.up("sm")]: {
+							width: 380,
+							marginRight: `${theme.spacing.unit}px`,
+							borderRadius: theme.shape.borderRadius
+						},
+						[theme.breakpoints.down("xs")]: {
+							minHeight: 200,
+							flex: 1
+						}
+					}}
+				>
+					<div
 						style={{
-							background: "rgb(44, 40, 52)",
-							height: 26,
-							padding: "14px 12px 12px 24px",
+							background: theme.palette.background.paper,
+							height: 22,
+							padding: "12px 18px",
 							fontSize: 18
 							// flex: 2
 						}}
 					>
-						<div>
-							<span
-								style={{
-									color: "#FFF"
-								}}
-							>
-								{this.state.room.name}
-							</span>
-							<span
-								style={{
-									paddingLeft: 16,
-									color: "#aaa"
-								}}
-							>
-								{this.state.mediacache.hasOwnProperty(
-									this.state.room.media[this.state.room.cur]
-								)
-									? this.state.mediacache[
-											this.state.room.media[
-												this.state.room.cur
-											]
-									  ].title
-									: "Loading..."}
-							</span>
+						<div
+							style={{
+								color: "#FFF"
+							}}
+						>
+							{this.state.room.name}
 						</div>
 					</div>
-				</main>
-				<SidebarView
-					style={{
-						background: "rgb(44, 40, 52)",
-						display: "flex",
-						flexDirection: "column"
-					}}
-					roomview={this}
-				/>
+					<SidebarView
+						style={{
+							display: "flex",
+							flexDirection: "column",
+							position: "relative",
+							backgroundColor: theme.palette.background.paper,
+							overflow: "hidden",
+							flex: 1
+						}}
+						roomview={this}
+					/>
+				</div>
 			</div>
 		);
 	}
 }
+
+export default RoomView;

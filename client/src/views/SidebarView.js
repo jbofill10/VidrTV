@@ -1,7 +1,7 @@
-import React from "react";
-import Radium from "radium";
-import PropTypes from "prop-types";
-import { withStyles } from "@material-ui/core/styles";
+import { Component } from "react";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
+import { withTheme } from "@material-ui/core/styles";
 import SwipeableViews from "react-swipeable-views";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -14,39 +14,8 @@ import SendIcon from "@material-ui/icons/Send";
 import TextField from "@material-ui/core/TextField";
 import { ChatView, PlaylistView } from "./";
 
-const styles = theme => ({
-	root: {
-		position: "relative",
-		backgroundColor: theme.palette.background.paper,
-		width: 380,
-		overflow: "hidden"
-	},
-	container: {
-		height: "100%"
-	},
-	fab: {
-		position: "absolute",
-		bottom: theme.spacing.unit * 2,
-		right: theme.spacing.unit * 2
-	},
-	form: {
-		flex: 0,
-		padding: `${theme.spacing.unit * 1}px ${theme.spacing.unit *
-			12}px ${theme.spacing.unit * 1}px ${theme.spacing.unit * 1}px`
-	},
-	textField: {
-		margin: "8px 12px 6px 8px"
-	},
-	bottom: {
-		position: "absolute",
-		bottom: 0,
-		left: 0,
-		right: 0
-	}
-});
-
-@Radium
-class SidebarView extends React.Component {
+@withTheme()
+class SidebarView extends Component {
 	constructor(props) {
 		super(props);
 
@@ -84,7 +53,7 @@ class SidebarView extends React.Component {
 	}
 
 	render() {
-		const { classes, theme, style, roomview } = this.props;
+		const { theme, style, roomview } = this.props;
 
 		const transitionDuration = {
 			enter: theme.transitions.duration.enteringScreen,
@@ -97,7 +66,6 @@ class SidebarView extends React.Component {
 				content: <ChatView roomview={roomview} />,
 				fab: {
 					color: "primary",
-					className: classes.fab,
 					icon: <SendIcon />,
 					click: () => this.sendChatMessage()
 				}
@@ -112,7 +80,6 @@ class SidebarView extends React.Component {
 				),
 				fab: {
 					color: "secondary",
-					className: classes.fab,
 					icon: (
 						<AddIcon
 							style={{
@@ -134,7 +101,7 @@ class SidebarView extends React.Component {
 		];
 
 		return (
-			<div className={classes.root} style={style}>
+			<div css={style}>
 				<AppBar position="static" color="default">
 					<Tabs
 						value={this.state.value}
@@ -169,8 +136,11 @@ class SidebarView extends React.Component {
 						))}
 					</SwipeableViews>
 					<div
-						className={classes.bottom}
 						style={{
+							position: "absolute",
+							bottom: 0,
+							left: 0,
+							right: 0,
 							pointerEvents:
 								this.state.value === 0 ? "auto" : "none"
 						}}
@@ -189,7 +159,13 @@ class SidebarView extends React.Component {
 							}}
 						>
 							<form
-								className={classes.form}
+								style={{
+									flex: 0,
+									padding: `${theme.spacing.unit}px ${theme
+										.spacing.unit * 12}px ${
+										theme.spacing.unit
+									}px ${theme.spacing.unit}px`
+								}}
 								noValidate
 								autoComplete="off"
 								onSubmit={this.onSubmit}
@@ -198,7 +174,9 @@ class SidebarView extends React.Component {
 									id="outlined-full-width"
 									variant="outlined"
 									label="Message"
-									className={classes.textField}
+									style={{
+										margin: "8px 12px 6px 8px"
+									}}
 									value={this.state.input}
 									onChange={this.handleInputChange}
 									margin="normal"
@@ -222,11 +200,15 @@ class SidebarView extends React.Component {
 								unmountOnExit
 							>
 								<Fab
+									style={{
+										position: "absolute",
+										bottom: theme.spacing.unit * 2,
+										right: theme.spacing.unit * 2
+									}}
 									disabled={
 										page.name === "Chat" &&
 										this.state.input.length === 0
 									}
-									className={page.fab.className}
 									color={page.fab.color}
 									onClick={page.fab.click}
 								>
@@ -241,9 +223,4 @@ class SidebarView extends React.Component {
 	}
 }
 
-SidebarView.propTypes = {
-	classes: PropTypes.object.isRequired,
-	theme: PropTypes.object.isRequired
-};
-
-export default withStyles(styles, { withTheme: true })(SidebarView);
+export default SidebarView;

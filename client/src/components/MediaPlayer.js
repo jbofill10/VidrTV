@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import Radium from "radium";
-import { default as MediaControls, StatsOverlay } from "./MediaControls";
+import { Component } from "react";
+/** @jsx jsx */
+import { jsx } from "@emotion/core";
+import { MediaControls, StatsOverlay } from "./";
 import YouTubePlayer from "react-player/lib/players/YouTube";
 
 const paddingHack = 200;
 const PlaybackDeltaThreshold = 1200;
 
-@Radium
-class MediaPlayer extends Component {
+export default class MediaPlayer extends Component {
 	constructor(props) {
 		super(props);
 
@@ -182,7 +182,7 @@ class MediaPlayer extends Component {
 	};
 
 	onPlay = () => {
-		console.log(Date.now() - this._startBuffer);
+		// console.log(Date.now() - this._startBuffer);
 
 		if (this.state.start <= Date.now());
 		else this.setState({ playing: false });
@@ -231,16 +231,17 @@ class MediaPlayer extends Component {
 			pip,
 			showStats
 		} = this.state;
+		const { className, style } = this.props;
 
 		return (
 			<div
-				className={this.props.className}
-				style={[
+				className={className}
+				css={[
 					{
-						border: "solid 1px #c78bff",
-						borderRadius: "1px",
+						// border: `solid 0px ${theme.palette.primary.main}`,
+						// borderRadius: `${theme.shape.borderRadius}px`,
 						// boxShadow: "0 0 32px #c78bff75",
-						background: "rgba(255, 255, 255, 0.082)",
+						background: "#000000",
 						position: "relative",
 						// maxHeight: `calc((${heightdiff | 0}px) * 9 / 16)`,
 						// height: "200px",
@@ -248,7 +249,7 @@ class MediaPlayer extends Component {
 						overflow: "hidden",
 						boxSizing: "border-box"
 					},
-					this.props.style
+					style
 				]}
 				ref={div => (this._parentdiv = div)}
 			>
@@ -331,5 +332,3 @@ class MediaPlayer extends Component {
 		);
 	}
 }
-
-export default MediaPlayer;

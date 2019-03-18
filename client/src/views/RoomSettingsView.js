@@ -1,5 +1,4 @@
 import React from "react";
-import Radium from "radium";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -9,8 +8,7 @@ import Input from "@material-ui/core/Input";
 import Switch from "@material-ui/core/Switch";
 import "whatwg-fetch";
 
-@Radium
-class RoomSettingsView extends React.Component {
+export default class RoomSettingsView extends React.Component {
 	constructor(props) {
 		super(props);
 		this.handleChange = this.handleChange.bind(this);
@@ -77,5 +75,3 @@ class RoomSettingsView extends React.Component {
 		);
 	}
 }
-
-export default RoomSettingsView;
