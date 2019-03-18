@@ -201,7 +201,7 @@ export default class MediaControls extends Component {
 						border: 0,
 						outline: "none"
 					}}
-					onClick={player.playPause}
+					// onClick={player.playPause}
 				/>
 				<div
 					className="overlaygradient"

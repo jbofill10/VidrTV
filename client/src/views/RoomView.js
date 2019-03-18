@@ -2,6 +2,7 @@ import { Component } from "react";
 /** @jsx jsx */
 import { jsx } from "@emotion/core";
 import { MediaPlayer, Loader } from "../components";
+import SimpleBar from "simplebar-react";
 import { SidebarView } from "./";
 import { withTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -35,6 +36,10 @@ class RoomView extends Component {
 
 	componentDidMount() {
 		document.title = "Vidr.tv - Joining...";
+
+		document.head
+			.querySelector(`meta[name="theme-color"]`)
+			.setAttribute("content", this.props.theme.palette.background.paper);
 
 		// open realtime socket connection
 		this.socket = openSocket(
@@ -157,21 +162,20 @@ class RoomView extends Component {
 
 		const { theme } = this.props;
 
-		console.log(this.state.mediacache);
-
 		return (
 			<div
 				css={{
 					display: "flex",
 					overflow: "hidden",
-					// height: "100%",
 					width: "100%",
 					maxWidth: "1920px",
 					margin: `0 auto ${theme.spacing.unit}px auto`,
 					[theme.breakpoints.down("xs")]: {
-						overflowY: "auto",
-						flexDirection: "column",
-						margin: 0
+						height: "100%",
+						margin: 0,
+						overflowY: "scroll",
+						WebkitOverflowScrolling: "touch",
+						flexDirection: "column"
 					}
 				}}
 			>
@@ -181,159 +185,174 @@ class RoomView extends Component {
 						display: "flex",
 						flexDirection: "column",
 						[theme.breakpoints.up("sm")]: {
-							flex: 1,
-							margin: `0 ${theme.spacing.unit}px`
+							flex: 2,
+							margin: `0 ${theme.spacing.unit}px`,
+							borderRadius: `0 0 ${theme.shape.borderRadius}px ${
+								theme.shape.borderRadius
+							}px`,
+							"& > div": {
+								height: "100%"
+							}
 						},
 						[theme.breakpoints.down("xs")]: {
 							flexShrink: 0
 						}
 					}}
 				>
-					<div
+					<SimpleBar
 						style={{
 							position: "relative",
-							height: "100%",
-							width: "100%",
-							flex: "0 1"
+							width: "100%"
 						}}
 					>
-						<MediaPlayer
-							className="player-container"
-							// player height + heightdiff = player height breakpoint
-							heightdiff={110 + theme.spacing.unit}
-							socket={this.socket}
-							clock={this.clock}
-							room={this.state.room}
-							mediacache={this.state.mediacache}
-						/>
-					</div>
-					<div
-						css={{
-							backgroundColor: theme.palette.background.paper,
-							borderRadius: theme.shape.borderRadius,
-							padding: "12px 16px",
-							[theme.breakpoints.up("sm")]: {
-								marginTop: `${theme.spacing.unit}px`
-							}
-						}}
-					>
-						{this.state.mediacache.hasOwnProperty(
-							this.state.room.media[this.state.room.cur]
-						) ? (
-							<div>
-								<Typography
-									variant="subtitle1"
-									style={{ color: "#FFF", fontSize: 18 }}
-								>
-									{
-										this.state.mediacache[
-											this.state.room.media[
-												this.state.room.cur
-											]
-										].title
-									}
-								</Typography>
-								<div
-									style={{
-										borderBottom:
-											"solid 1px rgba(255,255,255,0.1)",
-										paddingBottom: "8px"
-									}}
-								>
+						<div
+							css={{
+								position: "relative",
+								width: "100%",
+								flex: "0 1"
+							}}
+						>
+							<MediaPlayer
+								className="player-container"
+								// player height + heightdiff = player height breakpoint
+								heightdiff={148 + theme.spacing.unit}
+								socket={this.socket}
+								clock={this.clock}
+								room={this.state.room}
+								mediacache={this.state.mediacache}
+							/>
+						</div>
+						<div
+							css={{
+								backgroundColor: theme.palette.background.paper,
+								padding: "12px 16px",
+								[theme.breakpoints.up("sm")]: {
+									borderRadius: theme.shape.borderRadius,
+									marginTop: `${theme.spacing.unit}px`
+								}
+							}}
+						>
+							{this.state.mediacache.hasOwnProperty(
+								this.state.room.media[this.state.room.cur]
+							) ? (
+								<div>
 									<Typography
 										variant="subtitle1"
-										style={{ color: "#aaa", fontSize: 16 }}
+										style={{ color: "#FFF", fontSize: 18 }}
 									>
-										{parseInt(
+										{
 											this.state.mediacache[
 												this.state.room.media[
 													this.state.room.cur
 												]
-											].raw.statistics.viewCount
-										).toLocaleString()}
-										{" views"}
+											].title
+										}
 									</Typography>
-								</div>
-								<div
-									style={{
-										margin: "12px 0",
-										display: "flex"
-									}}
-								>
-									<img
-										alt={
-											this.state.mediacache[
-												this.state.room.media[
-													this.state.room.cur
-												]
-											].channel.title
-										}
-										style={{
-											borderRadius: "50%",
-											height: 48,
-											width: 48
-										}}
-										src={
-											this.state.mediacache[
-												this.state.room.media[
-													this.state.room.cur
-												]
-											].channel.thumbnails.default.url
-										}
-									/>
 									<div
 										style={{
-											flex: 1,
-											margin: "4px 12px"
+											borderBottom:
+												"solid 1px rgba(255,255,255,0.1)",
+											paddingBottom: "8px"
 										}}
 									>
-										<a
-											target="_blank"
-											rel="noopener noreferrer"
-											href={
+										<Typography
+											variant="subtitle1"
+											style={{
+												color: "#aaa",
+												fontSize: 16
+											}}
+										>
+											{parseInt(
 												this.state.mediacache[
 													this.state.room.media[
 														this.state.room.cur
 													]
-												].channel.url
-											}
-											style={{
-												color: "#fff",
-												opacity: 0.88,
-												fontSize: 14,
-												fontWeight: 500
-											}}
-										>
-											{
+												].raw.statistics.viewCount
+											).toLocaleString()}
+											{" views"}
+										</Typography>
+									</div>
+									<div
+										style={{
+											margin: "12px 0",
+											display: "flex"
+										}}
+									>
+										<img
+											alt={
 												this.state.mediacache[
 													this.state.room.media[
 														this.state.room.cur
 													]
 												].channel.title
 											}
-										</a>
+											style={{
+												borderRadius: "50%",
+												height: 48,
+												width: 48
+											}}
+											src={
+												this.state.mediacache[
+													this.state.room.media[
+														this.state.room.cur
+													]
+												].channel.thumbnails.default.url
+											}
+										/>
 										<div
 											style={{
-												color: "#fff",
-												opacity: 0.6,
-												fontSize: 13,
-												fontWeight: 400
+												flex: 1,
+												margin: "4px 12px"
 											}}
 										>
-											{"Published on "}
-											{this.state.mediacache[
-												this.state.room.media[
-													this.state.room.cur
-												]
-											].publishedAt.toDateString()}
+											<a
+												target="_blank"
+												rel="noopener noreferrer"
+												href={
+													this.state.mediacache[
+														this.state.room.media[
+															this.state.room.cur
+														]
+													].channel.url
+												}
+												style={{
+													color: "#fff",
+													opacity: 0.88,
+													fontSize: 14,
+													fontWeight: 500
+												}}
+											>
+												{
+													this.state.mediacache[
+														this.state.room.media[
+															this.state.room.cur
+														]
+													].channel.title
+												}
+											</a>
+											<div
+												style={{
+													color: "#fff",
+													opacity: 0.6,
+													fontSize: 13,
+													fontWeight: 400
+												}}
+											>
+												{"Published on "}
+												{this.state.mediacache[
+													this.state.room.media[
+														this.state.room.cur
+													]
+												].publishedAt.toDateString()}
+											</div>
 										</div>
 									</div>
 								</div>
-							</div>
-						) : (
-							<div>Loading...</div>
-						)}
-					</div>
+							) : (
+								<div>Loading...</div>
+							)}
+						</div>
+					</SimpleBar>
 				</main>
 				<div
 					css={{
@@ -341,14 +360,15 @@ class RoomView extends Component {
 						flexDirection: "column",
 						position: "relative",
 						overflow: "hidden",
+						flex: 1,
 						[theme.breakpoints.up("sm")]: {
-							width: 380,
+							maxWidth: 380,
+							minWidth: 320,
 							marginRight: `${theme.spacing.unit}px`,
 							borderRadius: theme.shape.borderRadius
 						},
 						[theme.breakpoints.down("xs")]: {
-							minHeight: 200,
-							flex: 1
+							minHeight: 480
 						}
 					}}
 				>

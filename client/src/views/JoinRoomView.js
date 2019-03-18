@@ -37,6 +37,10 @@ export default class JoinRoomView extends React.Component {
 			});
 
 		document.title = "Vidr.tv - Join a Room";
+
+		document.head
+			.querySelector(`meta[name="theme-color"]`)
+			.setAttribute("content", "#263245");
 	}
 
 	render() {

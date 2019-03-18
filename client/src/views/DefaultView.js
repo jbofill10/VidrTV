@@ -5,6 +5,9 @@ import Typography from "@material-ui/core/Typography";
 export default class DefaultView extends React.Component {
 	componentDidMount() {
 		document.title = "Vidr.tv";
+		document.head
+			.querySelector(`meta[name="theme-color"]`)
+			.setAttribute("content", "#311b92");
 	}
 
 	render() {
