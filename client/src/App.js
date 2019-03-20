@@ -67,6 +67,7 @@ class App extends React.Component {
 							>
 								<div
 									className="bg"
+									id="bg1"
 									style={{
 										background:
 											theme.palette.background.grad1,
@@ -86,6 +87,7 @@ class App extends React.Component {
 								/>
 								<div
 									className="bg"
+									id="bg2"
 									style={{
 										background:
 											theme.palette.background.grad2,
@@ -109,6 +111,7 @@ class App extends React.Component {
 								/>
 								<div
 									className="bg"
+									id="bg3"
 									style={{
 										background:
 											theme.palette.background.grad3,

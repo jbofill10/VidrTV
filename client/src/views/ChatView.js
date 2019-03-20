@@ -1,9 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import SimpleBar from "simplebar-react";
 import { withTheme } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 
 @withTheme()
+@connect(
+	() => ({}),
+	{}
+)
 class ChatView extends React.Component {
 	constructor(props) {
 		super(props);
